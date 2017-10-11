@@ -7,35 +7,33 @@ REM This script creates the SDK folder with the latest bits from the Azure SDK r
 REM It removes some files we do not need.
 
 if "%1" equ "" (
-    set Work_path=%~dp0..\..\..\Work
-) else (
-    set Work_path=%1
+    echo make_sdk.cmd requires a single output directory parameter
+    exit /b 1
 )
-rem // resolve to fully qualified path
-for %%i in ("%Work_path%") do set Work_path=%%~fi
+set Libraries_path=%1
 
-set Libraries_path=%Work_path%\arduino\libraries\
-set AzureIoTHub_path=%Libraries_path%AzureIoTHub\
-set AzureIoTProtocolHTTP_path=%Libraries_path%AzureIoTProtocol_HTTP\
-set AzureIoTProtocolMQTT_path=%Libraries_path%AzureIoTProtocol_MQTT\
-set AzureIoTProtocolAMQP_path=%Libraries_path%AzureIoTProtocol_AMQP\
-set AzureIoTUtility_path=%Libraries_path%AzureIoTUtility\
+rem // The location of the Azure IoT SDK relative to this file
+set arduino_repo_root=%~dp0..\
+rem // resolve to fully qualified path
+for %%i in ("%arduino_repo_root%") do set arduino_repo_root=%%~fi
+
+rem // The location of the Arduino PAL directory relative to this file
+set Arduino_pal_path=%arduino_repo_root%pal\
+set AzureIoTSDKs_path=%arduino_repo_root%sdk\
+
+
+set AzureIoTHub_path=%Libraries_path%\AzureIoTHub\
+set AzureIoTProtocolHTTP_path=%Libraries_path%\AzureIoTProtocol_HTTP\
+set AzureIoTProtocolMQTT_path=%Libraries_path%\AzureIoTProtocol_MQTT\
+set AzureIoTProtocolAMQP_path=%Libraries_path%\AzureIoTProtocol_AMQP\
+set AzureIoTUtility_path=%Libraries_path%\AzureIoTUtility\
+
 set AzureUHTTP_path=%AzureIoTProtocolHTTP_path%src\azure_uhttp_c\
 set AzureUMQTT_path=%AzureIoTProtocolMQTT_path%src\azure_umqtt_c\
 set AzureUAMQP_path=%AzureIoTProtocolAMQP_path%src\azure_uamqp_c\
 set SharedUtility_path=%AzureIoTUtility_path%src\azure_c_shared_utility\
 set Adapters_path=%AzureIoTUtility_path%src\adapters\
 set sdk_path=%AzureIoTHub_path%src\sdk\
-rem // The location of the Azure IoT SDK relative to this file
-set AzureIoTSDKs_path=%~dp0..\..\sdk\
-rem // resolve to fully qualified path
-for %%i in ("%AzureIoTSDKs_path%") do set AzureIoTSDKs_path=%%~fi
-
-rem // The location of the Arduino PAL directory relative to this file
-set Arduino_pal_path=%~dp0..\..\pal\
-rem // resolve to fully qualified path
-for %%i in ("%Arduino_pal_path%") do set Arduino_pal_path=%%~fi
-echo "Arduino PAL path: " %Arduino_pal_path%
 
 mkdir %Libraries_path%
 pushd %Libraries_path%
@@ -50,8 +48,10 @@ robocopy %~dp0\base-libraries\AzureIoTProtocol_MQTT %AzureIoTProtocolMQTT_path% 
 mkdir %sdk_path%
 
 cd /D %AzureIoTSDKs_path%
-echo Upstream HEAD @ > %sdk_path%metadata.txt
-git rev-parse HEAD >> %sdk_path%metadata.txt
+rem echo Upstream HEAD @ > %sdk_path%metadata.txt
+rem git rev-parse HEAD >> %sdk_path%metadata.txt
+
+echo arduino_repo_root: %arduino_repo_root%
 
 copy %AzureIoTSDKs_path%LICENSE %AzureIoTHub_path%LICENSE
 
@@ -70,11 +70,12 @@ mkdir %Adapters_path%
 copy %AzureIoTSDKs_path%c-utility\inc\azure_c_shared_utility %SharedUtility_path%
 copy %AzureIoTSDKs_path%c-utility\src\ %SharedUtility_path%
 
-copy %AzureIoTSDKs_path%c-utility\adapters\agenttime.c %Adapters_path%
-copy %AzureIoTSDKs_path%c-utility\adapters\tickcounter_tirtos.c %Adapters_path%
+copy %AzureIoTSDKs_path%c-utility\pal\agenttime.c %Adapters_path%
+copy %AzureIoTSDKs_path%c-utility\pal\tickcounter.c %Adapters_path%
 
 rem // Copy the Arduino-specific files from the Arduino PAL path
-copy %Arduino_pal_path%*.* %Adapters_path%
+copy %Arduino_pal_path%inc\*.* %Adapters_path%
+copy %Arduino_pal_path%src\*.* %Adapters_path%
 
 mkdir %AzureUHTTP_path%
 copy %AzureIoTSDKs_path%c-utility\adapters\httpapi_compact.c %AzureUHTTP_path%

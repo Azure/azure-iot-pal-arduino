@@ -5,12 +5,12 @@
 @echo off
 
 if %AZURE_CONTAINER_SASTOKEN%=="" (
-    echo Fatal: Invalid container SAS token.
+    echo Fatal: Container SAS token has not been set.
     echo.
     goto :usage
 )
 if "%AZURE_CONTAINER_URL%"=="" (
-    echo Fatal: Invalid container URL.
+    echo Fatal: Container URL has not been set.
     echo.
     goto :usage
 )

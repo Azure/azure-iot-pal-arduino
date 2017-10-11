@@ -1,6 +1,11 @@
 @REM Copyright (c) Microsoft. All rights reserved.
 @REM Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+@REM !!!!!!!!!!!!! DO NOT EXECUTE THIS FILE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+REM This script is replaced by build_prep.cmd followed by build.cmd
+echo Deprecated since Arduino lib v1.0.39 15 Oct 2017 -- do not execute
+exit /b 1
+
 @setlocal EnableExtensions EnableDelayedExpansion
 @echo off
 

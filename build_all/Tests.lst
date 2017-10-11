@@ -3,8 +3,8 @@
 
 [huzzah_remote_monitoring]
 Target=remote_monitoring.ino
-RelativePath=\iot-hub-c-huzzah-getstartedkit\remote_monitoring
-RelativeWorkingDir=\arduino_cc_Work\Results\huzzah_remote_monitoring
+SourcePath=!kits_root!\iot-hub-c-huzzah-getstartedkit\remote_monitoring
+RelativeWorkingDir=\huzzah_remote_monitoring
 CloneURL=https://github.com/Azure-Samples/iot-hub-c-huzzah-getstartedkit
 MaxAllowedDurationSeconds=100
 LogLines=300
@@ -18,8 +18,8 @@ Execution=Enable
 
 [huzzah_command_center]
 Target=command_center.ino
-RelativePath=\iot-hub-c-huzzah-getstartedkit\command_center
-RelativeWorkingDir=\arduino_cc_Work\Results\huzzah_command_center
+SourcePath=!kits_root!\iot-hub-c-huzzah-getstartedkit\command_center
+RelativeWorkingDir=\huzzah_command_center
 CloneURL=https://github.com/Azure-Samples/iot-hub-c-huzzah-getstartedkit
 MaxAllowedDurationSeconds=100
 LogLines=300
@@ -33,8 +33,8 @@ Execution=Disable
 
 [huzzah_simplesample_http]
 Target=simplesample_http.ino
-RelativePath=\arduino\libraries\AzureIoTProtocol_HTTP\examples\simplesample_http
-RelativeWorkingDir=\arduino_cc_Work\Results\huzzah_simplesample_http
+SourcePath=!user_libraries_path!\AzureIoTProtocol_HTTP\examples\simplesample_http
+RelativeWorkingDir=\huzzah_simplesample_http
 CloneURL=""
 MaxAllowedDurationSeconds=100
 LogLines=300
@@ -48,8 +48,8 @@ Execution=Disable
 
 [huzzah_simplesample_mqtt]
 Target=simplesample_mqtt.ino
-RelativePath=\arduino\libraries\AzureIoTProtocol_MQTT\examples\simplesample_mqtt
-RelativeWorkingDir=\arduino_cc_Work\Results\huzzah_simplesample_mqtt
+SourcePath=!user_libraries_path!\AzureIoTProtocol_MQTT\examples\simplesample_mqtt
+RelativeWorkingDir=\huzzah_simplesample_mqtt
 CloneURL=""
 MaxAllowedDurationSeconds=100
 LogLines=300
@@ -63,8 +63,8 @@ Execution=Disable
 
 [m0wifi_remote_monitoring]
 Target=remote_monitoring.ino
-RelativePath=\iot-hub-c-m0wifi-getstartedkit\remote_monitoring
-RelativeWorkingDir=\arduino_cc_Work\Results\m0wifi_remote_monitoring
+SourcePath=!kits_root!\iot-hub-c-m0wifi-getstartedkit\remote_monitoring
+RelativeWorkingDir=\m0wifi_remote_monitoring
 CloneURL=https://github.com/Azure-Samples/iot-hub-c-m0wifi-getstartedkit
 MaxAllowedDurationSeconds=100
 LogLines=300
@@ -78,8 +78,8 @@ Execution=Disable
 
 [m0wifi_command_center]
 Target=command_center.ino
-RelativePath=\iot-hub-c-m0wifi-getstartedkit\command_center
-RelativeWorkingDir=\arduino_cc_Work\Results\m0wifi_command_center
+SourcePath=!kits_root!\iot-hub-c-m0wifi-getstartedkit\command_center
+RelativeWorkingDir=\m0wifi_command_center
 CloneURL=https://github.com/Azure-Samples/iot-hub-c-m0wifi-getstartedkit
 MaxAllowedDurationSeconds=100
 LogLines=300
@@ -93,8 +93,8 @@ Execution=Disable
 
 [m0wifi_simplesample_http]
 Target=simplesample_http.ino
-RelativePath=\arduino\libraries\AzureIoTProtocol_HTTP\examples\simplesample_http
-RelativeWorkingDir=\arduino_cc_Work\Results\m0wifi_simplesample_http
+SourcePath=!user_libraries_path!\AzureIoTProtocol_HTTP\examples\simplesample_http
+RelativeWorkingDir=\m0wifi_simplesample_http
 CloneURL=""
 MaxAllowedDurationSeconds=100
 LogLines=300
@@ -108,8 +108,8 @@ Execution=Disable
 
 [m0wifi_simplesample_mqtt]
 Target=simplesample_mqtt.ino
-RelativePath=\arduino\libraries\AzureIoTProtocol_MQTT\examples\simplesample_mqtt
-RelativeWorkingDir=\arduino_cc_Work\Results\m0wifi_simplesample_mqtt
+SourcePath=!user_libraries_path!\AzureIoTProtocol_MQTT\examples\simplesample_mqtt
+RelativeWorkingDir=\m0wifi_simplesample_mqtt
 CloneURL=""
 MaxAllowedDurationSeconds=100
 LogLines=300
@@ -123,8 +123,8 @@ Execution=Disable
 
 [thingdev_remote_monitoring]
 Target=remote_monitoring.ino
-RelativePath=\iot-hub-c-thingdev-getstartedkit\remote_monitoring
-RelativeWorkingDir=\arduino_cc_Work\Results\thingdev_remote_monitoring
+SourcePath=!kits_root!\iot-hub-c-thingdev-getstartedkit\remote_monitoring
+RelativeWorkingDir=\thingdev_remote_monitoring
 CloneURL=https://github.com/Azure-Samples/iot-hub-c-thingdev-getstartedkit.git
 MaxAllowedDurationSeconds=100
 LogLines=300
@@ -138,8 +138,8 @@ Execution=Enable
 
 [thingdev_command_center]
 Target=command_center.ino
-RelativePath=\iot-hub-c-thingdev-getstartedkit\command_center
-RelativeWorkingDir=\arduino_cc_Work\Results\thingdev_command_center
+SourcePath=!kits_root!\iot-hub-c-thingdev-getstartedkit\command_center
+RelativeWorkingDir=\thingdev_command_center
 CloneURL=https://github.com/Azure-Samples/iot-hub-c-thingdev-getstartedkit.git
 MaxAllowedDurationSeconds=100
 LogLines=300
@@ -153,8 +153,8 @@ Execution=Disable
 
 [thingdev_simplesample_http]
 Target=simplesample_http.ino
-RelativePath=\arduino\libraries\AzureIoTProtocol_HTTP\examples\simplesample_http
-RelativeWorkingDir=\arduino_cc_Work\Results\thingdev_simplesample_http
+SourcePath=!user_libraries_path!\AzureIoTProtocol_HTTP\examples\simplesample_http
+RelativeWorkingDir=\thingdev_simplesample_http
 CloneURL=""
 MaxAllowedDurationSeconds=100
 LogLines=300
@@ -168,8 +168,8 @@ Execution=Disable
 
 [thingdev_simplesample_mqtt]
 Target=simplesample_mqtt.ino
-RelativePath=\arduino\libraries\AzureIoTProtocol_MQTT\examples\simplesample_mqtt
-RelativeWorkingDir=\arduino_cc_Work\Results\thingdev_simplesample_mqtt
+SourcePath=!user_libraries_path!\AzureIoTProtocol_MQTT\examples\simplesample_mqtt
+RelativeWorkingDir=\thingdev_simplesample_mqtt
 CloneURL=""
 MaxAllowedDurationSeconds=100
 LogLines=300
