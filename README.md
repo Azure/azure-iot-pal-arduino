@@ -1,8 +1,36 @@
 # azure-iot-pal-arduino
 
+This repository contains all of the Arduino-specific source files for the Azure IoT Arduino 
+libraries. 
 
+#### Published libraries
+The published Azure IoT Arduino libraries are here:
+* [AzureIoTHub Arduino **published library**](https://github.com/Azure/azure-iot-arduino)
+* [AzureIoTProtocol_MQTT Arduino **published library**](https://github.com/Azure/azure-iot-arduino-protocol-mqtt)
+* [AzureIoTProtocol_HTTP Arduino **published library**](https://github.com/Azure/azure-iot-arduino-protocol-http)
+* [AzureIoTUtility Arduino **published library**](https://github.com/Azure/azure-iot-arduino-utility)
 
+Contributions should _not_ be made to these locations, as they are auto-generated.
 
+#### Arduino-specific library sources
+
+Arduino-specific sources for the Azure IoT Arduino libraries are kept in this repository:
+* [AzureIoTHub **Arduino sources**](https://github.com/Azure/azure-iot-pal-arduino/tree/master/build_all/base-libraries/AzureIoTHub)
+* [AzureIoTProtocol_MQTT **Arduino sources**](https://github.com/Azure/azure-iot-pal-arduino/tree/master/build_all/base-libraries/AzureIoTProtocol_MQTT)
+* [AzureIoTProtocol_HTTP **Arduino sources**](https://github.com/Azure/azure-iot-pal-arduino/tree/master/build_all/base-libraries/AzureIoTProtocol_HTTP)
+* [AzureIoTUtility **Arduino sources**](https://github.com/Azure/azure-iot-pal-arduino/tree/master/build_all/base-libraries/AzureIoTUtility)
+
+Arduino-specific contributions should be made to these locations.
+
+#### Non-Arduino-specific Azure IoT sources
+
+The non-Arduino-specific portions of the Azure IoT C SDK are found here:
+* [AzureIoTHub **sources**](https://github.com/Azure/azure-iot-sdk-c)
+* [AzureIoTProtocol_MQTT **sources**](https://github.com/Azure/azure-umqtt-c)
+* [AzureIoTProtocol_HTTP **sources**](https://github.com/Azure/azure-c-shared-utility)
+* [AzureIoTUtility **sources**](https://github.com/Azure/azure-c-shared-utility)
+
+Contributions which are not Arduino-specific should be made to these locations.
 
 ### Contributing
 
