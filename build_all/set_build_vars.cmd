@@ -28,9 +28,22 @@ set compiler_tools_builder_path=%compiler_path%\tools-builder
 set compiler_tools_processor_path=%compiler_path%\hardware\tools\avr
 
 set compiler_libraries_path=%compiler_path%\libraries
-set user_hardware_path=%UserProfile%\Documents\Arduino\hardware
-set user_libraries_path=%UserProfile%\Documents\Arduino\libraries
 set user_packages_path=%jenkins_workspace%\arduino_tools\arduino15-2.3.0\packages
+
+rem -----------------------------------------------------------------------------
+rem -- If this computer runs the Arduino IDE, use the user's hardware path
+rem -- and library path. Otherwise, keep stuff in the Jenkins directories.
+rem -----------------------------------------------------------------------------
+
+if exist "%UserProfile%\Documents\Arduino" (
+    echo Arduino IDE directory detected
+    set user_hardware_path=%UserProfile%\Documents\Arduino\hardware
+    set user_libraries_path=%UserProfile%\Documents\Arduino\libraries
+) else (
+    set user_hardware_path=%tools_root%\hardware
+    set user_libraries_path=%work_root%\libraries
+    echo No Arduino IDE directory detected
+)
 
 
 rem -----------------------------------------------------------------------------
