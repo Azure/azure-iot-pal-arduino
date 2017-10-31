@@ -69,5 +69,3 @@ void xlogging_dump_bytes(const void* buf, size_t size)
         LOG(AZ_LOG_TRACE, 0, "%p: %s    %s", startPos, hexBuf, charBuf);
     }
 }
-
-#endif
