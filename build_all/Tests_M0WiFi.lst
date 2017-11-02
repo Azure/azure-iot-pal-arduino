@@ -33,7 +33,7 @@ Execution=Disable
 
 [m0wifi_simplesample_http]
 Target=simplesample_http.ino
-SourcePath=!user_libraries_path!\AzureIoTProtocol_HTTP\examples\simplesample_http
+SourcePath=!kits_root!\iot-hub-c-m0wifi-getstartedkit\simplesample_http
 RelativeWorkingDir=\m0wifi_simplesample_http
 CloneURL=""
 MaxAllowedDurationSeconds=100
@@ -48,7 +48,7 @@ Execution=Disable
 
 [m0wifi_simplesample_mqtt]
 Target=simplesample_mqtt.ino
-SourcePath=!user_libraries_path!\AzureIoTProtocol_MQTT\examples\simplesample_mqtt
+SourcePath=!kits_root!\iot-hub-c-m0wifi-getstartedkit\simplesample_mqtt
 RelativeWorkingDir=\m0wifi_simplesample_mqtt
 CloneURL=""
 MaxAllowedDurationSeconds=100
