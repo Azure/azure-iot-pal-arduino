@@ -32,6 +32,17 @@ The non-Arduino-specific portions of the Azure IoT C SDK are found here:
 
 Contributions which are not Arduino-specific should be made to these locations.
 
+#### Azure IoT Arduino Library README.md sources
+
+The README.txt files for the Arduino libraries are auto-generated during the release
+process from a template file using a script.
+Contributions to the README.md files for any of the four Azure IoT Arduino libraries should be made by 
+modifying one or both of 
+
+* [README_builder.ps1](https://github.com/Azure/azure-iot-pal-arduino/blob/master/build_all/README_builder.ps1)
+* [README_template.md](https://github.com/Azure/azure-iot-pal-arduino/blob/master/build_all/README_template.md)
+
+
 ### Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
