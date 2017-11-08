@@ -81,11 +81,11 @@ rem ----------------------------------------------------------------------------
 rem -- Copy the samples from the kits into the Arduino libraries
 rem -----------------------------------------------------------------------------
 xcopy %kits_root%\iot-hub-c-huzzah-getstartedkit\simplesample_http %user_libraries_path%\AzureIoTHub\examples\esp8266\simplesample_http /I
-xcopy %kits_root%\iot-hub-c-huzzah-getstartedkit\simplesample_mqtt %user_libraries_path%\AzureIoTProtocol_MQTT\examples\esp8266\simplesample_http /I
+xcopy %kits_root%\iot-hub-c-huzzah-getstartedkit\simplesample_mqtt %user_libraries_path%\AzureIoTProtocol_MQTT\examples\esp8266\simplesample_mqtt /I
 xcopy %kits_root%\iot-hub-c-huzzah-getstartedkit\simplesample_http %user_libraries_path%\AzureIoTProtocol_HTTP\examples\esp8266\simplesample_http /I
 xcopy %kits_root%\iot-hub-c-huzzah-getstartedkit\simplesample_http %user_libraries_path%\AzureIoTUtility\examples\esp8266\simplesample_http /I
 xcopy %kits_root%\iot-hub-c-m0wifi-getstartedkit\simplesample_http %user_libraries_path%\AzureIoTHub\examples\samd\simplesample_http /I
-xcopy %kits_root%\iot-hub-c-m0wifi-getstartedkit\simplesample_mqtt %user_libraries_path%\AzureIoTProtocol_MQTT\examples\samd\simplesample_http /I
+xcopy %kits_root%\iot-hub-c-m0wifi-getstartedkit\simplesample_mqtt %user_libraries_path%\AzureIoTProtocol_MQTT\examples\samd\simplesample_mqtt /I
 xcopy %kits_root%\iot-hub-c-m0wifi-getstartedkit\simplesample_http %user_libraries_path%\AzureIoTProtocol_HTTP\examples\samd\simplesample_http /I
 xcopy %kits_root%\iot-hub-c-m0wifi-getstartedkit\simplesample_http %user_libraries_path%\AzureIoTUtility\examples\samd\simplesample_http /I
 
