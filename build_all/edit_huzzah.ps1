@@ -10,14 +10,14 @@ $target = "void remote_monitoring_run\(void\)\r\n"
 
 $memcheck = @"
 // This function drops heap info into the output where execute.ps1 can check for too much heap consumption
-static void do_memcheck(void)
-{
-    size_t current_heap_size;
-    uint8_t* ptr = (uint8_t*)malloc(1024);
-    free(ptr);
-    current_heap_size = (size_t)(0x3FFFC000-(uint32_t)ptr);
+#include <umm_malloc/umm_malloc.h>
+static void do_memcheck()
+{   
+    size_t current_heap_size = umm_free_heap_size();
     LogInfo("Heap:%d", current_heap_size);
+    return;
 }
+
 
 void remote_monitoring_run(void)
 
