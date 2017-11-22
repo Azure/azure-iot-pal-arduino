@@ -67,6 +67,17 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 rem -----------------------------------------------------------------------------
+rem -- Fix source files that contain '%zu' or '%zd', which Arduino can't do
+rem -----------------------------------------------------------------------------
+PowerShell.exe -ExecutionPolicy Bypass -Command "& './fix_format_strings.ps1 ' '%user_libraries_path%'"
+if !ERRORLEVEL! NEQ 0 (
+    echo Failed to fix format strings
+    exit /b 1
+) else (
+    echo Format strings fixed
+)
+
+rem -----------------------------------------------------------------------------
 rem -- Generate the README.md files for the Arduino libraries
 rem -----------------------------------------------------------------------------
 PowerShell.exe -ExecutionPolicy Bypass -Command "& './README_builder.ps1 ' '%user_libraries_path%'"

@@ -69,7 +69,7 @@ mkdir %SharedUtility_path%
 mkdir %Adapters_path%
 copy %AzureIoTSDKs_path%c-utility\inc\azure_c_shared_utility %SharedUtility_path%
 copy %AzureIoTSDKs_path%c-utility\src\ %SharedUtility_path%
-copy /y %Arduino_pal_path%\azure_c_shared_utility\xlogging.h %SharedUtility_path%
+copy /y %Arduino_pal_path%\azure_c_shared_utility\*.* %SharedUtility_path%
 
 copy %AzureIoTSDKs_path%c-utility\pal\agenttime.c %Adapters_path%
 copy %AzureIoTSDKs_path%c-utility\pal\tickcounter.c %Adapters_path%
