@@ -16,6 +16,7 @@
 #include "azure_c_shared_utility/platform.h"
 #include "azure_c_shared_utility/threadapi.h"
 #include "azure_c_shared_utility/optionhandler.h"
+#include "azure_c_shared_utility/tlsio_options.h"
 
 /* Codes_SRS_TLSIO_ARDUINO_21_001: [ The tlsio_arduino shall implement and export all the Concrete functions in the VTable IO_INTERFACE_DESCRIPTION defined in the `xio.h`. ]*/
 /* Codes_SRS_TLSIO_ARDUINO_21_002: [ The tlsio_arduino shall report the open operation status using the IO_OPEN_RESULT enumerator defined in the `xio.h`.]*/
@@ -78,6 +79,7 @@ typedef struct ArduinoTLS_tag
     uint16_t port;
     TLSIO_ARDUINO_STATE state;
     int countTry;
+    TLSIO_OPTIONS options;
 } ArduinoTLS;
 
 /* Codes_SRS_TLSIO_ARDUINO_21_008: [ The tlsio_arduino_get_interface_description shall return the VTable IO_INTERFACE_DESCRIPTION. ]*/
@@ -128,6 +130,9 @@ CONCRETE_IO_HANDLE tlsio_arduino_create(void* io_create_parameters)
             /* Codes_SRS_TLSIO_ARDUINO_21_005: [ The tlsio_arduino shall received the connection information using the TLSIO_CONFIG structure defined in `tlsio.h`. ]*/
             /* Codes_SRS_TLSIO_ARDUINO_21_017: [ The tlsio_arduino_create shall receive the connection configuration (TLSIO_CONFIG). ]*/
             TLSIO_CONFIG* tlsio_config = (TLSIO_CONFIG*)io_create_parameters;
+            
+            // Arduino tlsio does not support any options
+            tlsio_options_initialize(&tlsio_instance->options, TLSIO_OPTION_BIT_NONE);
 
             /* Codes_SRS_TLSIO_ARDUINO_21_015: [ The tlsio_arduino_create shall set 10 seconds for the sslClient timeout. ]*/
             sslClient_setTimeout(10000);
@@ -184,6 +189,7 @@ void tlsio_arduino_destroy(CONCRETE_IO_HANDLE tlsio_handle)
             LogError("TLS destroyed with a SSL connection still active.");
         }
 
+        tlsio_options_release_resources(&tlsio_instance->options);
         /* Codes_SRS_TLSIO_ARDUINO_21_022: [ The tlsio_arduino_destroy shall free the memory allocated for tlsio_instance. ]*/
         free(tlsio_instance);
     }
@@ -498,20 +504,48 @@ void tlsio_arduino_dowork(CONCRETE_IO_HANDLE tlsio_handle)
 
 int tlsio_arduino_setoption(CONCRETE_IO_HANDLE tlsio_handle, const char* optionName, const void* value)
 {
-    /* Codes_SRS_TLSIO_ARDUINO_21_077: [ The tlsio_arduino_setoption shall not do anything, and return 0. ]*/
-    (void)tlsio_handle, (void)optionName, (void)value;
-
-    /* Not implementing any options */
-    return 0;
+    ArduinoTLS* tls_io_instance = (ArduinoTLS*)tlsio_handle;
+    /* Codes_SRS_TLSIO_30_120: [ If the tlsio_handle parameter is NULL, tlsio_openssl_compact_setoption shall do nothing except log an error and return FAILURE. ]*/
+    int result;
+    if (tls_io_instance == NULL)
+    {
+        LogError("NULL tlsio");
+        result = __FAILURE__;
+    }
+    else
+    {
+        /* Codes_SRS_TLSIO_30_121: [ If the optionName parameter is NULL, tlsio_setoption shall do nothing except log an error and return FAILURE. ]*/
+        /* Codes_SRS_TLSIO_30_122: [ If the value parameter is NULL, tlsio_setoption shall do nothing except log an error and return FAILURE. ]*/
+        /* Codes_SRS_TLSIO_ARDUINO_21_077: [ The tlsio_arduino_setoption shall not do anything, and return  __FAILURE__ . ]*/
+        TLSIO_OPTIONS_RESULT options_result = tlsio_options_set(&tls_io_instance->options, optionName, value);
+        if (options_result != TLSIO_OPTIONS_RESULT_SUCCESS)
+        {
+            LogError("Failed tlsio_options_set");
+            result = __FAILURE__;
+        }
+        else
+        {
+            result = 0;
+        }
+    }
+    return result;
 }
 
 OPTIONHANDLER_HANDLE tlsio_arduino_retrieveoptions(CONCRETE_IO_HANDLE tlsio_handle)
 {
-    /* Codes_SRS_TLSIO_ARDUINO_21_078: [ The tlsio_arduino_retrieveoptions shall not do anything, and return NULL. ]*/
-    (void)(tlsio_handle);
-        
-    /* Not implementing any options */
-    return NULL;
+    ArduinoTLS* tls_io_instance = (ArduinoTLS*)tlsio_handle;
+    /* Codes_SRS_TLSIO_ARDUINO_21_078: [ The tlsio_arduino_retrieveoptions shall return an empty options handler. ]*/
+    OPTIONHANDLER_HANDLE result;
+    if (tls_io_instance == NULL)
+    {
+        LogError("NULL tlsio");
+        result = NULL;
+    }
+    else
+    {
+        result = tlsio_options_retrieve_options(&tls_io_instance->options, tlsio_arduino_setoption);
+    }
+    return result;
 }
 
 

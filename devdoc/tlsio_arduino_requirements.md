@@ -287,7 +287,7 @@ Implementation of `IO_SETOPTION concrete_io_setoption`
 int tlsio_arduino_setoption(CONCRETE_IO_HANDLE tlsio_handle, const char* optionName, const void* value)
 ```
 
-**SRS_TLSIO_ARDUINO_21_077: [** The tlsio_arduino_setoption shall not do anything, and return 0. **]**
+**SRS_TLSIO_ARDUINO_21_077: [** The tlsio_arduino_setoption shall not do anything, and return `__FAILURE__`. **]**
 
 
 ###   tlsio_arduino_retrieveoptions
@@ -296,6 +296,6 @@ Implementation of `IO_RETRIEVEOPTIONS concrete_io_retrieveoptions`
 OPTIONHANDLER_HANDLE tlsio_arduino_retrieveoptions(CONCRETE_IO_HANDLE tlsio_handle)
 ```
 
-**SRS_TLSIO_ARDUINO_21_078: [** The tlsio_arduino_retrieveoptions shall not do anything, and return NULL. **]**
+**SRS_TLSIO_ARDUINO_21_078: [** The tlsio_arduino_retrieveoptions shall return an empty options handler. **]**
 
 

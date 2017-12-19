@@ -12,6 +12,10 @@ ${theseTestsName}.c
 )
 
 set(${theseTestsName}_c_files
+${SHARED_UTIL_PAL_FOLDER}/tlsio_options.c
+${SHARED_UTIL_SRC_FOLDER}/crt_abstractions.c
+${SHARED_UTIL_SRC_FOLDER}/vector.c
+${SHARED_UTIL_SRC_FOLDER}/optionhandler.c
 ${EXTERNAL_PAL_REPO_DIR}/pal/src/tlsio_arduino.c
 )
 

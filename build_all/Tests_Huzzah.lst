@@ -16,6 +16,21 @@ CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,UploadSpeed=115200,Fl
 Build=Enable
 Execution=Enable
 
+[huzzah_device_twin]
+Target=device_twin.ino
+SourcePath=!kits_root!\iot-hub-c-huzzah-getstartedkit\device_twin
+RelativeWorkingDir=\device_twin
+CloneURL=https://github.com/Azure-Samples/iot-hub-c-huzzah-getstartedkit
+MaxAllowedDurationSeconds=100
+LogLines=300
+MinimumHeap=6900
+Categories=IoTHub
+Hardware=Adafruit_Huzzah
+SerialPort=COM4
+CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,UploadSpeed=115200,FlashSize=4M3M -ide-version=10609
+Build=Enable
+Execution=Disable
+
 [huzzah_command_center]
 Target=command_center.ino
 SourcePath=!kits_root!\iot-hub-c-huzzah-getstartedkit\command_center

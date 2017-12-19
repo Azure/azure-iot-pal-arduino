@@ -337,41 +337,48 @@ BEGIN_TEST_SUITE(tlsioarduino_ut)
         TEST_MUTEX_RELEASE(g_testByTest);
     }
 
-
-    /* Tests_SRS_TLSIO_ARDUINO_21_078: [ The tlsio_arduino_retrieveoptions shall not do anything, and return NULL. ]*/
+    /* Tests_SRS_TLSIO_ARDUINO_21_078: [ The tlsio_arduino_retrieveoptions shall return an empty options handler. ]*/
     TEST_FUNCTION(tlsio_arduino_retrieveoptions__succeed)
     {
         ///arrange
         OPTIONHANDLER_HANDLE result;
+        CONCRETE_IO_HANDLE tlsioHandle;
         const IO_INTERFACE_DESCRIPTION* tlsioInterfaces = tlsio_arduino_get_interface_description();
         ASSERT_IS_NOT_NULL(tlsioInterfaces);
+        tlsioHandle = tlsioInterfaces->concrete_io_create((void*)&tlsioConfig);
+        ASSERT_IS_NOT_NULL(tlsioHandle);
+        umock_c_reset_all_calls();
 
         ///act
-        result = tlsioInterfaces->concrete_io_retrieveoptions(NULL);
+        result = tlsioInterfaces->concrete_io_retrieveoptions(tlsioHandle);
 
         ///assert
-        ASSERT_ARE_EQUAL(char_ptr, umock_c_get_expected_calls(), umock_c_get_actual_calls());
-        ASSERT_IS_NULL(result);
+        ASSERT_IS_NOT_NULL(result);
 
         ///cleanup
+        tlsioInterfaces->concrete_io_destroy(tlsioHandle);
+        OptionHandler_Destroy(result);
     }
 
-    /* Tests_SRS_TLSIO_ARDUINO_21_077: [ The tlsio_arduino_setoption shall not do anything, and return 0. ]*/
-    TEST_FUNCTION(tlsio_arduino_setoption__succeed)
+    /* Tests_SRS_TLSIO_ARDUINO_21_077: [ The tlsio_arduino_setoption shall not do anything, and return  __FAILURE__ . ]*/
+    TEST_FUNCTION(tlsio_arduino_setoption__failed)
     {
         ///arrange
         int result;
+        CONCRETE_IO_HANDLE tlsioHandle;
         const IO_INTERFACE_DESCRIPTION* tlsioInterfaces = tlsio_arduino_get_interface_description();
         ASSERT_IS_NOT_NULL(tlsioInterfaces);
+        tlsioHandle = tlsioInterfaces->concrete_io_create((void*)&tlsioConfig);
+        ASSERT_IS_NOT_NULL(tlsioHandle);
 
         ///act
-        result = tlsioInterfaces->concrete_io_setoption(NULL, NULL, NULL);
+        result = tlsioInterfaces->concrete_io_setoption(tlsioHandle, "unsupported-option", "unsupported value");
 
         ///assert
-        ASSERT_ARE_EQUAL(char_ptr, umock_c_get_expected_calls(), umock_c_get_actual_calls());
-        ASSERT_ARE_EQUAL(int, 0, result);
+        ASSERT_ARE_NOT_EQUAL(int, 0, result);
 
         ///cleanup
+        tlsioInterfaces->concrete_io_destroy(tlsioHandle);
     }
 
     /* Tests_SRS_TLSIO_ARDUINO_21_074: [ If the tlsio_handle is NULL, the tlsio_arduino_dowork shall not do anything. ]*/
@@ -1405,6 +1412,9 @@ BEGIN_TEST_SUITE(tlsioarduino_ut)
         STRICT_EXPECTED_CALL(sslClient_stop());
         STRICT_EXPECTED_CALL(sslClient_connected());
         STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
 
         tlsioHandle = tlsioInterfaces->concrete_io_create((void*)&tlsioConfig);
         ASSERT_IS_NOT_NULL(tlsioHandle);
@@ -1427,7 +1437,7 @@ BEGIN_TEST_SUITE(tlsioarduino_ut)
 
         ///assert
         ASSERT_ARE_EQUAL(char_ptr, umock_c_get_expected_calls(), umock_c_get_actual_calls());
-        ASSERT_ARE_EQUAL(int, 0, currentmalloc_call);
+        ASSERT_ARE_EQUAL(int, -3, currentmalloc_call); // tlsio_options call 'free' on 3 null pointers
         ASSERT_CALLBACK_COUNTERS(0, 0, 0, 0, 0);
 
         ///cleanup
@@ -2625,6 +2635,9 @@ BEGIN_TEST_SUITE(tlsioarduino_ut)
         STRICT_EXPECTED_CALL(sslClient_connect(SSLCLIENT_IP_ADDRESS, TEST_CREATE_CONNECTION_PORT));
         STRICT_EXPECTED_CALL(sslClient_connected());
         STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
 
         tlsioHandle = tlsioInterfaces->concrete_io_create((void*)&tlsioConfig);
         ASSERT_IS_NOT_NULL(tlsioHandle);
@@ -2643,7 +2656,7 @@ BEGIN_TEST_SUITE(tlsioarduino_ut)
 
         ///assert
         ASSERT_ARE_EQUAL(char_ptr, umock_c_get_expected_calls(), umock_c_get_actual_calls());
-        ASSERT_ARE_EQUAL(int, 0, currentmalloc_call);
+        ASSERT_ARE_EQUAL(int, -3, currentmalloc_call); // tlsio_options calls 'free' on 3 null pointers
         ASSERT_CALLBACK_COUNTERS(0, 0, 0, 0, 0);
 
         ///cleanup
@@ -2669,6 +2682,9 @@ BEGIN_TEST_SUITE(tlsioarduino_ut)
         STRICT_EXPECTED_CALL(sslClient_connect(SSLCLIENT_IP_ADDRESS, TEST_CREATE_CONNECTION_PORT));
         STRICT_EXPECTED_CALL(sslClient_connected());
         STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
 
         tlsioHandle = tlsioInterfaces->concrete_io_create((void*)&tlsioConfig);
         ASSERT_IS_NOT_NULL(tlsioHandle);
@@ -2686,7 +2702,7 @@ BEGIN_TEST_SUITE(tlsioarduino_ut)
 
         ///assert
         ASSERT_ARE_EQUAL(char_ptr, umock_c_get_expected_calls(), umock_c_get_actual_calls());
-        ASSERT_ARE_EQUAL(int, 0, currentmalloc_call);
+        ASSERT_ARE_EQUAL(int, -3, currentmalloc_call); // tlsio_options calls 'free' on 3 null pointers
         ASSERT_CALLBACK_COUNTERS(0, 0, 0, 0, 0);
 
         ///cleanup
@@ -2726,6 +2742,9 @@ BEGIN_TEST_SUITE(tlsioarduino_ut)
         STRICT_EXPECTED_CALL(sslClient_setTimeout(10000));
         STRICT_EXPECTED_CALL(sslClient_hostByName(TEST_CREATE_CONNECTION_HOST_NAME, IGNORED_PTR_ARG)).IgnoreArgument(2);
         STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
+        STRICT_EXPECTED_CALL(gballoc_free(IGNORED_PTR_ARG)).IgnoreArgument(1);
 
         tlsioHandle = tlsioInterfaces->concrete_io_create((void*)&tlsioConfig);
         ASSERT_IS_NOT_NULL(tlsioHandle);
@@ -2735,7 +2754,7 @@ BEGIN_TEST_SUITE(tlsioarduino_ut)
 
         ///assert
         ASSERT_ARE_EQUAL(char_ptr, umock_c_get_expected_calls(), umock_c_get_actual_calls());
-        ASSERT_ARE_EQUAL(int, 0, currentmalloc_call);
+        ASSERT_ARE_EQUAL(int, -3, currentmalloc_call); // tlsio_options call 'free' on 3 null pointers
         ASSERT_CALLBACK_COUNTERS(0, 0, 0, 0, 0);
 
         ///cleanup

@@ -74,6 +74,11 @@ copy /y %Arduino_pal_path%\azure_c_shared_utility\*.* %SharedUtility_path%
 copy %AzureIoTSDKs_path%c-utility\pal\agenttime.c %Adapters_path%
 copy %AzureIoTSDKs_path%c-utility\pal\tickcounter.c %Adapters_path%
 
+rem // Bring in the generic refcount_os.h
+copy %AzureIoTSDKs_path%c-utility\pal\generic\refcount_os.h %SharedUtility_path%
+rem // and tlsio_options.c
+copy %AzureIoTSDKs_path%c-utility\pal\tlsio_options.c %SharedUtility_path%
+
 rem // Copy the Arduino-specific files from the Arduino PAL path
 copy %Arduino_pal_path%inc\*.* %Adapters_path%
 copy %Arduino_pal_path%src\*.* %Adapters_path%
@@ -89,7 +94,13 @@ copy %AzureIoTSDKs_path%umqtt\inc\azure_umqtt_c %AzureIoTHub_path%src\azure_umqt
 del %sdk_path%*amqp*.*
 del %sdk_path%iothubtransportmqtt_websockets.*
 
-del %SharedUtility_path%tlsio_*.*
+del %SharedUtility_path%tlsio_mbedtls.*
+del %SharedUtility_path%tlsio_appleios.*
+del %SharedUtility_path%tlsio_cyclonessl*.*
+del %SharedUtility_path%tlsio_openssl.*
+del %SharedUtility_path%tlsio_schannel.*
+del %SharedUtility_path%tlsio_wolfssl.*
+
 del %SharedUtility_path%wsio*.*
 del %SharedUtility_path%x509_*.*
 del %SharedUtility_path%etw*.*
