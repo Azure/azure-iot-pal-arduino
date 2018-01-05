@@ -12,7 +12,7 @@ MinimumHeap=6900
 Categories=IoTHub
 Hardware=Adafruit_Huzzah
 SerialPort=COM6
-CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,UploadSpeed=115200,FlashSize=4M3M -ide-version=10609
+CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,FlashSize=4M1M,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,UploadSpeed=115200
 Build=Enable
 Execution=Enable
 
@@ -27,7 +27,7 @@ MinimumHeap=6900
 Categories=IoTHub
 Hardware=Adafruit_Huzzah
 SerialPort=COM6
-CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,UploadSpeed=115200,FlashSize=4M3M -ide-version=10609
+CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,FlashSize=4M1M,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,UploadSpeed=115200
 Build=Enable
 Execution=Disable
 
@@ -42,7 +42,7 @@ MinimumHeap=6900
 Categories=IoTHub
 Hardware=Adafruit_Huzzah
 SerialPort=COM6
-CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,UploadSpeed=115200,FlashSize=4M3M -ide-version=10609
+CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,FlashSize=4M1M,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,UploadSpeed=115200
 Build=Enable
 Execution=Disable
 
@@ -57,7 +57,7 @@ MinimumHeap=6900
 Categories=IoTHub
 Hardware=Adafruit_Huzzah
 SerialPort=COM6
-CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,UploadSpeed=115200,FlashSize=4M3M -ide-version=10609
+CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,FlashSize=4M1M,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,UploadSpeed=115200
 Build=Enable
 Execution=Disable
 
@@ -72,7 +72,7 @@ MinimumHeap=6900
 Categories=IoTHub
 Hardware=Adafruit_Huzzah
 SerialPort=COM6
-CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,UploadSpeed=115200,FlashSize=4M3M -ide-version=10609
+CPUParameters=-fqbn=esp8266:esp8266:huzzah:CpuFrequency=80,FlashSize=4M1M,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,UploadSpeed=115200
 Build=Enable
 Execution=Disable
 

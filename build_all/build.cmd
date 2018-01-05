@@ -173,8 +173,8 @@ rem                     "F:\Azure\IoT\SDKs\iot-hub-c-huzzah-getstartedkit-master
 
     set compiler_name=%compiler_path%\arduino-builder.exe
 
-    set hardware_parameters=-hardware "%compiler_hardware_path%" -hardware "%user_hardware_path%" -hardware "%user_packages_path%"
-    set tools_parameters=-tools "%compiler_tools_builder_path%" -tools "%compiler_tools_processor_path%" -tools "%user_packages_path%"
+    set hardware_parameters=-hardware "%compiler_hardware_path%" -hardware "%compiler_packages_path%"
+    set tools_parameters=-tools "%compiler_tools_builder_path%" -tools "%compiler_tools_processor_path%" -tools "%compiler_packages_path%"
     set libraries_parameters=-built-in-libraries "%compiler_libraries_path%" -libraries "%user_libraries_path%"
     set parameters=-logger=machine !hardware_parameters! !tools_parameters! !libraries_parameters! !CPUParameters! -build-path "%built_binaries_root%!RelativeWorkingDir!" -warnings=none -prefs=build.warn_data_percentage=75 -verbose !SourcePath!\!Target!
 
@@ -215,7 +215,7 @@ if not "!projectName!"=="" (
         goto :eof
     )
     
-    call powershell.exe -NoProfile -NonInteractive -ExecutionPolicy unrestricted -Command .\execute.ps1 -binaryPath:%built_binaries_root%!RelativeWorkingDir!\!Target!.bin -serialPort:!SerialPort! -esptool:%user_packages_path%\esp8266\tools\esptool\0.4.9\esptool.exe -logLines:!LogLines! -minimumHeap:!MinimumHeap!
+    call powershell.exe -NoProfile -NonInteractive -ExecutionPolicy unrestricted -Command .\execute.ps1 -binaryPath:%built_binaries_root%!RelativeWorkingDir!\!Target!.bin -serialPort:!SerialPort! -esptool:%compiler_packages_path%\esp8266\tools\esptool\%esptool_version%\esptool.exe -logLines:!LogLines! -minimumHeap:!MinimumHeap!
 
     if "!errorlevel!"=="0" (
         set __errolevel_run.!projectName!=SUCCEED

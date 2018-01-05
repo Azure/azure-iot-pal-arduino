@@ -17,9 +17,11 @@ Get-Content $oldLibraryProperties | Foreach-Object{
 }
 
 # Increment the 3rd part of the version
+echo "Found old version: $version"
 $newVersion = ($version).Split(".")
 $newVersion[2] = [int]$newVersion[2] + 1
 $newVersion = $newVersion -join "."
+echo "New version: $newVersion"
 
 # -------------------------------------------------------
 # Update the library.properties file
@@ -47,6 +49,10 @@ Push-Location -Path $newDir
 git add .
 git commit -m "Sync Arduino libraries with latest Azure IoT SDK $newVersion"
 git tag v$newVersion -m "Add tag v$newVersion"
+$gitResult = $LastExitCode
+if ($gitResult -ne 0) {
+    throw gitResult
+}
 Pop-Location
 }
 

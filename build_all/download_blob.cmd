@@ -56,6 +56,7 @@ goto args_loop
 @echo    4) Using Microsoft Azure Storage Explorer (http://storageexplorer.com/), generate a SasToken (Shared Access Signature) for the Container, copy the 'URL' and the 'Query string'.
 @echo    5) Set container environment variables:
 @echo        a. AZURE_CONTAINER_SASTOKEN="Query string". Use the Query string generated in the step 4 with double quotes to avoid issues with special characters on it.
+@echo           "!!!! Important !!!! If the sas token contains percent signs, they must be doubled up in the SET command or they will be stripped out
 @echo        b. AZURE_CONTAINER_URL="URL". Got from Microsoft Azure Storage Explorer, it must be something like https://contoso.blob.core.windows.net/myproductcontainer
 @echo    6) For each zip file, call download_blob.cmd with the parameters
 @echo        a. -file "file name without extension". Required parameter with zip file name
@@ -80,7 +81,7 @@ set sasToken=!sasToken:%"=!
 set containerUrl=!AZURE_CONTAINER_URL:%"=!
 if "%containerUrl:~-1%"=="/" (set containerUrl=%containerUrl:~0,-1%)
 
-mkdir %directory%
+mkdir %directory% > nul 2>&1
 
 set compiler_fullZipName=%directory%\%zip_file_name%.zip
 
@@ -88,7 +89,7 @@ if "%check_path%"=="" goto :download
 
 if exist %directory%\%check_path% (
     echo ***do not download %zip_file_name% because %check_path% already exist.***
-    goto :eof
+    exit /b 0
 )
 
 :download
@@ -96,11 +97,22 @@ if exist %compiler_fullZipName% (
     echo ***do not download %zip_file_name% because it already exist, only unzip it.*** 
 ) else (
     echo Downloading %containerUrl%/%zip_file_name%.zip to %compiler_fullZipName%
-    powershell.exe -nologo -noprofile -command "& { iwr '%containerUrl%/%zip_file_name%.zip%sasToken%' -OutFile '%compiler_fullZipName%'; }"
+    powershell.exe -nologo -noprofile -command "& { try { iwr '%containerUrl%/%zip_file_name%.zip%sasToken%' -OutFile '%compiler_fullZipName%'; } catch { echo $_; Exit 1; } }"
+    if !ERRORLEVEL! NEQ 0 (
+        echo Failed to download %compiler_fullZipName%
+        exit /b 1
+    ) else (
+        echo Downloaded %compiler_fullZipName%
+    )
 )
 
 echo Uncompressing %compiler_fullZipName% to %directory%
-powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('%compiler_fullZipName%', '%directory%'); }"
-
-echo Deleting %compiler_fullZipName%
-del %compiler_fullZipName%
+powershell.exe -nologo -noprofile -command "& { try { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('%compiler_fullZipName%', '%directory%'); } catch { Exit 1; } }"
+    if !ERRORLEVEL! NEQ 0 (
+        echo Failed to unzip %compiler_fullZipName%
+        exit /b 1
+    ) else (
+        echo Unzipped %compiler_fullZipName%
+        echo Deleting %compiler_fullZipName%
+        del %compiler_fullZipName%
+    )

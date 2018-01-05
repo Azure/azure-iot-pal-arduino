@@ -11,24 +11,27 @@ set jenkins_workspace=%scripts_path%\..\..
 rem // resolve to fully qualified path
 for %%i in ("%jenkins_workspace%") do set jenkins_workspace=%%~fi
 
+set arduino_esp8266_version=2.4.0
+set adafruit_samd_version=1.0.21
+set arduino_samd_version=1.6.17
+set arduino_builder_version=1.8.5
+set esptool_version=0.4.12
+
 set work_root=%jenkins_workspace%\arduino_work
 set kits_root=%jenkins_workspace%\arduino_work
 set tools_root=%jenkins_workspace%\arduino_tools
 set tools_root=%jenkins_workspace%\arduino_tools
 set built_binaries_root=%jenkins_workspace%\arduino_work\bin
-if not defined IOTHUB_ARDUINO_VERSION (
-    echo Eror: IOTHUB_ARDUINO_VERSION is not defined
-    exit /b 1
-)
+
 set tests_list_file=tests.lst
-set compiler_path=%jenkins_workspace%\arduino_tools\%IOTHUB_ARDUINO_VERSION%
+set compiler_path=%jenkins_workspace%\arduino_tools\arduino-%arduino_builder_version%
 
 set compiler_hardware_path=%compiler_path%\hardware
 set compiler_tools_builder_path=%compiler_path%\tools-builder
 set compiler_tools_processor_path=%compiler_path%\hardware\tools\avr
 
 set compiler_libraries_path=%compiler_path%\libraries
-set user_packages_path=%jenkins_workspace%\arduino_tools\arduino15-2.3.0\packages
+set compiler_packages_path=%jenkins_workspace%\arduino_tools\packages
 
 rem -----------------------------------------------------------------------------
 rem -- If this computer runs the Arduino IDE, use the user's hardware path
@@ -37,10 +40,8 @@ rem ----------------------------------------------------------------------------
 
 if exist "%UserProfile%\Documents\Arduino" (
     echo Arduino IDE directory detected
-    set user_hardware_path=%UserProfile%\Documents\Arduino\hardware
     set user_libraries_path=%UserProfile%\Documents\Arduino\libraries
 ) else (
-    set user_hardware_path=%tools_root%\hardware
     set user_libraries_path=%work_root%\libraries
     echo No Arduino IDE directory detected
 )
@@ -90,7 +91,7 @@ goto args_loop
 :args_done
 
 echo.
-echo Setup environment for Arduino with the follow parameters:
+echo Setup environment for Arduino with the following parameters:
 echo.
 echo   build_test  = %build_test%
 echo   run_test    = %run_test%
@@ -107,10 +108,14 @@ echo   compiler_hardware_path        = %compiler_hardware_path%
 echo   compiler_tools_builder_path   = %compiler_tools_builder_path%
 echo   compiler_tools_processor_path = %compiler_tools_processor_path%
 echo   compiler_libraries_path       = %compiler_libraries_path%
-echo   user_packages_path            = %user_packages_path%
+echo   compiler_packages_path        = %compiler_packages_path%
 echo.
 echo   user_libraries_path = %user_libraries_path%
-echo   user_hardware_path  = %user_hardware_path%
+echo.
+echo   arduino_esp8266_version = %arduino_esp8266_version%
+echo   adafruit_samd_version = %adafruit_samd_version%
+echo   arduino_samd_version = %arduino_samd_version%
+echo   arduino_builder_version = %arduino_builder_version%
+echo   esptool_version = %esptool_version%
 echo.
 echo.
-

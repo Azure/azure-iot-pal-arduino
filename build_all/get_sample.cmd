@@ -10,7 +10,6 @@ echo ...
 set repo_dir=%1\%2
 
 git clone https://github.com/Azure-Samples/%2.git %repo_dir%
-set iotconfigs=%repo_dir%\remote_monitoring\iot_configs.h
 
 REM The particulars of the various devices and the SSID and password are environment variables
 if [%2]==[iot-hub-c-huzzah-getstartedkit] (
@@ -35,5 +34,8 @@ if [%2]==[iot-hub-c-huzzah-getstartedkit] (
 
 echo Editing iot_configs.h for %2
 pushd !scripts_path!
+set iotconfigs=%repo_dir%\remote_monitoring\iot_configs.h
+PowerShell.exe -ExecutionPolicy Bypass -Command "& './edit_sample.ps1 ' -file '!iotconfigs!' -ssid '%ARDUINO_WIFI_SSID%' -password '%ARDUINO_WIFI_PASSWORD%' -hostname '!ARDUINO_HOST_NAME!' -id '!dev_id!' -key '!dev_key!'"
+set iotconfigs=%repo_dir%\device_twin\iot_configs.h
 PowerShell.exe -ExecutionPolicy Bypass -Command "& './edit_sample.ps1 ' -file '!iotconfigs!' -ssid '%ARDUINO_WIFI_SSID%' -password '%ARDUINO_WIFI_PASSWORD%' -hostname '!ARDUINO_HOST_NAME!' -id '!dev_id!' -key '!dev_key!'"
 popd

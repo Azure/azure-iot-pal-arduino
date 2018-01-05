@@ -28,10 +28,36 @@ if !environment_ok! EQU "bad" (
 
 
 
+
+rem -----------------------------------------------------------------------------
+rem -- download arduino packages
+rem -----------------------------------------------------------------------------
+call download_blob.cmd -directory %compiler_packages_path% -file Arduino15-packages-adafruit-%adafruit_samd_version% -check adafruit\hardware\samd\%adafruit_samd_version%\libraries
+if !ERRORLEVEL! NEQ 0 (
+    echo Failed to download Arduino15-packages-adafruit-%adafruit_samd_version%
+    exit /b 1
+)
+
+call download_blob.cmd -directory %compiler_packages_path% -file Arduino15-packages-esp8266-%arduino_esp8266_version% -check esp8266\tools\xtensa-lx106-elf-gcc
+if !ERRORLEVEL! NEQ 0 (
+    echo Failed to download Arduino15-packages-esp8266-%arduino_esp8266_version%
+    exit /b 1
+)
+
+call download_blob.cmd -directory %compiler_packages_path% -file Arduino15-packages-arduino-%arduino_samd_version% -check arduino\hardware\samd\%arduino_samd_version%\libraries
+if !ERRORLEVEL! NEQ 0 (
+    echo Failed to download Arduino15-packages-arduino-%arduino_samd_version%
+    exit /b 1
+)
+
 rem -----------------------------------------------------------------------------
 rem -- download arduino compiler
 rem -----------------------------------------------------------------------------
-call download_blob.cmd -directory %tools_root% -file %IOTHUB_ARDUINO_VERSION% -check %IOTHUB_ARDUINO_VERSION%\arduino-builder.exe
+call download_blob.cmd -directory %tools_root% -file arduino-%arduino_builder_version% -check arduino-%arduino_builder_version%\arduino-builder.exe
+if !ERRORLEVEL! NEQ 0 (
+    echo Failed to download Arduino compiler
+    exit /b 1
+)
 
 rem -----------------------------------------------------------------------------
 rem -- create test directories
@@ -127,54 +153,28 @@ git clone https://github.com/Azure/azure-iot-arduino-utility AzureIoTUtility_tem
 
 rem -- turn the built libraries into proper git repos by giving them their .git folders
 call :relocate_git_folders AzureIoTHub
-call :relocate_git_folders AzureIoTProtocol_MQTT
-call :relocate_git_folders AzureIoTProtocol_HTTP
-call :relocate_git_folders AzureIoTUtility
-
-popd
-
-
-rem -----------------------------------------------------------------------------
-rem -- download arduino hardware
-rem -----------------------------------------------------------------------------
-
-echo Cloning https://github.com/esp8266/Arduino
-mkdir %user_hardware_path% > nul 2>&1
-pushd %user_hardware_path%
-
-call %~dp0\ensure_delete_directory.cmd esp8266com
 if !ERRORLEVEL! NEQ 0 (
+    popd
     exit /b 1
 )
-mkdir esp8266com
-cd esp8266com
-git clone https://github.com/esp8266/Arduino esp8266
+call :relocate_git_folders AzureIoTProtocol_MQTT
+if !ERRORLEVEL! NEQ 0 (
+    popd
+    exit /b 1
+)
+call :relocate_git_folders AzureIoTProtocol_HTTP
+if !ERRORLEVEL! NEQ 0 (
+    popd
+    exit /b 1
+)
+call :relocate_git_folders AzureIoTUtility
+if !ERRORLEVEL! NEQ 0 (
+    popd
+    exit /b 1
+)
 popd
 
 
-
-
-rem -----------------------------------------------------------------------------
-rem -- download arduino packages-adafruit-
-rem -- error checking is disabled because download_blob doesn't report errors properly
-rem -----------------------------------------------------------------------------
-call download_blob.cmd -directory %user_packages_path% -file Arduino15-packages-esp8266-2.3.0 -check esp8266\hardware\esp8266\2.3.0\libraries
-rem if !ERRORLEVEL! NEQ 0 (
-rem     echo Failed to download Arduino15-packages-esp8266-2.3.0
-rem     exit /b 1
-rem )
-
-call download_blob.cmd -directory %user_packages_path% -file Arduino15-packages-adafruit-1.0.9 -check adafruit\hardware\samd\1.0.9\libraries
-rem if !ERRORLEVEL! NEQ 0 (
-rem     echo Failed to download Arduino15-packages-adafruit-1.0.9
-rem     exit /b 1
-rem )
-
-call download_blob.cmd -directory %user_packages_path% -file Arduino15-packages-arduino-1.6.8 -check arduino\hardware\samd\1.6.8\libraries
-rem if !ERRORLEVEL! NEQ 0 (
-rem     echo Failed to download Arduino15-packages-arduino-1.6.8
-rem     exit /b 1
-rem )
 
 exit /b 0
 
@@ -192,14 +192,15 @@ move %1_temp\.git %1\.git
 attrib +h %1\.git
 pushd !scripts_path!
 PowerShell.exe -ExecutionPolicy Bypass -Command "& './bump_version.ps1 ' -oldDir '%user_libraries_path%\%1_temp' -newDir '%user_libraries_path%\%1'"
-popd
-rd /s /q %1_temp
 if !ERRORLEVEL! NEQ 0 (
     echo Failed to bump version in %1
+    popd
     exit /b 1
 ) else (
     echo Bumped version in %1
 )
+popd
+rd /s /q %1_temp
 exit /b 0
 
 rem -- Make sure this variable is defined

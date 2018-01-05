@@ -12,7 +12,7 @@ MinimumHeap=7000
 Categories=IoTHub
 Hardware=SparkFun_ESP8266_Thing 
 SerialPort=COM5
-CPUParameters=-fqbn=esp8266:esp8266:thing:CpuFrequency=80,UploadSpeed=115200 -vid-pid=0X239A_0X800B -ide-version=10609
+CPUParameters=-fqbn=esp8266:esp8266:thingdev:CpuFrequency=80,FlashSize=512K0,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,UploadSpeed=115200 -ide-version=10805
 Build=Enable
 Execution=Enable
 
@@ -27,7 +27,7 @@ MinimumHeap=7000
 Categories=IoTHub
 Hardware=SparkFun_ESP8266_Thing 
 SerialPort=COM5
-CPUParameters=-fqbn=esp8266:esp8266:thing:CpuFrequency=80,UploadSpeed=115200 -vid-pid=0X239A_0X800B -ide-version=10609
+CPUParameters=-fqbn=esp8266:esp8266:thingdev:CpuFrequency=80,FlashSize=512K0,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,UploadSpeed=115200 -ide-version=10805
 Build=Enable
 Execution=Disable
 
@@ -42,7 +42,7 @@ MinimumHeap=7000
 Categories=IoTHub
 Hardware=SparkFun_ESP8266_Thing
 SerialPort=COM5
-CPUParameters=-fqbn=esp8266:esp8266:thing:CpuFrequency=80,UploadSpeed=115200 -vid-pid=0X239A_0X800B -ide-version=10609
+CPUParameters=-fqbn=esp8266:esp8266:thingdev:CpuFrequency=80,FlashSize=512K0,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,UploadSpeed=115200 -ide-version=10805
 Build=Enable
 Execution=Disable
 
@@ -57,7 +57,7 @@ MinimumHeap=7000
 Categories=IoTHub
 Hardware=SparkFun_ESP8266_Thing
 SerialPort=COM5
-CPUParameters=-fqbn=esp8266:esp8266:thing:CpuFrequency=80,UploadSpeed=115200 -vid-pid=0X239A_0X800B -ide-version=10609
+CPUParameters=-fqbn=esp8266:esp8266:thingdev:CpuFrequency=80,FlashSize=512K0,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,UploadSpeed=115200 -ide-version=10805
 Build=Enable
 Execution=Disable
 
