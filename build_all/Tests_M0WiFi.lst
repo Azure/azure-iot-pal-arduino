@@ -11,7 +11,7 @@ LogLines=300
 MinimumHeap=7000
 Categories=IoTHub
 Hardware=Adafruit_FeatherM0
-SerialPort=COM7
+SerialPort=COM9
 CPUParameters=-fqbn=adafruit:samd:adafruit_feather_m0 -ide-version=10805
 Build=Enable
 Execution=Disable
@@ -26,7 +26,7 @@ LogLines=300
 MinimumHeap=7000
 Categories=IoTHub
 Hardware=Adafruit_FeatherM0
-SerialPort=COM7
+SerialPort=COM9
 CPUParameters=-fqbn=adafruit:samd:adafruit_feather_m0 -ide-version=10805
 Build=Enable
 Execution=Disable
@@ -41,7 +41,7 @@ LogLines=300
 MinimumHeap=7000
 Categories=IoTHub
 Hardware=Adafruit_FeatherM0
-SerialPort=COM7
+SerialPort=COM9
 CPUParameters=-fqbn=adafruit:samd:adafruit_feather_m0 -ide-version=10805
 Build=Disable
 Execution=Disable
@@ -56,7 +56,7 @@ LogLines=300
 MinimumHeap=7000
 Categories=IoTHub
 Hardware=Adafruit_FeatherM0
-SerialPort=COM7
+SerialPort=COM9
 CPUParameters=-fqbn=adafruit:samd:adafruit_feather_m0 -ide-version=10805
 Build=Disable
 Execution=Disable

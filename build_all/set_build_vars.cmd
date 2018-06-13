@@ -15,7 +15,7 @@ set arduino_esp8266_version=2.4.0
 set adafruit_samd_version=1.0.21
 set arduino_samd_version=1.6.17
 set arduino_builder_version=1.8.5
-set esptool_version=0.4.12
+set esptool_version=0.4.13
 
 set work_root=%jenkins_workspace%\arduino_work
 set kits_root=%jenkins_workspace%\arduino_work
@@ -34,17 +34,9 @@ set compiler_libraries_path=%compiler_path%\libraries
 set compiler_packages_path=%jenkins_workspace%\arduino_tools\packages
 
 rem -----------------------------------------------------------------------------
-rem -- If this computer runs the Arduino IDE, use the user's hardware path
-rem -- and library path. Otherwise, keep stuff in the Jenkins directories.
+rem -- Libraries get built and used from c:\jenkins\workspace\arduino_work
 rem -----------------------------------------------------------------------------
-
-if exist "%UserProfile%\Documents\Arduino" (
-    echo Arduino IDE directory detected
-    set user_libraries_path=%UserProfile%\Documents\Arduino\libraries
-) else (
-    set user_libraries_path=%work_root%\libraries
-    echo No Arduino IDE directory detected
-)
+set user_libraries_path=%work_root%\libraries
 
 
 rem -----------------------------------------------------------------------------

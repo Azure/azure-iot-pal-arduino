@@ -26,38 +26,15 @@ if !environment_ok! EQU "bad" (
     exit /b 1
 )
 
-
-
-
 rem -----------------------------------------------------------------------------
 rem -- download arduino packages
 rem -----------------------------------------------------------------------------
-call download_blob.cmd -directory %compiler_packages_path% -file Arduino15-packages-adafruit-%adafruit_samd_version% -check adafruit\hardware\samd\%adafruit_samd_version%\libraries
-if !ERRORLEVEL! NEQ 0 (
-    echo Failed to download Arduino15-packages-adafruit-%adafruit_samd_version%
-    exit /b 1
-)
-
-call download_blob.cmd -directory %compiler_packages_path% -file Arduino15-packages-esp8266-%arduino_esp8266_version% -check esp8266\tools\xtensa-lx106-elf-gcc
-if !ERRORLEVEL! NEQ 0 (
-    echo Failed to download Arduino15-packages-esp8266-%arduino_esp8266_version%
-    exit /b 1
-)
-
-call download_blob.cmd -directory %compiler_packages_path% -file Arduino15-packages-arduino-%arduino_samd_version% -check arduino\hardware\samd\%arduino_samd_version%\libraries
-if !ERRORLEVEL! NEQ 0 (
-    echo Failed to download Arduino15-packages-arduino-%arduino_samd_version%
-    exit /b 1
-)
-
 rem -----------------------------------------------------------------------------
 rem -- download arduino compiler
 rem -----------------------------------------------------------------------------
-call download_blob.cmd -directory %tools_root% -file arduino-%arduino_builder_version% -check arduino-%arduino_builder_version%\arduino-builder.exe
-if !ERRORLEVEL! NEQ 0 (
-    echo Failed to download Arduino compiler
-    exit /b 1
-)
+rem // The packages and compiler are no longer maintained in the cloud, and
+rem // instead are just kept on the Arduino release machine. See the Arduino 
+rem // release instructions for more info.
 
 rem -----------------------------------------------------------------------------
 rem -- create test directories

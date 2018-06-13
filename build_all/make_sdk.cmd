@@ -100,6 +100,7 @@ del %SharedUtility_path%tlsio_cyclonessl*.*
 del %SharedUtility_path%tlsio_openssl.*
 del %SharedUtility_path%tlsio_schannel.*
 del %SharedUtility_path%tlsio_wolfssl.*
+del %SharedUtility_path%gbnetwork.*
 
 del %SharedUtility_path%wsio*.*
 del %SharedUtility_path%x509_*.*
