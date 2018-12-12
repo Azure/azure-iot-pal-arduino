@@ -4,6 +4,7 @@
 #ifndef AZUREIOTUTILITY_H
 #define AZUREIOTUTILITY_H
 
+#include "azure_c_shared_utility/platform.h"
 #include "azure_c_shared_utility/lock.h"
 #include "azure_c_shared_utility/threadapi.h"
 

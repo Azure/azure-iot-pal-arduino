@@ -60,10 +60,10 @@ copy %AzureIoTSDKs_path%iothub_client\inc\ %sdk_path%
 copy %AzureIoTSDKs_path%serializer\src\ %sdk_path%
 copy %AzureIoTSDKs_path%serializer\inc\ %sdk_path%
 copy %AzureIoTSDKs_path%deps\parson\parson.* %sdk_path%
-copy %AzureIoTSDKs_path%serializer\samples\simplesample_http\simplesample_http.* %AzureIoTHub_path%examples\simplesample_http
-copy %AzureIoTSDKs_path%serializer\samples\simplesample_http\simplesample_http.* %AzureIoTProtocolHTTP_path%examples\simplesample_http
-copy %AzureIoTSDKs_path%serializer\samples\simplesample_mqtt\simplesample_mqtt.* %AzureIoTProtocolMQTT_path%examples\simplesample_mqtt
-copy %AzureIoTSDKs_path%serializer\samples\simplesample_http\simplesample_http.* %AzureIoTUtility_path%examples\simplesample_http
+rem // copy %AzureIoTSDKs_path%serializer\samples\simplesample_http\simplesample_http.* %AzureIoTHub_path%examples\simplesample_http
+rem // copy %AzureIoTSDKs_path%serializer\samples\simplesample_http\simplesample_http.* %AzureIoTProtocolHTTP_path%examples\simplesample_http
+rem // copy %AzureIoTSDKs_path%serializer\samples\simplesample_mqtt\simplesample_mqtt.* %AzureIoTProtocolMQTT_path%examples\simplesample_mqtt
+rem // copy %AzureIoTSDKs_path%serializer\samples\simplesample_http\simplesample_http.* %AzureIoTUtility_path%examples\simplesample_http
 
 mkdir %SharedUtility_path%
 mkdir %Adapters_path%
@@ -95,7 +95,7 @@ del %sdk_path%*amqp*.*
 del %sdk_path%iothubtransportmqtt_websockets.*
 
 del %SharedUtility_path%tlsio_mbedtls.*
-del %SharedUtility_path%tlsio_appleios.*
+rem // del %SharedUtility_path%tlsio_appleios.*
 del %SharedUtility_path%tlsio_cyclonessl*.*
 del %SharedUtility_path%tlsio_openssl.*
 del %SharedUtility_path%tlsio_schannel.*
