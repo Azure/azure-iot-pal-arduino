@@ -33,7 +33,8 @@ set AzureUMQTT_path=%AzureIoTProtocolMQTT_path%src\azure_umqtt_c\
 set AzureUAMQP_path=%AzureIoTProtocolAMQP_path%src\azure_uamqp_c\
 set SharedUtility_path=%AzureIoTUtility_path%src\azure_c_shared_utility\
 set Adapters_path=%AzureIoTUtility_path%src\adapters\
-set sdk_path=%AzureIoTHub_path%src\sdk\
+set sdk_path=%AzureIoTHub_path%src\
+set internal_path=%AzureIoTHub_path%\src\internal
 
 mkdir %Libraries_path%
 pushd %Libraries_path%
@@ -46,6 +47,7 @@ robocopy %~dp0\base-libraries\AzureIoTProtocol_HTTP %AzureIoTProtocolHTTP_path% 
 robocopy %~dp0\base-libraries\AzureIoTProtocol_MQTT %AzureIoTProtocolMQTT_path% -MIR
 
 mkdir %sdk_path%
+mkdir %internal_path%
 
 cd /D %AzureIoTSDKs_path%
 rem echo Upstream HEAD @ > %sdk_path%metadata.txt
@@ -57,6 +59,7 @@ copy %AzureIoTSDKs_path%LICENSE %AzureIoTHub_path%LICENSE
 
 copy %AzureIoTSDKs_path%iothub_client\src\ %sdk_path%
 copy %AzureIoTSDKs_path%iothub_client\inc\ %sdk_path%
+copy %AzureIoTSDKs_path%iothub_client\inc\internal %internal_path%\
 copy %AzureIoTSDKs_path%serializer\src\ %sdk_path%
 copy %AzureIoTSDKs_path%serializer\inc\ %sdk_path%
 copy %AzureIoTSDKs_path%deps\parson\parson.* %sdk_path%
