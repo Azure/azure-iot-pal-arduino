@@ -108,5 +108,6 @@ del %SharedUtility_path%gbnetwork.*
 del %SharedUtility_path%wsio*.*
 del %SharedUtility_path%x509_*.*
 del %SharedUtility_path%etw*.*
+del %SharedUtility_path%http_proxy_io.c
 
 popd
