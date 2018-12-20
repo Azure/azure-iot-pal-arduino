@@ -21,7 +21,8 @@ void xlogging_dump_bytes(const void* buf, size_t size)
     size_t countbuf = 0;
     const unsigned char* bufAsChar = (const unsigned char*)buf;
     const unsigned char* startPos = bufAsChar;
-    
+    LOG(AZ_LOG_TRACE, 0, "Buffer length=%d\r\n", size);
+
     /* Print the whole buffer. */
     size_t i = 0;
     for (i = 0; i < size; i++)
@@ -44,7 +45,7 @@ void xlogging_dump_bytes(const void* buf, size_t size)
         {
             charBuf[countbuf] = '\0';
             hexBuf[countbuf * 3] = '\0';
-            LOG(AZ_LOG_TRACE, 0, "%p: %s    %s", startPos, hexBuf, charBuf);
+            LOG(AZ_LOG_TRACE, 0, "%p: %s    %s\r\n", startPos, hexBuf, charBuf);
             countbuf = 0;
             startPos = bufAsChar;
         }
@@ -66,6 +67,6 @@ void xlogging_dump_bytes(const void* buf, size_t size)
         hexBuf[countbuf * 3] = '\0';
 
         /* Print the last line. */
-        LOG(AZ_LOG_TRACE, 0, "%p: %s    %s", startPos, hexBuf, charBuf);
+        LOG(AZ_LOG_TRACE, 0, "%p: %s    %s\r\n", startPos, hexBuf, charBuf);
     }
 }
