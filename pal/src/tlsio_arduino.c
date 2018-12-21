@@ -2,22 +2,14 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 #include <stdlib.h>
-#include <stddef.h>
 #include <stdint.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <string.h>
 #include <stdbool.h>
-#include <time.h>
 
 #include "tlsio_arduino.h"
 #include "sslClient_arduino.h"
 #include "azure_c_shared_utility/xio.h"
-#include "azure_c_shared_utility/gballoc.h"
 #include "azure_c_shared_utility/xlogging.h"
-#include "azure_c_shared_utility/agenttime.h"
 #include "azure_c_shared_utility/singlylinkedlist.h"
-#include "azure_c_shared_utility/crt_abstractions.h"
 #include "azure_c_shared_utility/tlsio_options.h"
 #include "azure_c_shared_utility/strings.h"
 #include "azure_c_shared_utility/tlsio.h"
@@ -33,15 +25,9 @@ typedef struct
 
 #define MAX_VALID_PORT 0xffff
 
-const char WEBSOCKET_HEADER_START[] = "GET /$iothub/websocket";
-const char WEBSOCKET_HEADER_NO_CERT_PARAM[] = "?iothub-no-client-cert=true";
-const size_t WEBSOCKET_HEADER_START_SIZE = sizeof(WEBSOCKET_HEADER_START) - 1;
-const size_t WEBSOCKET_HEADER_NO_CERT_PARAM_SIZE = sizeof(WEBSOCKET_HEADER_NO_CERT_PARAM) - 1;
-
 // The TLSIO_RECEIVE_BUFFER_SIZE has very little effect on performance, and is kept small
 // to minimize memory consumption.
 #define TLSIO_RECEIVE_BUFFER_SIZE 64
-
 
 typedef enum TLSIO_STATE_TAG
 {
@@ -53,13 +39,6 @@ typedef enum TLSIO_STATE_TAG
     TLSIO_STATE_ERROR,
 } TLSIO_STATE;
 
-bool is_an_opening_state(TLSIO_STATE state)
-{
-    return state == TLSIO_STATE_OPENING_WAITING_DNS ||
-        state == TLSIO_STATE_OPENING_WAITING_SOCKET ||
-        state == TLSIO_STATE_OPENING_WAITING_SSL;
-}
-
 typedef struct TLS_IO_INSTANCE_TAG
 {
     ON_BYTES_RECEIVED on_bytes_received;
@@ -70,18 +49,24 @@ typedef struct TLS_IO_INSTANCE_TAG
     void* on_open_complete_context;
     TLSIO_STATE tlsio_state;
     STRING_HANDLE hostname;
-	uint32_t remote_addr;
+    uint32_t remote_addr;
     uint16_t port;
     SINGLYLINKEDLIST_HANDLE pending_transmission_list;
     TLSIO_OPTIONS options;
 } TLS_IO_INSTANCE;
+
+static bool is_an_opening_state(TLSIO_STATE state)
+{
+    return state == TLSIO_STATE_OPENING_WAITING_DNS ||
+        state == TLSIO_STATE_OPENING_WAITING_SOCKET ||
+        state == TLSIO_STATE_OPENING_WAITING_SSL;
+}
 
 /* Codes_SRS_TLSIO_30_005: [ The phrase "enter TLSIO_STATE_EXT_ERROR" means the adapter shall call the on_io_error function and pass the on_io_error_context that was supplied in tlsio_open_async. ]*/
 static void enter_tlsio_error_state(TLS_IO_INSTANCE* tls_io_instance)
 {
     if (tls_io_instance->tlsio_state != TLSIO_STATE_ERROR)
     {
-		LogInfo("Calling error callback");
         tls_io_instance->tlsio_state = TLSIO_STATE_ERROR;
         tls_io_instance->on_io_error(tls_io_instance->on_io_error_context);
     }
@@ -142,7 +127,7 @@ static void internal_close(TLS_IO_INSTANCE* tls_io_instance)
     /* Codes_SRS_TLSIO_30_051: [ On success, if the underlying TLS does not support asynchronous closing, then the adapter shall enter TLSIO_STATE_EXT_CLOSED immediately after entering TLSIO_STATE_EX_CLOSING. ]*/
     if (tls_io_instance->tlsio_state == TLSIO_STATE_OPEN)
     {
-		sslClient_stop();
+        sslClient_stop();
     }
 
     while (process_and_destroy_head_message(tls_io_instance, IO_SEND_CANCELLED));
@@ -231,15 +216,15 @@ static CONCRETE_IO_HANDLE tlsio_arduino_create(void* io_create_parameters)
                 else
                 {
                     memset(result, 0, sizeof(TLS_IO_INSTANCE));
-					result->hostname = NULL;
+                    result->hostname = NULL;
                     result->port = (uint16_t)tls_io_config->port;
                     result->tlsio_state = TLSIO_STATE_CLOSED;
                     result->hostname = NULL;
                     result->pending_transmission_list = NULL;
                     tlsio_options_initialize(&result->options, TLSIO_OPTION_BIT_NONE);
                     /* Codes_SRS_TLSIO_30_016: [ tlsio_create shall make a copy of the hostname member of io_create_parameters to allow deletion of hostname immediately after the call. ]*/
-					if (NULL == (result->hostname = STRING_construct(tls_io_config->hostname)))
-					{
+                    if (NULL == (result->hostname = STRING_construct(tls_io_config->hostname)))
+                    {
                         /* Codes_SRS_TLSIO_30_011: [ If any resource allocation fails, tlsio_create shall return NULL. ]*/
                         LogError("Failed to allocate hostname");
                         tlsio_arduino_destroy(result);
@@ -264,7 +249,6 @@ static CONCRETE_IO_HANDLE tlsio_arduino_create(void* io_create_parameters)
 
     return (CONCRETE_IO_HANDLE)result;
 }
-
 
 static int tlsio_arduino_open_async(CONCRETE_IO_HANDLE tls_io,
     ON_IO_OPEN_COMPLETE on_io_open_complete, void* on_io_open_complete_context,
@@ -410,7 +394,6 @@ static void dowork_read(TLS_IO_INSTANCE* tls_io_instance)
             while (tls_io_instance->tlsio_state == TLSIO_STATE_OPEN && 0 != sslClient_available())
             {
                 rcv_bytes = sslClient_read(buffer, TLSIO_RECEIVE_BUFFER_SIZE);
-				LogInfo("Received %d bytes", rcv_bytes);
 
                 if (rcv_bytes > 0)
                 {
@@ -424,12 +407,11 @@ static void dowork_read(TLS_IO_INSTANCE* tls_io_instance)
                     LogError("Communications error while reading");
                     enter_tlsio_error_state(tls_io_instance);
                 }
-				// else
-				// {
-					/* Codes_SRS_TLSIO_30_102: [ If the TLS connection receives no data then tlsio_dowork shall not call the on_bytes_received
-					callback. ]*/
-					// break;
-				// }
+                else
+                {
+                    /* Codes_SRS_TLSIO_30_102: [ If the TLS connection receives no data then tlsio_dowork shall not call the on_bytes_received
+                    callback. ]*/
+                }
             }
         }
     }
@@ -443,33 +425,33 @@ static void dowork_send(TLS_IO_INSTANCE* tls_io_instance)
         PENDING_TRANSMISSION* pending_message = (PENDING_TRANSMISSION*)singlylinkedlist_item_get_value(first_pending_io);
         uint8_t* buffer = ((uint8_t*)pending_message->bytes) + pending_message->size - pending_message->unsent_size;
 
-		size_t write_result = sslClient_write(buffer, pending_message->unsent_size);
-		if (write_result >= 0)
-		{
-			pending_message->unsent_size -= write_result;
-			if (pending_message->unsent_size == 0)
-			{
-				/* Codes_SRS_TLSIO_30_091: [ If tlsio_arduino_compact_dowork is able to send all the bytes in an enqueued message, it shall call the messages's on_send_complete along with its associated callback_context and IO_SEND_OK. ]*/
-				// The whole message has been sent successfully
-				process_and_destroy_head_message(tls_io_instance, IO_SEND_OK);
-			}
-			else
-			{
-				/* Codes_SRS_TLSIO_30_093: [ If the TLS connection was not able to send an entire enqueued message at once, subsequent calls to tlsio_dowork shall continue to send the remaining bytes. ]*/
-				// Repeat the send on the next pass with the rest of the message
-				// This empty else compiles to nothing but helps readability
-			}
-		}
-		else
-		{
-			// The write returned non-success. It may be busy, or it may be broken
-			/* Codes_SRS_TLSIO_30_002: [ The phrase "destroy the failed message" means that the adapter shall remove the message from the queue and destroy it after calling the message's on_send_complete along with its associated callback_context and IO_SEND_ERROR. ]*/
-			/* Codes_SRS_TLSIO_30_005: [ When the adapter enters TLSIO_STATE_EXT_ERROR it shall call the  on_io_error function and pass the on_io_error_context that were supplied in  tlsio_open . ]*/
-			/* Codes_SRS_TLSIO_30_095: [ If the send process fails before sending all of the bytes in an enqueued message, tlsio_dowork shall destroy the failed message and enter TLSIO_STATE_EX_ERROR. ]*/
-			// This is an unexpected error, and we need to bail out. Probably lost internet connection.
-			LogError("Write failed");
-			process_and_destroy_head_message(tls_io_instance, IO_SEND_ERROR);
-		}
+        size_t write_result = sslClient_write(buffer, pending_message->unsent_size);
+        if (write_result >= 0)
+        {
+            pending_message->unsent_size -= write_result;
+            if (pending_message->unsent_size == 0)
+            {
+                /* Codes_SRS_TLSIO_30_091: [ If tlsio_arduino_compact_dowork is able to send all the bytes in an enqueued message, it shall call the messages's on_send_complete along with its associated callback_context and IO_SEND_OK. ]*/
+                // The whole message has been sent successfully
+                process_and_destroy_head_message(tls_io_instance, IO_SEND_OK);
+            }
+            else
+            {
+                /* Codes_SRS_TLSIO_30_093: [ If the TLS connection was not able to send an entire enqueued message at once, subsequent calls to tlsio_dowork shall continue to send the remaining bytes. ]*/
+                // Repeat the send on the next pass with the rest of the message
+                // This empty else compiles to nothing but helps readability
+            }
+        }
+        else
+        {
+            // The write returned non-success. It may be busy, or it may be broken
+            /* Codes_SRS_TLSIO_30_002: [ The phrase "destroy the failed message" means that the adapter shall remove the message from the queue and destroy it after calling the message's on_send_complete along with its associated callback_context and IO_SEND_ERROR. ]*/
+            /* Codes_SRS_TLSIO_30_005: [ When the adapter enters TLSIO_STATE_EXT_ERROR it shall call the  on_io_error function and pass the on_io_error_context that were supplied in  tlsio_open . ]*/
+            /* Codes_SRS_TLSIO_30_095: [ If the send process fails before sending all of the bytes in an enqueued message, tlsio_dowork shall destroy the failed message and enter TLSIO_STATE_EX_ERROR. ]*/
+            // This is an unexpected error, and we need to bail out. Probably lost internet connection.
+            LogError("Write failed");
+            process_and_destroy_head_message(tls_io_instance, IO_SEND_ERROR);
+        }
     }
     else
     {
@@ -479,18 +461,18 @@ static void dowork_send(TLS_IO_INSTANCE* tls_io_instance)
 
 static void dowork_poll_dns(TLS_IO_INSTANCE* tls_io_instance)
 {
-	/* Codes_SRS_TLSIO_ARDUINO_21_018: [ The tlsio_arduino_create shall convert the provide hostName to an IP address. ]*/
-	if (sslClient_hostByName(STRING_c_str(tls_io_instance->hostname), &(tls_io_instance->remote_addr)))
-	{
-		tls_io_instance->tlsio_state = TLSIO_STATE_OPENING_WAITING_SOCKET;
-	}
-	else
-	{
-		/* Codes_SRS_TLSIO_ARDUINO_21_019: [ If the WiFi cannot find the IP for the hostName, the tlsio_arduino_create shall destroy the sslClient and tlsio instances and return NULL as the handle. ]*/
-		LogError("Host %s not found", STRING_c_str(tls_io_instance->hostname));
-		free(tls_io_instance);
-		tls_io_instance = NULL;
-	}
+    /* Codes_SRS_TLSIO_ARDUINO_21_018: [ The tlsio_arduino_create shall convert the provide hostName to an IP address. ]*/
+    if (sslClient_hostByName(STRING_c_str(tls_io_instance->hostname), &(tls_io_instance->remote_addr)))
+    {
+        tls_io_instance->tlsio_state = TLSIO_STATE_OPENING_WAITING_SOCKET;
+    }
+    else
+    {
+        /* Codes_SRS_TLSIO_ARDUINO_21_019: [ If the WiFi cannot find the IP for the hostName, the tlsio_arduino_create shall destroy the sslClient and tlsio instances and return NULL as the handle. ]*/
+        LogError("Host %s not found", STRING_c_str(tls_io_instance->hostname));
+        free(tls_io_instance);
+        tls_io_instance = NULL;
+    }
 }
 
 static void dowork_poll_socket(TLS_IO_INSTANCE* tls_io_instance)
@@ -501,7 +483,7 @@ static void dowork_poll_socket(TLS_IO_INSTANCE* tls_io_instance)
 
 static void dowork_poll_open_ssl(TLS_IO_INSTANCE* tls_io_instance)
 {
-	if (sslClient_connect(tls_io_instance->remote_addr, tls_io_instance->port))
+    if (sslClient_connect(tls_io_instance->remote_addr, tls_io_instance->port))
     {
         /* Codes_SRS_TLSIO_30_080: [ The tlsio_dowork shall establish a TLS connection using the hostName and port provided during tlsio_open. ]*/
         // Connect succeeded
@@ -512,7 +494,7 @@ static void dowork_poll_open_ssl(TLS_IO_INSTANCE* tls_io_instance)
     }
     else
     {
-		LogError("Error opening socket");
+        LogError("Error opening socket");
         enter_open_error_state(tls_io_instance);
     }
 }
@@ -532,29 +514,23 @@ static void tlsio_arduino_dowork(CONCRETE_IO_HANDLE tls_io)
         switch (tls_io_instance->tlsio_state)
         {
         case TLSIO_STATE_CLOSED:
-			LogInfo("dowork TLSIO_STATE_CLOSED");
             /* Codes_SRS_TLSIO_30_075: [ If the adapter is in TLSIO_STATE_EXT_CLOSED then  tlsio_dowork  shall do nothing. ]*/
             // Waiting to be opened, nothing to do
             break;
         case TLSIO_STATE_OPENING_WAITING_DNS:
-			LogInfo("dowork TLSIO_STATE_OPENING_WAITING_DNS");
             dowork_poll_dns(tls_io_instance);
             break;
         case TLSIO_STATE_OPENING_WAITING_SOCKET:
-			LogInfo("dowork TLSIO_STATE_OPENING_WAITING_SOCKET");
             dowork_poll_socket(tls_io_instance);
             break;
         case TLSIO_STATE_OPENING_WAITING_SSL:
-			LogInfo("dowork TLSIO_STATE_OPENING_WAITING_SSL");
             dowork_poll_open_ssl(tls_io_instance);
             break;
         case TLSIO_STATE_OPEN:
-			LogInfo("dowork TLSIO_STATE_OPEN");
             dowork_read(tls_io_instance);
             dowork_send(tls_io_instance);
             break;
         case TLSIO_STATE_ERROR:
-			LogInfo("dowork TLSIO_STATE_ERROR");
             /* Codes_SRS_TLSIO_30_071: [ If the adapter is in TLSIO_STATE_EXT_ERROR then tlsio_dowork shall do nothing. ]*/
             // There's nothing valid to do here but wait to be retried
             break;
@@ -624,20 +600,6 @@ static int tlsio_arduino_send_async(CONCRETE_IO_HANDLE tls_io, const void* buffe
             }
             else
             {
-                // For AMQP and MQTT over websockets, the interaction of the IoT Hub and the
-                // Apple TLS requires hacking the websocket upgrade header with a
-                // "iothub-no-client-cert=true" parameter to avoid a TLS hang.
-                // bool add_no_cert_url_parameter = false;
-                // if (tls_io_instance->no_messages_yet_sent)
-                // {
-                    // tls_io_instance->no_messages_yet_sent = false;
-                    // if (strncmp((const char*)buffer, WEBSOCKET_HEADER_START, WEBSOCKET_HEADER_START_SIZE) == 0)
-                    // {
-                        // add_no_cert_url_parameter = true;
-                        // size += WEBSOCKET_HEADER_NO_CERT_PARAM_SIZE;
-                    // }
-                // }
-
                 /* Codes_SRS_TLSIO_30_063: [ The tlsio_arduino_compact_send shall enqueue for transmission the on_send_complete, the callback_context, the size, and the contents of buffer. ]*/
                 if ((pending_transmission->bytes = (unsigned char*)malloc(size)) == NULL)
                 {
@@ -652,18 +614,8 @@ static int tlsio_arduino_send_async(CONCRETE_IO_HANDLE tls_io, const void* buffe
                     pending_transmission->unsent_size = size;
                     pending_transmission->on_send_complete = on_send_complete;
                     pending_transmission->callback_context = callback_context;
-                    // if (add_no_cert_url_parameter)
-                    // {
-                        // Insert the WEBSOCKET_HEADER_NO_CERT_PARAM after the url
-                        // (void)memcpy(pending_transmission->bytes, WEBSOCKET_HEADER_START, WEBSOCKET_HEADER_START_SIZE);
-                        // (void)memcpy(pending_transmission->bytes + WEBSOCKET_HEADER_START_SIZE, WEBSOCKET_HEADER_NO_CERT_PARAM, WEBSOCKET_HEADER_NO_CERT_PARAM_SIZE);
-                        // (void)memcpy(pending_transmission->bytes + WEBSOCKET_HEADER_START_SIZE + WEBSOCKET_HEADER_NO_CERT_PARAM_SIZE, buffer + WEBSOCKET_HEADER_START_SIZE, size - WEBSOCKET_HEADER_START_SIZE - WEBSOCKET_HEADER_NO_CERT_PARAM_SIZE);
-                    // }
-                    // else
-                    // {
-                        (void)memcpy(pending_transmission->bytes, buffer, size);
-                    // }
-
+                    (void)memcpy(pending_transmission->bytes, buffer, size);
+ 
                     if (singlylinkedlist_add(tls_io_instance->pending_transmission_list, pending_transmission) == NULL)
                     {
                         /* Codes_SRS_TLSIO_30_064: [ If the supplied message cannot be enqueued for transmission, tlsio_arduino_compact_send shall log an error and return FAILURE. ]*/
