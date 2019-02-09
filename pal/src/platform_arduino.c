@@ -3,7 +3,8 @@
 
 /*Codes_SRS_PLATFORM_ARDUINO_21_001: [ The platform_arduino shall implement the interface provided in the `platfom.h`. ]*/
 #include "azure_c_shared_utility/platform.h"
-#include "tlsio_arduino.h"
+//#include "tlsio_arduino.h"
+#include "azure_c_shared_utility/tlsio_mbedtls.h"
 
 /*Codes_SRS_PLATFORM_ARDUINO_21_003: [ The platform_init shall initialize the platform. ]*/
 /*Codes_SRS_PLATFORM_ARDUINO_21_004: [ The platform_init shall allocate any memory needed to control the platform. ]*/
@@ -27,6 +28,6 @@ STRING_HANDLE platform_get_platform_info(void)
 /*Codes_SRS_PLATFORM_ARDUINO_21_007: [ The platform_get_default_tlsio shall return a set of tlsio functions provided by the Arduino tlsio implementation. ]*/
 const IO_INTERFACE_DESCRIPTION* platform_get_default_tlsio(void)
 {
-    return tlsio_arduino_get_interface_description();
+    return tlsio_mbedtls_get_interface_description();
 }
 

@@ -21,18 +21,20 @@ rem // The location of the Arduino PAL directory relative to this file
 set Arduino_pal_path=%arduino_repo_root%pal\
 set AzureIoTSDKs_path=%arduino_repo_root%sdk\
 
-
 set AzureIoTHub_path=%Libraries_path%\AzureIoTHub\
 set AzureIoTProtocolHTTP_path=%Libraries_path%\AzureIoTProtocol_HTTP\
 set AzureIoTProtocolMQTT_path=%Libraries_path%\AzureIoTProtocol_MQTT\
 set AzureIoTProtocolAMQP_path=%Libraries_path%\AzureIoTProtocol_AMQP\
 set AzureIoTUtility_path=%Libraries_path%\AzureIoTUtility\
+set AzureIoTSocketWiFi_path=%Libraries_path%\AzureIoTSocket_WiFi\
+set AzureIoTSocketEthernet_path=%Libraries_path%\AzureIoTSocket_Ethernet2\
 
 set AzureUHTTP_path=%AzureIoTProtocolHTTP_path%src\azure_uhttp_c\
 set AzureUMQTT_path=%AzureIoTProtocolMQTT_path%src\azure_umqtt_c\
 set AzureUAMQP_path=%AzureIoTProtocolAMQP_path%src\azure_uamqp_c\
 set SharedUtility_path=%AzureIoTUtility_path%src\azure_c_shared_utility\
 set Adapters_path=%AzureIoTUtility_path%src\adapters\
+set MbedTLS_path=%Arduino_pal_path%mbedtls\
 set sdk_path=%AzureIoTHub_path%src\
 set internal_path=%AzureIoTHub_path%\src\internal
 
@@ -45,6 +47,8 @@ robocopy %~dp0\base-libraries\AzureIoTHub %AzureIoTHub_path% -MIR
 robocopy %~dp0\base-libraries\AzureIoTUtility %AzureIoTUtility_path% -MIR
 robocopy %~dp0\base-libraries\AzureIoTProtocol_HTTP %AzureIoTProtocolHTTP_path% -MIR
 robocopy %~dp0\base-libraries\AzureIoTProtocol_MQTT %AzureIoTProtocolMQTT_path% -MIR
+robocopy %~dp0\base-libraries\AzureIoTSocket_WiFi %AzureIoTSocketWiFi_path% -MIR
+robocopy %~dp0\base-libraries\AzureIoTSocket_Ethernet2 %AzureIoTSocketEthernet_path% -MIR
 
 mkdir %sdk_path%
 mkdir %internal_path%
@@ -86,6 +90,18 @@ rem // Copy the Arduino-specific files from the Arduino PAL path
 copy %Arduino_pal_path%inc\*.* %Adapters_path%
 copy %Arduino_pal_path%src\*.* %Adapters_path%
 
+rem // Delete this - not currently used (and may never be)
+del %Adapters_path%\tlsio_arduino.c
+
+rem // Copy MbedTLS to target
+robocopy %MbedTLS_path%library %AzureIoTUtility_path%src\mbedtls-%MbedTLS_version% *.c /MIR
+robocopy %MbedTLS_path%include\mbedtls %AzureIoTUtility_path%src\mbedtls-%MbedTLS_version%\mbedtls *.h /MIR
+rem // Fixes Arduino limitation with include paths
+robocopy %MbedTLS_path%include\mbedtls %AzureIoTUtility_path%src\mbedtls-%MbedTLS_version%\mbedtls\mbedtls platform_util.h /MIR
+
+rem // Use the MbedTLS adaptor instead of the above
+copy %AzureIoTSDKs_path%c-utility\adapters\tlsio_mbedtls.c %Adapters_path%
+
 mkdir %AzureUHTTP_path%
 copy %AzureIoTSDKs_path%c-utility\adapters\httpapi_compact.c %AzureUHTTP_path%
 
@@ -94,11 +110,15 @@ copy %AzureIoTSDKs_path%umqtt\src %AzureUMQTT_path%
 mkdir %AzureIoTHub_path%src\azure_umqtt_c\
 copy %AzureIoTSDKs_path%umqtt\inc\azure_umqtt_c %AzureIoTHub_path%src\azure_umqtt_c\
 
+copy %Arduino_pal_path%AzureIoTSocket_WiFi\socketio_esp32wifi.cpp %AzureIoTSocketWiFi_path%src
+@echo %Arduino_pal_path%AzureIoTSocket_Ethernet\socketio_esp32ethernet2.cpp
+@echo %AzureIoTSocketEthernet_path%src
+copy %Arduino_pal_path%AzureIoTSocket_Ethernet\socketio_esp32ethernet2.cpp %AzureIoTSocketEthernet_path%src
+
 del %sdk_path%*amqp*.*
 del %sdk_path%iothubtransportmqtt_websockets.*
 
-del %SharedUtility_path%tlsio_mbedtls.*
-rem // del %SharedUtility_path%tlsio_appleios.*
+del %SharedUtility_path%tlsio_appleios.*
 del %SharedUtility_path%tlsio_cyclonessl*.*
 del %SharedUtility_path%tlsio_openssl.*
 del %SharedUtility_path%tlsio_schannel.*
