@@ -30,12 +30,12 @@ static bool getNTPResponse()
   // wait to see if a reply is available
   bool result = (0 != udp.parsePacket());
   struct timeval tp = {0, 0};
-  byte packetBuffer[NTP_PACKET_SIZE];
+  char packetBuffer[NTP_PACKET_SIZE];
   
   if (result) 
   {
     // We've received a packet, read the data from it
-    udp.read(packetBuffer, NTP_PACKET_SIZE); // read the packet into the buffer
+    udp.read((char *)packetBuffer, NTP_PACKET_SIZE); // read the packet into the buffer
 
     //the timestamp starts at byte 40 of the received packet and is four bytes,
     // or two words, long. First, esxtract the two words:
@@ -113,7 +113,7 @@ static void initTime()
 
   while (true)
   {
-    sendNTPpacket(TIME_SERVER); // send an NTP packet to a time server
+    sendNTPpacket((char *)TIME_SERVER); // send an NTP packet to a time server
 
     if (getNTPResponse())
       break;

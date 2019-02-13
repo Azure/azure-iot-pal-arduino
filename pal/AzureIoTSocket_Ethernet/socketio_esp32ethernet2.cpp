@@ -575,7 +575,7 @@ int socketio_send(CONCRETE_IO_HANDLE socket_io, const void* buffer, size_t size,
 				else if (send_result < size)
 				{
 					/* queue data */
-					if (add_pending_io(socket_io_instance, (const unsigned char*)(buffer + send_result), size - send_result, on_send_complete, callback_context) != 0)
+					if (add_pending_io(socket_io_instance, (const unsigned char*)((char *)buffer + send_result), size - send_result, on_send_complete, callback_context) != 0)
 					{
 						LogError("Failure: add_pending_io failed.");
 						result = __FAILURE__;
