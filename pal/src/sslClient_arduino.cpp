@@ -4,6 +4,7 @@
 #include <IPAddress.h>
 #include "sslClient_arduino.h"
 #include "azure_c_shared_utility/xlogging.h"
+#include "FS.h"
 
 #ifdef ARDUINO_ARCH_ESP8266
 #include "ESP8266WiFi.h"
@@ -31,8 +32,28 @@ uint8_t sslClient_connected(void)
 
 int sslClient_connect(uint32_t ipAddress, uint16_t port)
 {
+    Serial.println("!!!!!!!!sslClient_connect!!!!!!!!!!");
+    SPIFFS.begin();
+    File ca = SPIFFS.open("/trusted.cert.pem", "r");
+    if(!ca) {
+        Serial.println("Couldn't load cert");
+        return 1;  
+    }
     IPAddress ip = IPAddress(ipAddress);
-    return (int)sslClient.connect(ip, port);
+
+    if(sslClient.loadCertificate(ca)) {
+        Serial.println("Loaded Cert");
+    } else {
+        Serial.println("Didn't load cert");
+    }
+    
+    if (sslClient.connect(ip, port)) {
+        Serial.println("sslClient.connect succeeded");
+        return 0;
+    } else {
+        Serial.println("sslClient.connect failed");
+        return 1;
+    }
 }
 
 void sslClient_stop(void)
