@@ -17,7 +17,7 @@ extern "C" {
 
 MOCKABLE_FUNCTION(, void, sslClient_setTimeout, unsigned long, timeout);
 MOCKABLE_FUNCTION(, uint8_t, sslClient_connected);
-MOCKABLE_FUNCTION(, int, sslClient_connect, uint32_t, ipAddress, uint16_t, port);
+MOCKABLE_FUNCTION(, int, sslClient_connect, const char*, host, uint16_t, port);
 MOCKABLE_FUNCTION(, void, sslClient_stop);
 MOCKABLE_FUNCTION(, size_t, sslClient_write, const uint8_t*, buf, size_t, size);
 MOCKABLE_FUNCTION(, size_t, sslClient_print, const char*, str);
@@ -25,6 +25,8 @@ MOCKABLE_FUNCTION(, int, sslClient_read, uint8_t*, buf, size_t, size);
 MOCKABLE_FUNCTION(, int, sslClient_available);
 
 MOCKABLE_FUNCTION(, uint8_t, sslClient_hostByName, const char*, hostName, uint32_t*, ipAddress);
+
+MOCKABLE_FUNCTION(, void, sslClient_setCACert, const char*, rootCA);
 
 #ifdef __cplusplus
 }

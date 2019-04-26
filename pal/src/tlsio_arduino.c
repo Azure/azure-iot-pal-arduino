@@ -221,7 +221,7 @@ static CONCRETE_IO_HANDLE tlsio_arduino_create(void* io_create_parameters)
                     result->tlsio_state = TLSIO_STATE_CLOSED;
                     result->hostname = NULL;
                     result->pending_transmission_list = NULL;
-                    tlsio_options_initialize(&result->options, TLSIO_OPTION_BIT_NONE);
+                    tlsio_options_initialize(&result->options, TLSIO_OPTION_BIT_TRUSTED_CERTS);
                     /* Codes_SRS_TLSIO_30_016: [ tlsio_create shall make a copy of the hostname member of io_create_parameters to allow deletion of hostname immediately after the call. ]*/
                     if (NULL == (result->hostname = STRING_construct(tls_io_config->hostname)))
                     {
@@ -483,7 +483,12 @@ static void dowork_poll_socket(TLS_IO_INSTANCE* tls_io_instance)
 
 static void dowork_poll_open_ssl(TLS_IO_INSTANCE* tls_io_instance)
 {
-    if (sslClient_connect(tls_io_instance->remote_addr, tls_io_instance->port))
+    if (tls_io_instance->options.trusted_certs != NULL) 
+    {
+        sslClient_setCACert(tls_io_instance->options.trusted_certs);
+    }
+
+    if (sslClient_connect(STRING_c_str(tls_io_instance->hostname), tls_io_instance->port))
     {
         /* Codes_SRS_TLSIO_30_080: [ The tlsio_dowork shall establish a TLS connection using the hostName and port provided during tlsio_open. ]*/
         // Connect succeeded
