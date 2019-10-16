@@ -24,7 +24,7 @@ set AzureIoTSDKs_path=%arduino_repo_root%sdk\
 set AzureIoTHub_path=%Libraries_path%\AzureIoTHub\
 set AzureIoTProtocolHTTP_path=%Libraries_path%\AzureIoTProtocol_HTTP\
 set AzureIoTProtocolMQTT_path=%Libraries_path%\AzureIoTProtocol_MQTT\
-set AzureIoTProtocolAMQP_path=%Libraries_path%\AzureIoTProtocol_AMQP\
+rem set AzureIoTProtocolAMQP_path=%Libraries_path%\AzureIoTProtocol_AMQP\
 set AzureIoTUtility_path=%Libraries_path%\AzureIoTUtility\
 set AzureIoTSocketWiFi_path=%Libraries_path%\AzureIoTSocket_WiFi\
 set AzureIoTSocketEthernet_path=%Libraries_path%\AzureIoTSocket_Ethernet2\
@@ -34,6 +34,9 @@ set AzureUMQTT_path=%AzureIoTProtocolMQTT_path%src\azure_umqtt_c\
 set AzureUAMQP_path=%AzureIoTProtocolAMQP_path%src\azure_uamqp_c\
 set SharedUtility_path=%AzureIoTUtility_path%src\azure_c_shared_utility\
 set Adapters_path=%AzureIoTUtility_path%src\adapters\
+set Macro_Utils_path=%AzureIoTUtility_path%src\azure_c_shared_utility\azure_macro_utils\
+set Hub_Macro_Utils_path=%AzureIoTHub_path%src\azure_macro_utils\
+set Umock_c_path=%AzureIoTUtility_path%src\umock_c\
 set MbedTLS_path=%Arduino_pal_path%mbedtls\
 set sdk_path=%AzureIoTHub_path%src\
 set internal_path=%AzureIoTHub_path%\src\internal
@@ -67,20 +70,30 @@ copy %AzureIoTSDKs_path%iothub_client\inc\internal %internal_path%\
 copy %AzureIoTSDKs_path%serializer\src\ %sdk_path%
 copy %AzureIoTSDKs_path%serializer\inc\ %sdk_path%
 copy %AzureIoTSDKs_path%deps\parson\parson.* %sdk_path%
-rem // copy %AzureIoTSDKs_path%serializer\samples\simplesample_http\simplesample_http.* %AzureIoTHub_path%examples\simplesample_http
-rem // copy %AzureIoTSDKs_path%serializer\samples\simplesample_http\simplesample_http.* %AzureIoTProtocolHTTP_path%examples\simplesample_http
-rem // copy %AzureIoTSDKs_path%serializer\samples\simplesample_mqtt\simplesample_mqtt.* %AzureIoTProtocolMQTT_path%examples\simplesample_mqtt
-rem // copy %AzureIoTSDKs_path%serializer\samples\simplesample_http\simplesample_http.* %AzureIoTUtility_path%examples\simplesample_http
 
 mkdir %SharedUtility_path%
 mkdir %Adapters_path%
+mkdir %Umock_c_path%
+mkdir %Umock_c_path%aux_inc\
+mkdir %Macro_Utils_path%
+mkdir %Hub_Macro_Utils_path%
+mkdir %AzureIoTHub_path%examples\iothub_ll_telemetry_sample\
+mkdir %AzureIoTHub_path%src\certs\
+
+copy %Arduino_pal_path%samples\esp8266\* %AzureIoTHub_path%examples\iothub_ll_telemetry_sample
 copy %AzureIoTSDKs_path%c-utility\inc\azure_c_shared_utility %SharedUtility_path%
 copy %AzureIoTSDKs_path%c-utility\src\ %SharedUtility_path%
 copy /y %Arduino_pal_path%\azure_c_shared_utility\*.* %SharedUtility_path%
+copy %AzureIoTSDKs_path%deps\umock-c\inc\umock_c\ %Umock_c_path%
+copy %AzureIoTSDKs_path%deps\umock-c\inc\umock_c\aux_inc\ %Umock_c_path%aux_inc\
+copy %AzureIoTSDKs_path%deps\umock-c\src\ %Umock_c_path%
+copy %AzureIoTSDKs_path%deps\azure-macro-utils-c\inc\azure_macro_utils\ %Hub_Macro_Utils_path%
+copy %AzureIoTSDKs_path%deps\azure-macro-utils-c\inc\azure_macro_utils\ %Macro_Utils_path%
+copy %AzureIoTSDKs_path%certs\ %AzureIoTHub_path%src\certs\
 
 copy %AzureIoTSDKs_path%c-utility\pal\agenttime.c %Adapters_path%
 copy %AzureIoTSDKs_path%c-utility\pal\tickcounter.c %Adapters_path%
-
+copy %AzureIoTSDKs_path%deps\azure-macro-utils-c\inc\ %Azure_macro_utils_path%
 rem // Bring in the generic refcount_os.h
 copy %AzureIoTSDKs_path%c-utility\pal\generic\refcount_os.h %SharedUtility_path%
 rem // and tlsio_options.c
@@ -90,9 +103,6 @@ rem // Copy the Arduino-specific files from the Arduino PAL path
 copy %Arduino_pal_path%inc\*.* %Adapters_path%
 copy %Arduino_pal_path%src\*.* %Adapters_path%
 
-rem // Delete this - not currently used (and may never be)
-del %Adapters_path%\tlsio_arduino.c
-
 rem // Copy MbedTLS to target
 robocopy %MbedTLS_path%library %AzureIoTUtility_path%src\mbedtls-%MbedTLS_version% *.c /MIR
 robocopy %MbedTLS_path%include\mbedtls %AzureIoTUtility_path%src\mbedtls-%MbedTLS_version%\mbedtls *.h /MIR
@@ -101,6 +111,7 @@ robocopy %MbedTLS_path%include\mbedtls %AzureIoTUtility_path%src\mbedtls-%MbedTL
 
 rem // Use the MbedTLS adaptor instead of the above
 copy %AzureIoTSDKs_path%c-utility\adapters\tlsio_mbedtls.c %Adapters_path%
+rem copy %AzureIoTSDKs_path%c-utility\adapters\tlsio_bearssl.c %Adapters_path%
 
 mkdir %AzureUHTTP_path%
 copy %AzureIoTSDKs_path%c-utility\adapters\httpapi_compact.c %AzureUHTTP_path%
