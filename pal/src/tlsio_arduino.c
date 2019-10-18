@@ -236,7 +236,7 @@ static CONCRETE_IO_HANDLE tlsio_arduino_create(void* io_create_parameters)
                     result->tlsio_state = TLSIO_STATE_CLOSED;
                     result->hostname = NULL;
                     result->pending_transmission_list = NULL;
-                    tlsio_options_initialize(&result->options, TLSIO_OPTION_BIT_NONE);
+                    tlsio_options_initialize(&result->options, TLSIO_OPTION_BIT_TRUSTED_CERTS);
                     /* Codes_SRS_TLSIO_30_016: [ tlsio_create shall make a copy of the hostname member of io_create_parameters to allow deletion of hostname immediately after the call. ]*/
 					if (NULL == (result->hostname = STRING_construct(tls_io_config->hostname)))
 					{
@@ -277,14 +277,14 @@ static int tlsio_arduino_open_async(CONCRETE_IO_HANDLE tls_io,
     {
         /* Codes_SRS_TLSIO_30_031: [ If the on_io_open_complete parameter is NULL, tlsio_open shall log an error and return FAILURE. ]*/
         LogError("Required parameter on_io_open_complete is NULL");
-        result = __FAILURE__;
+        result = MU_FAILURE;
     }
     else
     {
         if (tls_io == NULL)
         {
             /* Codes_SRS_TLSIO_30_030: [ If the tlsio_handle parameter is NULL, tlsio_open shall log an error and return FAILURE. ]*/
-            result = __FAILURE__;
+            result = MU_FAILURE;
             LogError("NULL tlsio");
         }
         else
@@ -293,7 +293,7 @@ static int tlsio_arduino_open_async(CONCRETE_IO_HANDLE tls_io,
             {
                 /* Codes_SRS_TLSIO_30_032: [ If the on_bytes_received parameter is NULL, tlsio_open shall log an error and return FAILURE. ]*/
                 LogError("Required parameter on_bytes_received is NULL");
-                result = __FAILURE__;
+                result = MU_FAILURE;
             }
             else
             {
@@ -301,7 +301,7 @@ static int tlsio_arduino_open_async(CONCRETE_IO_HANDLE tls_io,
                 {
                     /* Codes_SRS_TLSIO_30_033: [ If the on_io_error parameter is NULL, tlsio_open shall log an error and return FAILURE. ]*/
                     LogError("Required parameter on_io_error is NULL");
-                    result = __FAILURE__;
+                    result = MU_FAILURE;
                 }
                 else
                 {
@@ -311,7 +311,7 @@ static int tlsio_arduino_open_async(CONCRETE_IO_HANDLE tls_io,
                     {
                         /* Codes_SRS_TLSIO_30_037: [ If the adapter is in any state other than TLSIO_STATE_EXT_CLOSED when tlsio_open  is called, it shall log an error, and return FAILURE. ]*/
                         LogError("Invalid tlsio_state. Expected state is TLSIO_STATE_CLOSED.");
-                        result = __FAILURE__;
+                        result = MU_FAILURE;
                     }
                     else
                     {
@@ -348,7 +348,7 @@ static int tlsio_arduino_close_async(CONCRETE_IO_HANDLE tls_io, ON_IO_CLOSE_COMP
     {
         /* Codes_SRS_TLSIO_30_050: [ If the tlsio_handle parameter is NULL, tlsio_arduino_close_async shall log an error and return FAILURE. ]*/
         LogError("NULL tlsio");
-        result = __FAILURE__;
+        result = MU_FAILURE;
     }
     else
     {
@@ -356,7 +356,7 @@ static int tlsio_arduino_close_async(CONCRETE_IO_HANDLE tls_io, ON_IO_CLOSE_COMP
         {
             /* Codes_SRS_TLSIO_30_055: [ If the on_io_close_complete parameter is NULL, tlsio_arduino_close_async shall log an error and return FAILURE. ]*/
             LogError("NULL on_io_close_complete");
-            result = __FAILURE__;
+            result = MU_FAILURE;
         }
         else
         {
@@ -501,7 +501,8 @@ static void dowork_poll_socket(TLS_IO_INSTANCE* tls_io_instance)
 
 static void dowork_poll_open_ssl(TLS_IO_INSTANCE* tls_io_instance)
 {
-	if (sslClient_connect(tls_io_instance->remote_addr, tls_io_instance->port))
+    int k = sslClient_connect(tls_io_instance->remote_addr, tls_io_instance->port);
+	if (k)
     {
         /* Codes_SRS_TLSIO_30_080: [ The tlsio_dowork shall establish a TLS connection using the hostName and port provided during tlsio_open. ]*/
         // Connect succeeded
@@ -512,7 +513,7 @@ static void dowork_poll_open_ssl(TLS_IO_INSTANCE* tls_io_instance)
     }
     else
     {
-		LogError("Error opening socket");
+		LogError("Error opening socket %d", k);
         enter_open_error_state(tls_io_instance);
     }
 }
@@ -549,7 +550,7 @@ static void tlsio_arduino_dowork(CONCRETE_IO_HANDLE tls_io)
             dowork_poll_open_ssl(tls_io_instance);
             break;
         case TLSIO_STATE_OPEN:
-			LogInfo("dowork TLSIO_STATE_OPEN");
+			// LogInfo("dowork TLSIO_STATE_OPEN");
             dowork_read(tls_io_instance);
             dowork_send(tls_io_instance);
             break;
@@ -573,7 +574,7 @@ static int tlsio_arduino_setoption(CONCRETE_IO_HANDLE tls_io, const char* option
     if (tls_io_instance == NULL)
     {
         LogError("NULL tlsio");
-        result = __FAILURE__;
+        result = MU_FAILURE;
     }
     else
     {
@@ -584,7 +585,7 @@ static int tlsio_arduino_setoption(CONCRETE_IO_HANDLE tls_io, const char* option
         if (options_result != TLSIO_OPTIONS_RESULT_SUCCESS)
         {
             LogError("Failed tlsio_options_set");
-            result = __FAILURE__;
+            result = MU_FAILURE;
         }
         else
         {
@@ -600,7 +601,7 @@ static int tlsio_arduino_send_async(CONCRETE_IO_HANDLE tls_io, const void* buffe
     if (on_send_complete == NULL || tls_io == NULL || buffer == NULL || size == 0 || on_send_complete == NULL)
     {
         /* Codes_SRS_TLSIO_30_062: [ If the on_send_complete is NULL, tlsio_arduino_compact_send shall log the error and return FAILURE. ]*/
-        result = __FAILURE__;
+        result = MU_FAILURE;
         LogError("Invalid parameter specified: tls_io: %p, buffer: %p, size: %zu, on_send_complete: %p", tls_io, buffer, size, on_send_complete);
     }
     else
@@ -610,7 +611,7 @@ static int tlsio_arduino_send_async(CONCRETE_IO_HANDLE tls_io, const void* buffe
         {
             /* Codes_SRS_TLSIO_30_060: [ If the tlsio_handle parameter is NULL, tlsio_arduino_compact_send shall log an error and return FAILURE. ]*/
             /* Codes_SRS_TLSIO_30_065: [ If tlsio_arduino_compact_open has not been called or the opening process has not been completed, tlsio_arduino_compact_send shall log an error and return FAILURE. ]*/
-            result = __FAILURE__;
+            result = MU_FAILURE;
             LogError("tlsio_arduino_send_async without a prior successful open");
         }
         else
@@ -619,7 +620,7 @@ static int tlsio_arduino_send_async(CONCRETE_IO_HANDLE tls_io, const void* buffe
             if (pending_transmission == NULL)
             {
                 /* Codes_SRS_TLSIO_30_064: [ If the supplied message cannot be enqueued for transmission, tlsio_arduino_compact_send shall log an error and return FAILURE. ]*/
-                result = __FAILURE__;
+                result = MU_FAILURE;
                 LogError("malloc failed");
             }
             else
@@ -644,7 +645,7 @@ static int tlsio_arduino_send_async(CONCRETE_IO_HANDLE tls_io, const void* buffe
                     /* Codes_SRS_TLSIO_30_064: [ If the supplied message cannot be enqueued for transmission, tlsio_arduino_compact_send shall log an error and return FAILURE. ]*/
                     LogError("malloc failed");
                     free(pending_transmission);
-                    result = __FAILURE__;
+                    result = MU_FAILURE;
                 }
                 else
                 {
@@ -670,7 +671,7 @@ static int tlsio_arduino_send_async(CONCRETE_IO_HANDLE tls_io, const void* buffe
                         LogError("Unable to add socket to pending list.");
                         free(pending_transmission->bytes);
                         free(pending_transmission);
-                        result = __FAILURE__;
+                        result = MU_FAILURE;
                     }
                     else
                     {

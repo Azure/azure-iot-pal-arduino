@@ -4,9 +4,10 @@
 #ifdef ARDUINO_ARCH_ESP8266
 
 #include <Arduino.h>
+#undef round
 #include <time.h>
 #include <ESP8266WiFi.h>
-#include <WiFiClientSecure.h>
+// #include <WiFiClientSecure.h>
 #include <WiFiUdp.h>
 
 // Times before 2010 (1970 + 40 years) are invalid
@@ -25,6 +26,7 @@ static void initWifi(const char* ssid, const char* pass) {
     Serial.println(ssid);
     
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
+    WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pass);
     while (WiFi.status() != WL_CONNECTED) {
       delay(500);

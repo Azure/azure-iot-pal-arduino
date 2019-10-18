@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 #include <AzureIoTUtility.h>
 
 #if defined(ARDUINO_ARCH_ESP8266) 
@@ -5,9 +8,10 @@
 #define USE_OPTIMIZE_PRINTF
 #define PIO_FRAMEWORK_ARDUINO_LWIP2_LOW_MEMORY
 #define PIO_FRAMEWORK_ARDUINO_LWIP2_HIGHER_BANDWIDTH
+
+#include "user_interface.h"
+#include "Esp.h"
 #endif
-// Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // CAVEAT: This sample is to demonstrate azure IoT client concepts only and is not a guide design principles or style
 // Checking of return codes and error values shall be omitted for brevity.  Please practice sound engineering practices
@@ -21,13 +25,10 @@
 #include "iothub_device_client_ll.h"
 #include "iothub_client_options.h"
 #include "iothub_message.h"
-//#include "azure_c_shared_utility/threadapi.h"
 #include "azure_c_shared_utility/crt_abstractions.h"
 #include "azure_c_shared_utility/shared_util_options.h"
 #include "azure_c_shared_utility/tlsio.h"
 #include "azure_c_shared_utility/xlogging.h"
-#include "user_interface.h"
-#include "Esp.h"
 
 #define SET_TRUSTED_CERT_IN_SAMPLES
 #ifdef SET_TRUSTED_CERT_IN_SAMPLES
@@ -46,9 +47,6 @@ static char pass[] = IOT_CONFIG_WIFI_PASSWORD;
     #include "AzureIoTProtocol_MQTT.h"
     #include "iothubtransportmqtt.h"
 #endif // SAMPLE_MQTT
-#ifdef SAMPLE_MQTT_OVER_WEBSOCKETS
-    #include "iothubtransportmqtt_websockets.h"
-#endif // SAMPLE_MQTT_OVER_WEBSOCKETS
 #ifdef SAMPLE_HTTP
     #include "AzureIoTProtocol_HTTP.h"
     #include "iothubtransporthttp.h"
@@ -80,8 +78,8 @@ const char* telemetry_msg = "test_message";
 IOTHUB_DEVICE_CLIENT_LL_HANDLE device_ll_handle;
 
 static int callbackCounter;
-int receiveContext = 0; 
-#define DOWORK_LOOP_NUM     3
+int receiveContext = 0;
+//#define DOWORK_LOOP_NUM     3
 
 static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_HANDLE message, void* userContextCallback)
 {
@@ -144,12 +142,13 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
 
 void setup() {
     int result = 0;
+
+//    wdt_disable();
     wdt_enable(5000);
-    
+
     sample_init(ssid, pass);
 
     device_ll_handle = IoTHubDeviceClient_LL_CreateFromConnectionString(connectionString, protocol);
-
     // Used to initialize IoTHub SDK subsystem
     (void)IoTHub_Init();
 
@@ -163,6 +162,10 @@ void setup() {
     {
         // Set any option that are neccessary.
         // For available options please see the iothub_sdk_options.md documentation
+
+    // turn off diagnostic sampling
+    int diag_off=0;
+    IoTHubDeviceClient_LL_SetOption(device_ll_handle, OPTION_DIAGNOSTIC_SAMPLING_PERCENTAGE, &diag_off);
 
 #ifndef SAMPLE_HTTP
         // Can not set this options in HTTP
@@ -211,7 +214,6 @@ void setup() {
 
                 LogInfo("Sending message %d to IoTHub\r\n", (int)(messages_sent + 1));
                 result = IoTHubDeviceClient_LL_SendEventAsync(device_ll_handle, message_handle, send_confirm_callback, NULL);
-//                LogInfo("send event was: %d", result);
                 // The message is copied to the sdk so the we can destroy it
                 IoTHubMessage_Destroy(message_handle);
 
@@ -234,7 +236,7 @@ void setup() {
     // Free all the sdk subsystem
     IoTHub_Deinit();
 
-    LogInfo("done with messages");
+    LogInfo("done with sending");
     return;
 }
 

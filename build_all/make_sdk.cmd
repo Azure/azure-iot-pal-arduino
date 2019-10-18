@@ -75,6 +75,7 @@ mkdir %SharedUtility_path%
 mkdir %Adapters_path%
 mkdir %Umock_c_path%
 mkdir %Umock_c_path%aux_inc\
+mkdir %Umock_c_path%azure_macro_utils\
 mkdir %Macro_Utils_path%
 mkdir %Hub_Macro_Utils_path%
 mkdir %AzureIoTHub_path%examples\iothub_ll_telemetry_sample\
@@ -89,6 +90,7 @@ copy %AzureIoTSDKs_path%deps\umock-c\inc\umock_c\aux_inc\ %Umock_c_path%aux_inc\
 copy %AzureIoTSDKs_path%deps\umock-c\src\ %Umock_c_path%
 copy %AzureIoTSDKs_path%deps\azure-macro-utils-c\inc\azure_macro_utils\ %Hub_Macro_Utils_path%
 copy %AzureIoTSDKs_path%deps\azure-macro-utils-c\inc\azure_macro_utils\ %Macro_Utils_path%
+copy %AzureIoTSDKs_path%deps\azure-macro-utils-c\inc\azure_macro_utils\ %Umock_c_path%azure_macro_utils\
 copy %AzureIoTSDKs_path%certs\ %AzureIoTHub_path%src\certs\
 
 copy %AzureIoTSDKs_path%c-utility\pal\agenttime.c %Adapters_path%
@@ -128,14 +130,18 @@ copy %Arduino_pal_path%AzureIoTSocket_Ethernet\socketio_esp32ethernet2.cpp %Azur
 
 del %sdk_path%*amqp*.*
 del %sdk_path%iothubtransportmqtt_websockets.*
+del %sdk_path%blob.c
+del %internal_path%blob.h
+del %Adapters_path%tlsio_bearssl*
 
-del %SharedUtility_path%tlsio_appleios.*
 del %SharedUtility_path%tlsio_cyclonessl*.*
 del %SharedUtility_path%tlsio_openssl.*
+del %SharedUtility_path%tlsio_bearssl.*
 del %SharedUtility_path%tlsio_schannel.*
 del %SharedUtility_path%tlsio_wolfssl.*
 del %SharedUtility_path%gbnetwork.*
-
+del %SharedUtility_path%dns_resolver*
+del %SharedUtility_path%logging_stacktrace*
 del %SharedUtility_path%wsio*.*
 del %SharedUtility_path%x509_*.*
 del %SharedUtility_path%etw*.*
