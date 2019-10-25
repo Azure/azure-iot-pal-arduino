@@ -3,16 +3,6 @@
 
 #include <AzureIoTUtility.h>
 
-#if defined(ARDUINO_ARCH_ESP8266) 
-// defines here are used to optimize ram usage in esp8266
-#define USE_OPTIMIZE_PRINTF
-#define PIO_FRAMEWORK_ARDUINO_LWIP2_LOW_MEMORY
-#define PIO_FRAMEWORK_ARDUINO_LWIP2_HIGHER_BANDWIDTH
-
-#include "user_interface.h"
-#include "Esp.h"
-#endif
-
 // CAVEAT: This sample is to demonstrate azure IoT client concepts only and is not a guide design principles or style
 // Checking of return codes and error values shall be omitted for brevity.  Please practice sound engineering practices
 // when writing production code.
@@ -79,7 +69,6 @@ IOTHUB_DEVICE_CLIENT_LL_HANDLE device_ll_handle;
 
 static int callbackCounter;
 int receiveContext = 0;
-//#define DOWORK_LOOP_NUM     3
 
 static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_HANDLE message, void* userContextCallback)
 {
@@ -142,10 +131,7 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
 
 void setup() {
     int result = 0;
-
-//    wdt_disable();
-    wdt_enable(5000);
-
+ 
     sample_init(ssid, pass);
 
     device_ll_handle = IoTHubDeviceClient_LL_CreateFromConnectionString(connectionString, protocol);

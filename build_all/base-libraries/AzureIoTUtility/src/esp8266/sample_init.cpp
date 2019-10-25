@@ -9,6 +9,8 @@
 #include <ESP8266WiFi.h>
 // #include <WiFiClientSecure.h>
 #include <WiFiUdp.h>
+#include "user_interface.h"
+#include "Esp.h"
 
 // Times before 2010 (1970 + 40 years) are invalid
 #define MIN_EPOCH 40 * 365 * 24 * 3600
@@ -60,6 +62,8 @@ void esp8266_sample_init(const char* ssid, const char* password)
     initSerial();
     initWifi(ssid, password);
     initTime();
+	//wdt_disable(); /* Uncomment this and comment out next line when gdb debugging. Note: use of system_get_free_heap_size() function may also help in tracking available memory. */
+    wdt_enable(5000);
 }
 
 #endif // ARDUINO_ARCH_ESP8266
