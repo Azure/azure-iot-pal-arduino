@@ -143,9 +143,11 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
 void setup() {
     int result = 0;
 
+    #if defined(ARDUINO_ARCH_ESP8266)
 //    wdt_disable();
     wdt_enable(5000);
-
+    #endif
+    
     sample_init(ssid, pass);
 
     device_ll_handle = IoTHubDeviceClient_LL_CreateFromConnectionString(connectionString, protocol);
