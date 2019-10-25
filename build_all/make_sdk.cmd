@@ -39,7 +39,7 @@ set Hub_Macro_Utils_path=%AzureIoTHub_path%src\azure_macro_utils\
 set Umock_c_path=%AzureIoTUtility_path%src\umock_c\
 set MbedTLS_path=%Arduino_pal_path%mbedtls\
 set sdk_path=%AzureIoTHub_path%src\
-set internal_path=%AzureIoTHub_path%\src\internal
+set internal_path=%AzureIoTHub_path%\src\internal\
 
 mkdir %Libraries_path%
 pushd %Libraries_path%
@@ -66,7 +66,7 @@ copy %AzureIoTSDKs_path%LICENSE %AzureIoTHub_path%LICENSE
 
 copy %AzureIoTSDKs_path%iothub_client\src\ %sdk_path%
 copy %AzureIoTSDKs_path%iothub_client\inc\ %sdk_path%
-copy %AzureIoTSDKs_path%iothub_client\inc\internal %internal_path%\
+copy %AzureIoTSDKs_path%iothub_client\inc\internal %internal_path%
 copy %AzureIoTSDKs_path%serializer\src\ %sdk_path%
 copy %AzureIoTSDKs_path%serializer\inc\ %sdk_path%
 copy %AzureIoTSDKs_path%deps\parson\parson.* %sdk_path%
