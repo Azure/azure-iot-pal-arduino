@@ -7,7 +7,6 @@
 #undef round
 #include <time.h>
 #include <ESP8266WiFi.h>
-// #include <WiFiClientSecure.h>
 #include <WiFiUdp.h>
 #include "user_interface.h"
 #include "Esp.h"
@@ -62,7 +61,9 @@ void esp8266_sample_init(const char* ssid, const char* password)
     initSerial();
     initWifi(ssid, password);
     initTime();
-	//wdt_disable(); /* Uncomment this and comment out next line when gdb debugging. Note: use of system_get_free_heap_size() function may also help in tracking available memory. */
+    /* Uncomment wdt_disable() and comment out next line when gdb debugging. 
+    Note: use of system_get_free_heap_size() function may also help in tracking available memory. */
+    //wdt_disable(); 
     wdt_enable(5000);
 }
 
