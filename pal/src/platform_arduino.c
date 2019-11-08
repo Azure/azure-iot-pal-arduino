@@ -15,9 +15,6 @@
 /*Codes_SRS_PLATFORM_ARDUINO_21_004: [ The platform_init shall allocate any memory needed to control the platform. ]*/
 int platform_init(void)
 {
-    #if defined(ARDUINO_ARCH_ESP8266)
-        return 0;
-    #endif
     return 0;
 }
 
