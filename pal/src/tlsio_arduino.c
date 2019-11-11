@@ -81,7 +81,7 @@ static void enter_tlsio_error_state(TLS_IO_INSTANCE* tls_io_instance)
 {
     if (tls_io_instance->tlsio_state != TLSIO_STATE_ERROR)
     {
-		LogInfo("Calling error callback");
+	LogInfo("Calling error callback");
         tls_io_instance->tlsio_state = TLSIO_STATE_ERROR;
         tls_io_instance->on_io_error(tls_io_instance->on_io_error_context);
     }
@@ -142,7 +142,7 @@ static void internal_close(TLS_IO_INSTANCE* tls_io_instance)
     /* Codes_SRS_TLSIO_30_051: [ On success, if the underlying TLS does not support asynchronous closing, then the adapter shall enter TLSIO_STATE_EXT_CLOSED immediately after entering TLSIO_STATE_EX_CLOSING. ]*/
     if (tls_io_instance->tlsio_state == TLSIO_STATE_OPEN)
     {
-		sslClient_stop();
+	sslClient_stop();
     }
 
     while (process_and_destroy_head_message(tls_io_instance, IO_SEND_CANCELLED));
@@ -231,7 +231,7 @@ static CONCRETE_IO_HANDLE tlsio_arduino_create(void* io_create_parameters)
                 else
                 {
                     memset(result, 0, sizeof(TLS_IO_INSTANCE));
-					result->hostname = NULL;
+		    result->hostname = NULL;
                     result->port = (uint16_t)tls_io_config->port;
                     result->tlsio_state = TLSIO_STATE_CLOSED;
                     result->hostname = NULL;
@@ -410,7 +410,7 @@ static void dowork_read(TLS_IO_INSTANCE* tls_io_instance)
             while (tls_io_instance->tlsio_state == TLSIO_STATE_OPEN && 0 != sslClient_available())
             {
                 rcv_bytes = sslClient_read(buffer, TLSIO_RECEIVE_BUFFER_SIZE);
-				LogInfo("Received %d bytes", rcv_bytes);
+		LogInfo("Received %d bytes", rcv_bytes);
 
                 if (rcv_bytes > 0)
                 {
@@ -501,7 +501,7 @@ static void dowork_poll_socket(TLS_IO_INSTANCE* tls_io_instance)
 static void dowork_poll_open_ssl(TLS_IO_INSTANCE* tls_io_instance)
 {
     int k = sslClient_connect(tls_io_instance->remote_addr, tls_io_instance->port);
-	if (k)
+    if (k)
     {
         /* Codes_SRS_TLSIO_30_080: [ The tlsio_dowork shall establish a TLS connection using the hostName and port provided during tlsio_open. ]*/
         // Connect succeeded
