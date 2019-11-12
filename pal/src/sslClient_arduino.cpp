@@ -32,10 +32,10 @@ uint8_t sslClient_connected(void)
 
 int sslClient_connect(uint32_t ipAddress, uint16_t port)
 {
-    #ifdef ARDUINO_ARCH_ESP8266
+#ifdef ARDUINO_ARCH_ESP8266
     BearSSL::X509List cert(certificates);
     sslClient.setTrustAnchors(&cert);
-    #endif
+#endif
     IPAddress ip = IPAddress(ipAddress);
     return (int)sslClient.connect(ip, port);
 }
