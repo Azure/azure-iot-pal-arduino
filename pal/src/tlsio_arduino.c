@@ -443,33 +443,33 @@ static void dowork_send(TLS_IO_INSTANCE* tls_io_instance)
     {
         PENDING_TRANSMISSION* pending_message = (PENDING_TRANSMISSION*)singlylinkedlist_item_get_value(first_pending_io);
         uint8_t* buffer = ((uint8_t*)pending_message->bytes) + pending_message->size - pending_message->unsent_size;
-	size_t write_result = sslClient_write(buffer, pending_message->unsent_size);
+        size_t write_result = sslClient_write(buffer, pending_message->unsent_size);
 	if (write_result >= 0)
 	{
-		pending_message->unsent_size -= write_result;
-		if (pending_message->unsent_size == 0)
-		{
-			/* Codes_SRS_TLSIO_30_091: [ If tlsio_arduino_compact_dowork is able to send all the bytes in an enqueued message, it shall call the messages's on_send_complete along with its associated callback_context and IO_SEND_OK. ]*/
-			// The whole message has been sent successfully
-			process_and_destroy_head_message(tls_io_instance, IO_SEND_OK);
-		}
-		else
-		{
-			/* Codes_SRS_TLSIO_30_093: [ If the TLS connection was not able to send an entire enqueued message at once, subsequent calls to tlsio_dowork shall continue to send the remaining bytes. ]*/
-			// Repeat the send on the next pass with the rest of the message
-			// This empty else compiles to nothing but helps readability
-		}
-	}
-	else
-	{
-		// The write returned non-success. It may be busy, or it may be broken
-		/* Codes_SRS_TLSIO_30_002: [ The phrase "destroy the failed message" means that the adapter shall remove the message from the queue and destroy it after calling the message's on_send_complete along with its associated callback_context and IO_SEND_ERROR. ]*/
-		/* Codes_SRS_TLSIO_30_005: [ When the adapter enters TLSIO_STATE_EXT_ERROR it shall call the  on_io_error function and pass the on_io_error_context that were supplied in  tlsio_open . ]*/
-		/* Codes_SRS_TLSIO_30_095: [ If the send process fails before sending all of the bytes in an enqueued message, tlsio_dowork shall destroy the failed message and enter TLSIO_STATE_EX_ERROR. ]*/
-		// This is an unexpected error, and we need to bail out. Probably lost internet connection.
-		LogError("Write failed");
-		process_and_destroy_head_message(tls_io_instance, IO_SEND_ERROR);
-	}
+            pending_message->unsent_size -= write_result;
+            if (pending_message->unsent_size == 0)
+            {
+                /* Codes_SRS_TLSIO_30_091: [ If tlsio_arduino_compact_dowork is able to send all the bytes in an enqueued message, it shall call the messages's on_send_complete along with its associated callback_context and IO_SEND_OK. ]*/
+                // The whole message has been sent successfully
+                process_and_destroy_head_message(tls_io_instance, IO_SEND_OK);
+            }
+            else
+            {
+                /* Codes_SRS_TLSIO_30_093: [ If the TLS connection was not able to send an entire enqueued message at once, subsequent calls to tlsio_dowork shall continue to send the remaining bytes. ]*/
+                // Repeat the send on the next pass with the rest of the message
+                // This empty else compiles to nothing but helps readability
+            }
+        }
+        else
+        {
+            // The write returned non-success. It may be busy, or it may be broken
+            /* Codes_SRS_TLSIO_30_002: [ The phrase "destroy the failed message" means that the adapter shall remove the message from the queue and destroy it after calling the message's on_send_complete along with its associated callback_context and IO_SEND_ERROR. ]*/
+            /* Codes_SRS_TLSIO_30_005: [ When the adapter enters TLSIO_STATE_EXT_ERROR it shall call the  on_io_error function and pass the on_io_error_context that were supplied in  tlsio_open . ]*/
+            /* Codes_SRS_TLSIO_30_095: [ If the send process fails before sending all of the bytes in an enqueued message, tlsio_dowork shall destroy the failed message and enter TLSIO_STATE_EX_ERROR. ]*/
+            // This is an unexpected error, and we need to bail out. Probably lost internet connection.
+            LogError("Write failed");
+            process_and_destroy_head_message(tls_io_instance, IO_SEND_ERROR);
+        }
     }
     else
     {
@@ -479,18 +479,18 @@ static void dowork_send(TLS_IO_INSTANCE* tls_io_instance)
 
 static void dowork_poll_dns(TLS_IO_INSTANCE* tls_io_instance)
 {
-	/* Codes_SRS_TLSIO_ARDUINO_21_018: [ The tlsio_arduino_create shall convert the provide hostName to an IP address. ]*/
-	if (sslClient_hostByName(STRING_c_str(tls_io_instance->hostname), &(tls_io_instance->remote_addr)))
-	{
-		tls_io_instance->tlsio_state = TLSIO_STATE_OPENING_WAITING_SOCKET;
-	}
-	else
-	{
-		/* Codes_SRS_TLSIO_ARDUINO_21_019: [ If the WiFi cannot find the IP for the hostName, the tlsio_arduino_create shall destroy the sslClient and tlsio instances and return NULL as the handle. ]*/
-		LogError("Host %s not found", STRING_c_str(tls_io_instance->hostname));
-		free(tls_io_instance);
-		tls_io_instance = NULL;
-	}
+    /* Codes_SRS_TLSIO_ARDUINO_21_018: [ The tlsio_arduino_create shall convert the provide hostName to an IP address. ]*/
+    if (sslClient_hostByName(STRING_c_str(tls_io_instance->hostname), &(tls_io_instance->remote_addr)))
+    {
+        tls_io_instance->tlsio_state = TLSIO_STATE_OPENING_WAITING_SOCKET;
+    }
+    else
+    {
+        /* Codes_SRS_TLSIO_ARDUINO_21_019: [ If the WiFi cannot find the IP for the hostName, the tlsio_arduino_create shall destroy the sslClient and tlsio instances and return NULL as the handle. ]*/
+        LogError("Host %s not found", STRING_c_str(tls_io_instance->hostname));
+        free(tls_io_instance);
+        tls_io_instance = NULL;
+    }
 }
 
 static void dowork_poll_socket(TLS_IO_INSTANCE* tls_io_instance)
@@ -538,24 +538,24 @@ static void tlsio_arduino_dowork(CONCRETE_IO_HANDLE tls_io)
             // Waiting to be opened, nothing to do
             break;
         case TLSIO_STATE_OPENING_WAITING_DNS:
-	    LogInfo("dowork TLSIO_STATE_OPENING_WAITING_DNS");
+            LogInfo("dowork TLSIO_STATE_OPENING_WAITING_DNS");
             dowork_poll_dns(tls_io_instance);
             break;
         case TLSIO_STATE_OPENING_WAITING_SOCKET:
-	    LogInfo("dowork TLSIO_STATE_OPENING_WAITING_SOCKET");
+            LogInfo("dowork TLSIO_STATE_OPENING_WAITING_SOCKET");
             dowork_poll_socket(tls_io_instance);
             break;
         case TLSIO_STATE_OPENING_WAITING_SSL:
-	    LogInfo("dowork TLSIO_STATE_OPENING_WAITING_SSL");
+            LogInfo("dowork TLSIO_STATE_OPENING_WAITING_SSL");
             dowork_poll_open_ssl(tls_io_instance);
             break;
         case TLSIO_STATE_OPEN:
-	    // LogInfo("dowork TLSIO_STATE_OPEN");
+            // LogInfo("dowork TLSIO_STATE_OPEN");
             dowork_read(tls_io_instance);
             dowork_send(tls_io_instance);
             break;
         case TLSIO_STATE_ERROR:
-	    LogInfo("dowork TLSIO_STATE_ERROR");
+            LogInfo("dowork TLSIO_STATE_ERROR");
             /* Codes_SRS_TLSIO_30_071: [ If the adapter is in TLSIO_STATE_EXT_ERROR then tlsio_dowork shall do nothing. ]*/
             // There's nothing valid to do here but wait to be retried
             break;
