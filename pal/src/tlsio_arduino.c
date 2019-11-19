@@ -81,7 +81,7 @@ static void enter_tlsio_error_state(TLS_IO_INSTANCE* tls_io_instance)
 {
     if (tls_io_instance->tlsio_state != TLSIO_STATE_ERROR)
     {
-	LogInfo("Calling error callback");
+        LogInfo("Calling error callback");
         tls_io_instance->tlsio_state = TLSIO_STATE_ERROR;
         tls_io_instance->on_io_error(tls_io_instance->on_io_error_context);
     }
@@ -238,9 +238,9 @@ static CONCRETE_IO_HANDLE tlsio_arduino_create(void* io_create_parameters)
                     result->pending_transmission_list = NULL;
                     tlsio_options_initialize(&result->options, TLSIO_OPTION_BIT_TRUSTED_CERTS);
                     
-		    /* Codes_SRS_TLSIO_30_016: [ tlsio_create shall make a copy of the hostname member of io_create_parameters to allow deletion of hostname immediately after the call. ]*/
-		    if (NULL == (result->hostname = STRING_construct(tls_io_config->hostname)))
-		    {
+                    /* Codes_SRS_TLSIO_30_016: [ tlsio_create shall make a copy of the hostname member of io_create_parameters to allow deletion of hostname immediately after the call. ]*/
+                    if (NULL == (result->hostname = STRING_construct(tls_io_config->hostname)))
+                    {
                         /* Codes_SRS_TLSIO_30_011: [ If any resource allocation fails, tlsio_create shall return NULL. ]*/
                         LogError("Failed to allocate hostname");
                         tlsio_arduino_destroy(result);
@@ -411,7 +411,7 @@ static void dowork_read(TLS_IO_INSTANCE* tls_io_instance)
             while (tls_io_instance->tlsio_state == TLSIO_STATE_OPEN && 0 != sslClient_available())
             {
                 rcv_bytes = sslClient_read(buffer, TLSIO_RECEIVE_BUFFER_SIZE);
-		LogInfo("Received %d bytes", rcv_bytes);
+                LogInfo("Received %d bytes", rcv_bytes);
 
                 if (rcv_bytes > 0)
                 {
@@ -425,7 +425,7 @@ static void dowork_read(TLS_IO_INSTANCE* tls_io_instance)
                     LogError("Communications error while reading");
                     enter_tlsio_error_state(tls_io_instance);
                 }
-		else
+                else
 		{
 		    /* Codes_SRS_TLSIO_30_102: [ If the TLS connection receives no data then tlsio_dowork shall not call the on_bytes_received
 		    callback. ]*/
@@ -444,8 +444,8 @@ static void dowork_send(TLS_IO_INSTANCE* tls_io_instance)
         PENDING_TRANSMISSION* pending_message = (PENDING_TRANSMISSION*)singlylinkedlist_item_get_value(first_pending_io);
         uint8_t* buffer = ((uint8_t*)pending_message->bytes) + pending_message->size - pending_message->unsent_size;
         size_t write_result = sslClient_write(buffer, pending_message->unsent_size);
-	if (write_result >= 0)
-	{
+        if (write_result >= 0)
+        {
             pending_message->unsent_size -= write_result;
             if (pending_message->unsent_size == 0)
             {
