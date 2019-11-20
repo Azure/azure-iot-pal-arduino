@@ -276,9 +276,9 @@ void socketio_destroy(CONCRETE_IO_HANDLE socket_io)
             if (socket_io_instance->hostname != NULL)
             {
                 // We created this socket so delete it
-    			delete socket_io_instance->socket;
+                delete socket_io_instance->socket;
             }
-			socket_io_instance->socket = NULL;
+            socket_io_instance->socket = NULL;
         }
 
         /* clear all pending IOs */
@@ -327,24 +327,23 @@ int socketio_open(CONCRETE_IO_HANDLE socket_io, ON_IO_OPEN_COMPLETE on_io_open_c
             socket_io_instance->on_bytes_received = on_bytes_received;
             socket_io_instance->on_io_error = on_io_error;
             socket_io_instance->on_io_error_context = on_io_error_context;
-
             socket_io_instance->io_state = IO_STATE_OPEN;
 
             result = 0;
         }
         else
         {
-			socket_io_instance->socket = new EthernetClient();
-			
-			if (socket_io_instance->socket == NULL)
-			{
+            socket_io_instance->socket = new EthernetClient();
+
+            if (socket_io_instance->socket == NULL)
+            {
                 LogError("Failure: socket create failure %d.", socket_io_instance->socket);
                 result = __FAILURE__;
-			}
+            }
             else if (!socket_io_instance->socket->connect(socket_io_instance->hostname, socket_io_instance->port) != 0)
             {
                 LogError("Socket connect failed");
-				result = __FAILURE__;
+                result = __FAILURE__;
             }
 
             if (result == 0)
