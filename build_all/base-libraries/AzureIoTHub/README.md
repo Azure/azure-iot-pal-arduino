@@ -63,13 +63,13 @@ You should have the following ready before beginning with any board:
 
 6. Navigate to where your esp8266 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
 	
-- Locate the board's Arduino.h (hardware/esp8266/<board package version>/cores/esp8266/) and comment out the line containing `#define round(x)`, around line 137.
+- Locate the board's Arduino.h `hardware/esp8266/<board package version>/cores/esp8266/` and comment out the line containing `#define round(x)`, around line 137.
 
 - Locate the board's platform.txt and add the defines -DDONT_USE_UPLOADTOBLOB -DUSE_BALTIMORE_CERT on line 73 (build.extra_flags=) 
 	
 	- Note1: Please change the CERT define to the appropriate cert define if not using the global portal.azure.com server, defines for which are laid out in `certs.c`
 	
-	- Note2: Due to RAM limits, you must select just one CERT define and save into memory.
+	- Note2: Due to RAM limits, you must select just one CERT define.
 
 7. Run the sample.
 	
