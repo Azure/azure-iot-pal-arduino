@@ -43,13 +43,13 @@ You should have the following ready before beginning with any board:
 
 1. Install esp8266 board support into your Arduino IDE.
 
-    * Start Arduino and open Preferences window.
+    - Start Arduino and open Preferences window.
 
-    * Enter `http://arduino.esp8266.com/stable/package_esp8266com_index.json` into Additional Board Manager URLs field. You can add multiple URLs, separating them with commas.
+    - Enter `http://arduino.esp8266.com/stable/package_esp8266com_index.json` into Additional Board Manager URLs field. You can add multiple URLs, separating them with commas.
 
-    * Open Boards Manager from Tools > Board menu and install esp8266 platform 2.5.2 or later
+    - Open Boards Manager from Tools > Board menu and install esp8266 platform 2.5.2 or later
 
-    * Select your ESP8266 board from Tools > Board menu after installation
+    - Select your ESP8266 board from Tools > Board menu after installation
 
 2. Open the `iothub_II_telemetry_sample` example from the Arduino IDE File->Examples->AzureIoTHub menu.
 
@@ -57,16 +57,18 @@ You should have the following ready before beginning with any board:
 
 4. Update Wifi SSID/Password in `iot_configs.h`
 
-    * Ensure you are using a wifi network that does not require additional manual steps after connection, such as opening a web browser.
+    - Ensure you are using a wifi network that does not require additional manual steps after connection, such as opening a web browser.
 
 5. Update IoT Hub Connection string in `iot_configs.h`
 
 6. Navigate to where your esp8266 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
 	
-	* Locate the board's Arduino.h (hardware/esp8266/<board package version>/cores/esp8266/) and comment out the line containing `#define round(x)`, around line 137.
+- Locate the board's Arduino.h (hardware/esp8266/<board package version>/cores/esp8266/) and comment out the line containing `#define round(x)`, around line 137.
 
-	* Locate the board's platform.txt and add the defines -DDONT_USE_UPLOADTOBLOB -DUSE_BALTIMORE_CERT on line 73 (build.extra_flags=) 
+- Locate the board's platform.txt and add the defines -DDONT_USE_UPLOADTOBLOB -DUSE_BALTIMORE_CERT on line 73 (build.extra_flags=) 
+	
 	- Note1: Please change the CERT define to the appropriate cert define if not using the global portal.azure.com server, defines for which are laid out in `certs.c`
+	
 	- Note2: Due to RAM limits, you must select just one CERT define and save into memory.
 
 7. Run the sample.
