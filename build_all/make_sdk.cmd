@@ -24,14 +24,14 @@ set AzureIoTSDKs_path=%arduino_repo_root%sdk\
 set AzureIoTHub_path=%Libraries_path%\AzureIoTHub\
 set AzureIoTProtocolHTTP_path=%Libraries_path%\AzureIoTProtocol_HTTP\
 set AzureIoTProtocolMQTT_path=%Libraries_path%\AzureIoTProtocol_MQTT\
-rem set AzureIoTProtocolAMQP_path=%Libraries_path%\AzureIoTProtocol_AMQP\
+
 set AzureIoTUtility_path=%Libraries_path%\AzureIoTUtility\
 set AzureIoTSocketWiFi_path=%Libraries_path%\AzureIoTSocket_WiFi\
 set AzureIoTSocketEthernet_path=%Libraries_path%\AzureIoTSocket_Ethernet2\
 
 set AzureUHTTP_path=%AzureIoTProtocolHTTP_path%src\azure_uhttp_c\
 set AzureUMQTT_path=%AzureIoTProtocolMQTT_path%src\azure_umqtt_c\
-set AzureUAMQP_path=%AzureIoTProtocolAMQP_path%src\azure_uamqp_c\
+
 set SharedUtility_path=%AzureIoTUtility_path%src\azure_c_shared_utility\
 set Adapters_path=%AzureIoTUtility_path%src\adapters\
 set Macro_Utils_path=%AzureIoTUtility_path%src\azure_c_shared_utility\azure_macro_utils\
