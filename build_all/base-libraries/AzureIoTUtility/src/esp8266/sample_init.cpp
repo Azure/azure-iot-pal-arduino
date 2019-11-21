@@ -29,8 +29,8 @@ static void initWifi(const char* ssid, const char* pass) {
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pass);
     while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
+        delay(500);
+        Serial.print(".");
     }
     
     Serial.println("\r\nConnected to wifi");
