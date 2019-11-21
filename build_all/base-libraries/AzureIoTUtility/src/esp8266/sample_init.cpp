@@ -4,7 +4,6 @@
 #ifdef ARDUINO_ARCH_ESP8266
 
 #include <Arduino.h>
-#undef round
 #include <time.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
