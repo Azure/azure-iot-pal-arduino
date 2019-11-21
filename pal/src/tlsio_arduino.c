@@ -513,7 +513,7 @@ static void dowork_poll_open_ssl(TLS_IO_INSTANCE* tls_io_instance)
     }
     else
     {
-	LogError("Error opening socket %d", k);
+	LogError("Error opening socket %d", connect_success);
         enter_open_error_state(tls_io_instance);
     }
 }
@@ -700,8 +700,9 @@ const IO_INTERFACE_DESCRIPTION* tlsio_arduino_get_interface_description(void)
     return &tlsio_arduino_interface_description;
 }
 
+#ifndef USE_MBEDTLS
 const IO_INTERFACE_DESCRIPTION* socketio_get_interface_description(void)
 {
     return NULL;
 }
-
+#endif
