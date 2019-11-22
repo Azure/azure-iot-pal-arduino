@@ -53,15 +53,13 @@ You should have the following ready before beginning with any board:
 
 2. Open the `iothub_II_telemetry_sample` example from the Arduino IDE File->Examples->AzureIoTHub menu.
 
-3. Update the sketch as directed by comments in the sample to support the ESP8266 board.
-
-4. Update Wifi SSID/Password in `iot_configs.h`
+3. Update Wifi SSID/Password in `iot_configs.h`
 
     - Ensure you are using a wifi network that does not require additional manual steps after connection, such as opening a web browser.
 
-5. Update IoT Hub Connection string in `iot_configs.h`
+4. Update IoT Hub Connection string in `iot_configs.h`
 
-6. Navigate to where your esp8266 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
+5. Navigate to where your esp8266 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
 	
 - Locate the board's Arduino.h `hardware/esp8266/<board package version>/cores/esp8266/` and comment out the line containing `#define round(x)`, around line 137.
 
@@ -70,6 +68,44 @@ You should have the following ready before beginning with any board:
 	- Note1: Please change the CERT define to the appropriate cert define if not using the global portal.azure.com server, defines for which are laid out in `certs.c`
 	
 	- Note2: Due to RAM limits, you must select just one CERT define.
+
+6. Navigate to the AzureIoTUtility library location, typically `C:\Users\<your username>\Documents\Arduino\libraries\AzureIoTUtility\src` on Windows, and `~/Arduino/libraries/AzureIoTUtility/src` on Linux.
+- Once there, ensure that tlsio_mbedtls.c either is NOT in the `adapters` folder or IS defined/commented out, as this file will produce compile errors when building for esp8266.
+
+7. Run the sample.
+	
+8. Access the [SparkFun Get Started](https://azure.microsoft.com/en-us/documentation/samples/iot-hub-c-thingdev-getstartedkit/) tutorial to learn more about Microsoft Sparkfun Dev Kit.
+
+9. Access the [Huzzah Get Started](https://azure.microsoft.com/en-us/documentation/samples/iot-hub-c-huzzah-getstartedkit/) tutorial to learn more about Microsoft Huzzah Dev Kit.
+
+## ESP32
+
+##### Sparkfun ESP32 Thing, Adafruit ESP32 Feather , or generic ESP32 board
+
+1. Install esp32 board support into your Arduino IDE.
+
+    - Start Arduino and open Preferences window.
+
+    - Enter `https://dl.espressif.com/dl/package_esp32_index.json` into Additional Board Manager URLs field. You can add multiple URLs, separating them with commas.
+
+    - Open Boards Manager from Tools > Board menu and install esp32 platform 1.0.2 or later
+
+    - Select your ESP32 board from Tools > Board menu after installation
+
+2. Open the `iothub_II_telemetry_sample` example from the Arduino IDE File->Examples->AzureIoTHub menu.
+
+3. Update Wifi SSID/Password in `iot_configs.h`
+
+    - Ensure you are using a wifi network that does not require additional manual steps after connection, such as opening a web browser.
+
+4. Update IoT Hub Connection string in `iot_configs.h`
+
+5. Navigate to where your esp8266 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
+
+- Locate the board's platform.txt and add the define -DDONT_USE_UPLOADTOBLOB on line 53 (build.extra_flags=) 
+	
+6. Navigate to the AzureIoTUtility library location, typically `C:\Users\<your username>\Documents\Arduino\libraries\AzureIoTUtility\src` on Windows, and `~/Arduino/libraries/AzureIoTUtility/src` on Linux
+- Once there, ensure that tlsio_mbedtls.c is in the `adapters` folder.
 
 7. Run the sample.
 	
