@@ -5,7 +5,7 @@
 #include "azure_c_shared_utility/platform.h"
 #include "azure_c_shared_utility/xlogging.h"
 #include "azure_c_shared_utility/socketio.h"
-#if defined(ESP32)
+#if defined(ARDUINO_ARCH_ESP32)
     #include "tlsio_mbedtls.h"
 #else
     #include "tlsio_arduino.h"
@@ -33,7 +33,7 @@ STRING_HANDLE platform_get_platform_info(PLATFORM_INFO_OPTION options)
 /*Codes_SRS_PLATFORM_ARDUINO_21_007: [ The platform_get_default_tlsio shall return a set of tlsio functions provided by the Arduino tlsio implementation. ]*/
 const IO_INTERFACE_DESCRIPTION* platform_get_default_tlsio(void)
 {
-    #if defined(ESP32)
+    #if defined(ARDUINO_ARCH_ESP32)
         return tlsio_mbedtls_get_interface_description();
     #else
         return tlsio_arduino_get_interface_description();

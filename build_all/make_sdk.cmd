@@ -10,6 +10,13 @@ if "%1" equ "" (
     echo make_sdk.cmd requires a single output directory parameter
     exit /b 1
 )
+
+set use_mbedtls="true"
+if "%2" equ "esp8266" (
+	echo building without mbedtls adapter
+	set use_mbedtls="false"
+)
+
 set Libraries_path=%1
 
 rem // The location of the Azure IoT SDK relative to this file
@@ -105,6 +112,7 @@ rem // Copy the Arduino-specific files from the Arduino PAL path
 copy %Arduino_pal_path%inc\*.* %Adapters_path%
 copy %Arduino_pal_path%src\*.* %Adapters_path%
 
+if %use_mbedtls% equ "true" (
 rem // Copy MbedTLS to target
 robocopy %MbedTLS_path%library %AzureIoTUtility_path%src\mbedtls-%MbedTLS_version% *.c /MIR
 robocopy %MbedTLS_path%include\mbedtls %AzureIoTUtility_path%src\mbedtls-%MbedTLS_version%\mbedtls *.h /MIR
@@ -113,7 +121,9 @@ robocopy %MbedTLS_path%include\mbedtls %AzureIoTUtility_path%src\mbedtls-%MbedTL
 
 rem // Use the MbedTLS adaptor instead of the above
 copy %AzureIoTSDKs_path%c-utility\adapters\tlsio_mbedtls.c %Adapters_path%
-rem copy %AzureIoTSDKs_path%c-utility\adapters\tlsio_bearssl.c %Adapters_path%
+copy %AzureIoTSDKs_path%c-utility\inc\azure_c_shared_utility\tlsio_mbedtls.h %Adapters_path%
+)
+
 
 mkdir %AzureUHTTP_path%
 copy %AzureIoTSDKs_path%c-utility\adapters\httpapi_compact.c %AzureUHTTP_path%
