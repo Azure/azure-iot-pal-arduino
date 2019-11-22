@@ -700,7 +700,7 @@ const IO_INTERFACE_DESCRIPTION* tlsio_arduino_get_interface_description(void)
     return &tlsio_arduino_interface_description;
 }
 
-#ifndef USE_MBEDTLS
+#ifndef ARDUINO_ARCH_ESP32
 const IO_INTERFACE_DESCRIPTION* socketio_get_interface_description(void)
 {
     return NULL;
