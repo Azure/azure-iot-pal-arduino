@@ -134,7 +134,7 @@ static int add_pending_io(SOCKET_IO_INSTANCE* socket_io_instance, const unsigned
     PENDING_SOCKET_IO* pending_socket_io = (PENDING_SOCKET_IO*)malloc(sizeof(PENDING_SOCKET_IO));
     if (pending_socket_io == NULL)
     {
-        result = __FAILURE__;
+        result = MU_FAILURE;
     }
     else
     {
@@ -143,7 +143,7 @@ static int add_pending_io(SOCKET_IO_INSTANCE* socket_io_instance, const unsigned
         {
             LogError("Allocation Failure: Unable to allocate pending list.");
             free(pending_socket_io);
-            result = __FAILURE__;
+            result = MU_FAILURE;
         }
         else
         {
@@ -158,7 +158,7 @@ static int add_pending_io(SOCKET_IO_INSTANCE* socket_io_instance, const unsigned
                 LogError("Failure: Unable to add socket to pending list.");
                 free(pending_socket_io->bytes);
                 free(pending_socket_io);
-                result = __FAILURE__;
+                result = MU_FAILURE;
             }
             else
             {
@@ -177,7 +177,7 @@ static int add_pending_io(SOCKET_IO_INSTANCE* socket_io_instance, const unsigned
             (fcntl(socket_io_instance->socket, F_SETFL, flags | O_NONBLOCK) == -1))
         {
             LogError("Failure: fcntl failure.");
-            result = __FAILURE__;
+            result = MU_FAILURE;
         }
         else
         {
@@ -185,7 +185,7 @@ static int add_pending_io(SOCKET_IO_INSTANCE* socket_io_instance, const unsigned
             if ((err != 0) && (errno != EINPROGRESS))
             {
                 LogError("Failure: connect failure %d.", errno);
-                result = __FAILURE__;
+                result = MU_FAILURE;
             }
         }
     }
@@ -311,14 +311,14 @@ int socketio_open(CONCRETE_IO_HANDLE socket_io, ON_IO_OPEN_COMPLETE on_io_open_c
     if (socket_io == NULL)
     {
         LogError("Invalid argument: SOCKET_IO_INSTANCE is NULL");
-        result = __FAILURE__;
+        result = MU_FAILURE;
     }
     else
     {
         if (socket_io_instance->io_state != IO_STATE_CLOSED)
         {
             LogError("Failure: socket state is not closed.");
-            result = __FAILURE__;
+            result = MU_FAILURE;
         }
         else if (socket_io_instance->socket != NULL)
         {
@@ -338,12 +338,12 @@ int socketio_open(CONCRETE_IO_HANDLE socket_io, ON_IO_OPEN_COMPLETE on_io_open_c
             if (socket_io_instance->socket == NULL)
             {
                 LogError("Failure: socket create failure %d.", socket_io_instance->socket);
-                result = __FAILURE__;
+                result = MU_FAILURE;
             }
             else if (!socket_io_instance->socket->connect(socket_io_instance->hostname, socket_io_instance->port) != 0)
             {
                 LogError("Socket connect failed");
-                result = __FAILURE__;
+                result = MU_FAILURE;
             }
 
             if (result == 0)
@@ -381,7 +381,7 @@ int socketio_close(CONCRETE_IO_HANDLE socket_io, ON_IO_CLOSE_COMPLETE on_io_clos
 
     if (socket_io == NULL)
     {
-        result = __FAILURE__;
+        result = MU_FAILURE;
     }
     else
     {
@@ -424,7 +424,7 @@ int socketio_send(CONCRETE_IO_HANDLE socket_io, const void* buffer, size_t size,
     {
         /* Invalid arguments */
         LogError("Invalid argument: send given invalid parameter");
-        result = __FAILURE__;
+        result = MU_FAILURE;
     }
     else
     {
@@ -432,7 +432,7 @@ int socketio_send(CONCRETE_IO_HANDLE socket_io, const void* buffer, size_t size,
         if (socket_io_instance->io_state != IO_STATE_OPEN)
         {
             LogError("Failure: socket state is not opened.");
-            result = __FAILURE__;
+            result = MU_FAILURE;
         }
         else
         {
@@ -442,7 +442,7 @@ int socketio_send(CONCRETE_IO_HANDLE socket_io, const void* buffer, size_t size,
                 if (add_pending_io(socket_io_instance, (const unsigned char*)buffer, size, on_send_complete, callback_context) != 0)
                 {
                     LogError("Failure: add_pending_io failed.");
-                    result = __FAILURE__;
+                    result = MU_FAILURE;
                 }
                 else
                 {
@@ -456,7 +456,7 @@ int socketio_send(CONCRETE_IO_HANDLE socket_io, const void* buffer, size_t size,
                 if (send_result == 0)
                 {
                     LogError("Failure: sending socket failed. errno=%d (%s).", errno, strerror(errno));
-                    result = __FAILURE__;
+                    result = MU_FAILURE;
                 }
                 else if (send_result < size)
                 {
@@ -464,7 +464,7 @@ int socketio_send(CONCRETE_IO_HANDLE socket_io, const void* buffer, size_t size,
                     if (add_pending_io(socket_io_instance, (const unsigned char*)((char *)buffer + send_result), size - send_result, on_send_complete, callback_context) != 0)
                     {
                         LogError("Failure: add_pending_io failed.");
-                        result = __FAILURE__;
+                        result = MU_FAILURE;
                     }
                     else
                     {
