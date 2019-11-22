@@ -43,4 +43,4 @@ void esp32_sample_init(const char* ssid, const char* password)
     initTime();
 }
 
-#endif // ARDUINO_ARCH_ESP8266
+#endif // ARDUINO_ARCH_ESP32
