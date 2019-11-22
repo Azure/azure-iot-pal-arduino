@@ -18,6 +18,10 @@ Currently supported hardware:
   - SparkFun [Thing](https://www.sparkfun.com/products/13711)
 
   - Adafruit [Feather Huzzah](https://www.adafruit.com/products/2821)
+  
+- ESP32 based boards with [espressif/arduino-esp32](https://github.com/espressif/arduino-esp32)
+  
+  - Adafruit [HUZZAH32](https://www.adafruit.com/product/3405)
 
 ## Prerequisites
 
@@ -29,11 +33,15 @@ You should have the following ready before beginning with any board:
 
 -   [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 
--   Install the `AzureIoTHub` library via the Arduino IDE Library Manager
+-   Generate the Libraries by executing the make_sdk.cmd file with the folder to build to as arg 1, and the board you are using (esp8266, esp32) as arg 2 *OR*:
 
--   Install the `AzureIoTUtility` library via the Arduino IDE Library Manager
+	-   Install the `AzureIoTHub` library via the Arduino IDE Library Manager
 
--   Install the `AzureIoTProtocol_MQTT` library via the Arduino IDE Library Manager
+	-   Install the `AzureIoTUtility` library via the Arduino IDE Library Manager
+
+	-   Install the `AzureIoTProtocol_MQTT` library via the Arduino IDE Library Manager
+
+	-   Install the `AzureIoTSocket_WiFi` library via the Arduino IDE Library Manager
 
 # Simple Sample Instructions
 
@@ -80,7 +88,7 @@ You should have the following ready before beginning with any board:
 
 ## ESP32
 
-##### Sparkfun ESP32 Thing, Adafruit ESP32 Feather , or generic ESP32 board
+##### Sparkfun ESP32 Thing, Adafruit ESP32 Feather, or generic ESP32 board
 
 1. Install esp32 board support into your Arduino IDE.
 
@@ -100,7 +108,7 @@ You should have the following ready before beginning with any board:
 
 4. Update IoT Hub Connection string in `iot_configs.h`
 
-5. Navigate to where your esp8266 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
+5. Navigate to where your esp32 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
 
 - Locate the board's platform.txt and add the define -DDONT_USE_UPLOADTOBLOB on line 53 (build.extra_flags=) 
 	
