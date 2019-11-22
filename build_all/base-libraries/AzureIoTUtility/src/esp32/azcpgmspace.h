@@ -29,4 +29,4 @@ extern size_t az_c_strlen_P(PGM_P s);
 
 #endif // _AZCPGMSPACE_H
 
-#endif // #if defined(ARDUINO_ARCH_ESP8266)
+#endif //
