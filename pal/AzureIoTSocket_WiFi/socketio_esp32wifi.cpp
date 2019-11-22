@@ -171,146 +171,7 @@ static int add_pending_io(SOCKET_IO_INSTANCE* socket_io_instance, const unsigned
     }
     return result;
 }
-/*
-static int lookup_address_and_initiate_socket_connection(SOCKET_IO_INSTANCE* socket_io_instance)
-{
-    int result;
-    int err;
 
-    struct addrinfo addrInfoHintIp;
-    struct sockaddr_un addrInfoUn;
-    struct sockaddr* connect_addr = NULL;
-    socklen_t connect_addr_len;
-    struct addrinfo* addrInfoIp = NULL;
-
-    if (socket_io_instance->address_type == ADDRESS_TYPE_IP)
-    {
-        char portString[16];
-
-        memset(&addrInfoHintIp, 0, sizeof(addrInfoHintIp));
-        addrInfoHintIp.ai_family = AF_INET;
-        addrInfoHintIp.ai_socktype = SOCK_STREAM;
-
-        sprintf(portString, "%u", socket_io_instance->port);
-        err = getaddrinfo(socket_io_instance->hostname, portString, &addrInfoHintIp, &addrInfoIp);
-        if (err != 0)
-        {
-            LogError("Failure: getaddrinfo failure %d.", err);
-            result = MU_FAILURE;
-        }
-        else
-        {
-            connect_addr = addrInfoIp->ai_addr;
-            connect_addr_len = sizeof(*addrInfoIp->ai_addr);
-            result = 0;
-        }
-    }
-    else
-    {
-        size_t hostname_len = strlen(socket_io_instance->hostname);
-        if (hostname_len + 1 > sizeof(addrInfoUn.sun_path))
-        {
-            LogError("Hostname %s is too long for a unix socket (max len = %zu)", socket_io_instance->hostname, sizeof(addrInfoUn.sun_path));
-            result = MU_FAILURE;
-        }
-        else
-        {
-            memset(&addrInfoUn, 0, sizeof(addrInfoUn));
-            addrInfoUn.sun_family = AF_UNIX;
-            // No need to add NULL terminator due to the above memset
-            (void)memcpy(addrInfoUn.sun_path, socket_io_instance->hostname, hostname_len);
-
-            connect_addr = (struct sockaddr*)&addrInfoUn;
-            connect_addr_len = sizeof(addrInfoUn);
-            result = 0;
-        }
-    }
-
-    if (result == 0)
-    {
-        int flags;
-
-        if ((-1 == (flags = fcntl(socket_io_instance->socket, F_GETFL, 0))) ||
-            (fcntl(socket_io_instance->socket, F_SETFL, flags | O_NONBLOCK) == -1))
-        {
-            LogError("Failure: fcntl failure.");
-            result = MU_FAILURE;
-        }
-        else
-        {
-            err = connect(socket_io_instance->socket, connect_addr, connect_addr_len);
-            if ((err != 0) && (errno != EINPROGRESS))
-            {
-                LogError("Failure: connect failure %d.", errno);
-                result = MU_FAILURE;
-            }
-        }
-    }
-
-    if (addrInfoIp != NULL)
-    {
-        freeaddrinfo(addrInfoIp);
-    }
-
-    return result;
-}
-*/
-/*
-static int wait_for_connection(SOCKET_IO_INSTANCE* socket_io_instance)
-{
-    int result;
-    int err;
-    int retval;
-    int select_errno = 0;
-
-    fd_set fdset;
-    struct timeval tv;
-
-    FD_ZERO(&fdset);
-    FD_SET(socket_io_instance->socket, &fdset);
-    tv.tv_sec = CONNECT_TIMEOUT;
-    tv.tv_usec = 0;
-
-    do
-    {
-        retval = select(socket_io_instance->socket + 1, NULL, &fdset, NULL, &tv);
-
-        if (retval < 0)
-        {
-            select_errno = errno;
-        }
-    } while (retval < 0 && select_errno == EINTR);
-
-    if (retval != 1)
-    {
-        LogError("Failure: select failure.");
-        result = MU_FAILURE;
-    }
-    else
-    {
-        int so_error = 0;
-        socklen_t len = sizeof(so_error);
-        err = getsockopt(socket_io_instance->socket, SOL_SOCKET, SO_ERROR, &so_error, &len);
-        if (err != 0)
-        {
-            LogError("Failure: getsockopt failure %d.", errno);
-            result = MU_FAILURE;
-        }
-        else if (so_error != 0)
-        {
-            err = so_error;
-            LogError("Failure: connect failure %d.", so_error);
-            result = MU_FAILURE;
-        }
-        else
-        {
-            result = 0;
-        }
-    }
-
-    return result;
-}
-*/
 CONCRETE_IO_HANDLE socketio_create(void* io_create_parameters)
 {
     SOCKETIO_CONFIG* socket_io_config = (SOCKETIO_CONFIG*)io_create_parameters;
@@ -390,9 +251,9 @@ void socketio_destroy(CONCRETE_IO_HANDLE socket_io)
             if (socket_io_instance->hostname != NULL)
             {
                 // We created this socket so delete it
-    			delete socket_io_instance->socket;
+                delete socket_io_instance->socket;
             }
-			socket_io_instance->socket = NULL;
+            socket_io_instance->socket = NULL;
         }
 
         /* clear all pending IOs */
@@ -448,17 +309,17 @@ int socketio_open(CONCRETE_IO_HANDLE socket_io, ON_IO_OPEN_COMPLETE on_io_open_c
         }
         else
         {
-			socket_io_instance->socket = new WiFiClient();
-			
-			if (socket_io_instance->socket == NULL)
-			{
+            socket_io_instance->socket = new WiFiClient();
+
+            if (socket_io_instance->socket == NULL)
+            {
                 LogError("Failure: socket create failure %d.", socket_io_instance->socket);
                 result = MU_FAILURE;
-			}
+            }
             else if (!socket_io_instance->socket->connect(socket_io_instance->hostname, socket_io_instance->port) != 0)
             {
                 LogError("Socket connect failed");
-				result = MU_FAILURE;
+                result = MU_FAILURE;
             }
 
             if (result == 0)
@@ -473,11 +334,11 @@ int socketio_open(CONCRETE_IO_HANDLE socket_io, ON_IO_OPEN_COMPLETE on_io_open_c
             }
             else
             {
-				if (socket_io_instance->socket != NULL)
-				{
-					delete socket_io_instance->socket;
-					socket_io_instance->socket == NULL;
-				}
+                if (socket_io_instance->socket != NULL)
+                {
+                    delete socket_io_instance->socket;
+                    socket_io_instance->socket == NULL;
+                }
             }
         }
     }
@@ -502,9 +363,9 @@ int socketio_close(CONCRETE_IO_HANDLE socket_io, ON_IO_CLOSE_COMPLETE on_io_clos
     {
         SOCKET_IO_INSTANCE* socket_io_instance = (SOCKET_IO_INSTANCE*)socket_io;
 		
-		if ((socket_io_instance->io_state != IO_STATE_CLOSED) && (socket_io_instance->io_state != IO_STATE_CLOSING))
-		{
-			// Only close if the socket isn't already in the closed or closing state
+        if ((socket_io_instance->io_state != IO_STATE_CLOSED) && (socket_io_instance->io_state != IO_STATE_CLOSING))
+        {
+            // Only close if the socket isn't already in the closed or closing state
             if (socket_io_instance->socket != NULL)
             {
                 socket_io_instance->socket->stop();
@@ -513,19 +374,19 @@ int socketio_close(CONCRETE_IO_HANDLE socket_io, ON_IO_CLOSE_COMPLETE on_io_clos
             if (socket_io_instance->hostname != NULL)
             {
                 // We created this socket so delete it
-    			delete socket_io_instance->socket;
+                delete socket_io_instance->socket;
             }
 			
             socket_io_instance->socket = NULL;
-			socket_io_instance->io_state = IO_STATE_CLOSED;
-		}
+            socket_io_instance->io_state = IO_STATE_CLOSED;
+        }
 
-		if (on_io_close_complete != NULL)
-		{
-			on_io_close_complete(callback_context);
-		}
+        if (on_io_close_complete != NULL)
+        {
+            on_io_close_complete(callback_context);
+        }
 
-		result = 0;
+        result = 0;
     }
 
     return result;
@@ -575,29 +436,29 @@ int socketio_send(CONCRETE_IO_HANDLE socket_io, const void* buffer, size_t size,
                     LogError("Failure: sending socket failed. errno=%d (%s).", errno, strerror(errno));
                     result = MU_FAILURE;
                 }
-				else if (send_result < size)
-				{
-					/* queue data */
-					if (add_pending_io(socket_io_instance, (const unsigned char*)(buffer + send_result), size - send_result, on_send_complete, callback_context) != 0)
-					{
-						LogError("Failure: add_pending_io failed.");
-						result = MU_FAILURE;
-					}
-					else
-					{
-						result = send_result;
-					}
-				}
-				else
-				{
-					if (on_send_complete != NULL)
-					{
-						on_send_complete(callback_context, IO_SEND_OK);
-					}
+                else if (send_result < size)
+                {
+                    /* queue data */
+                    if (add_pending_io(socket_io_instance, (const unsigned char*)(buffer + send_result), size - send_result, on_send_complete, callback_context) != 0)
+                    {
+                        LogError("Failure: add_pending_io failed.");
+                        result = MU_FAILURE;
+                    }
+                    else
+                    {
+                        result = send_result;
+                    }
+                }
+                else
+                {
+                    if (on_send_complete != NULL)
+                    {
+                        on_send_complete(callback_context, IO_SEND_OK);
+                    }
 
-					result = 0;
-				}
-			}
+                    result = 0;
+                }
+            }
         }
     }
 
@@ -623,19 +484,19 @@ void socketio_dowork(CONCRETE_IO_HANDLE socket_io)
             ssize_t send_result = socket_io_instance->socket->write(pending_socket_io->bytes, pending_socket_io->size);
             if (send_result == 0)
             {
-				free(pending_socket_io->bytes);
-				free(pending_socket_io);
-				(void)singlylinkedlist_remove(socket_io_instance->pending_io_list, first_pending_io);
+                free(pending_socket_io->bytes);
+                free(pending_socket_io);
+                (void)singlylinkedlist_remove(socket_io_instance->pending_io_list, first_pending_io);
 
-				LogError("Failure: sending Socket information");
-				indicate_error(socket_io_instance);
-			}
-			else if (send_result < pending_socket_io->size)
-			{
-				/* simply wait until next dowork */
-				(void)memmove(pending_socket_io->bytes, pending_socket_io->bytes + send_result, pending_socket_io->size - send_result);
-				pending_socket_io->size -= send_result;
-				break;
+                LogError("Failure: sending Socket information");
+                indicate_error(socket_io_instance);
+            }
+            else if (send_result < pending_socket_io->size)
+            {
+                /* simply wait until next dowork */
+                (void)memmove(pending_socket_io->bytes, pending_socket_io->bytes + send_result, pending_socket_io->size - send_result);
+                pending_socket_io->size -= send_result;
+                break;
             }
             else
             {
@@ -662,7 +523,7 @@ void socketio_dowork(CONCRETE_IO_HANDLE socket_io)
 
             while (socket_io_instance->socket->available() && socket_io_instance->io_state == IO_STATE_OPEN)
             {
-				received = socket_io_instance->socket->read(socket_io_instance->recv_bytes, RECEIVE_BYTES_VALUE);
+                received = socket_io_instance->socket->read(socket_io_instance->recv_bytes, RECEIVE_BYTES_VALUE);
 
                 if (received > 0)
                 {
