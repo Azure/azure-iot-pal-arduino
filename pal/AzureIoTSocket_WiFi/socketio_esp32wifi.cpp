@@ -20,9 +20,6 @@
 #include "azure_c_shared_utility/xio.h"
 #include "azure_c_shared_utility/socketio.h"
 
-// connect timeout in seconds
-//#define CONNECT_TIMEOUT         10
-
 typedef enum IO_STATE_TAG
 {
     IO_STATE_CLOSED,
@@ -67,12 +64,9 @@ typedef struct NETWORK_INTERFACE_DESCRIPTION_TAG
 /*this function will clone an option given by name and value*/
 static void* socketio_CloneOption(const char* name, const void* value)
 {
-    void* result;
-
     LogError("Cannot clone option %s (not supported)", name);
-    result = NULL;
 
-    return result;
+    return NULL;
 }
 
 /*this function destroys an option previously created*/
@@ -134,6 +128,7 @@ static void indicate_error(SOCKET_IO_INSTANCE* socket_io_instance)
 static int add_pending_io(SOCKET_IO_INSTANCE* socket_io_instance, const unsigned char* buffer, size_t size, ON_SEND_COMPLETE on_send_complete, void* callback_context)
 {
     int result;
+
     PENDING_SOCKET_IO* pending_socket_io = (PENDING_SOCKET_IO*)malloc(sizeof(PENDING_SOCKET_IO));
     if (pending_socket_io == NULL)
     {
@@ -169,6 +164,7 @@ static int add_pending_io(SOCKET_IO_INSTANCE* socket_io_instance, const unsigned
             }
         }
     }
+
     return result;
 }
 
@@ -209,7 +205,7 @@ CONCRETE_IO_HANDLE socketio_create(void* io_create_parameters)
                 else
                 {
                     result->hostname = NULL;
-                    *result->socket = *((WiFiClient*)socket_io_config->accepted_socket);
+                    result->socket = (WiFiClient*)socket_io_config->accepted_socket;
                 }
 
                 if ((result->hostname == NULL) && (result->socket == NULL))
@@ -280,7 +276,7 @@ void socketio_destroy(CONCRETE_IO_HANDLE socket_io)
 
 int socketio_open(CONCRETE_IO_HANDLE socket_io, ON_IO_OPEN_COMPLETE on_io_open_complete, void* on_io_open_complete_context, ON_BYTES_RECEIVED on_bytes_received, void* on_bytes_received_context, ON_IO_ERROR on_io_error, void* on_io_error_context)
 {
-    int result = 0;
+    int result;
 
     SOCKET_IO_INSTANCE* socket_io_instance = (SOCKET_IO_INSTANCE*)socket_io;
     if (socket_io == NULL)
@@ -321,6 +317,10 @@ int socketio_open(CONCRETE_IO_HANDLE socket_io, ON_IO_OPEN_COMPLETE on_io_open_c
                 LogError("Socket connect failed");
                 result = MU_FAILURE;
             }
+            else
+            {
+                result = 0;
+            }
 
             if (result == 0)
             {
@@ -353,7 +353,7 @@ int socketio_open(CONCRETE_IO_HANDLE socket_io, ON_IO_OPEN_COMPLETE on_io_open_c
 
 int socketio_close(CONCRETE_IO_HANDLE socket_io, ON_IO_CLOSE_COMPLETE on_io_close_complete, void* callback_context)
 {
-    int result = 0;
+    int result;
 
     if (socket_io == NULL)
     {
@@ -446,7 +446,7 @@ int socketio_send(CONCRETE_IO_HANDLE socket_io, const void* buffer, size_t size,
                     }
                     else
                     {
-                        result = send_result;
+                        size_t bytes_sent = (send_result < 0 ? 0 : send_result);
                     }
                 }
                 else
@@ -545,9 +545,7 @@ void socketio_dowork(CONCRETE_IO_HANDLE socket_io)
 
 int socketio_setoption(CONCRETE_IO_HANDLE socket_io, const char* optionName, const void* value)
 {
-    int result = 0;
-
-    return result;
+    return 0;
 }
 
 const IO_INTERFACE_DESCRIPTION* socketio_get_interface_description(void)

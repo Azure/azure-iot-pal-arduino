@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#ifndef ARDUINO_ARCH_ESP8266
+#ifdef ARDUINO_ARCH_ESP32
 #include "azcpgmspace.h"
 #include <cstddef>
  
@@ -13,4 +13,4 @@ size_t az_c_strlen_P(PGM_P s) {
     return strlen_P(s);
 }
 
-#endif
+#endif // ARDUINO_ARCH_ESP32

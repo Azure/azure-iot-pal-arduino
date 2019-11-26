@@ -11,8 +11,7 @@
 #include "Esp.h"
 
 // Times before 2010 (1970 + 40 years) are invalid
-#define MIN_EPOCH 40 * 365 * 24 * 3600
-
+#define MIN_EPOCH (40 * 365 * 24 * 3600)
 
 static void initSerial() {
     // Start serial and initialize stdout

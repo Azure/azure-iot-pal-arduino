@@ -11,7 +11,7 @@
 #include <WiFiUdp.h>
 
 // Times before 2010 (1970 + 40 years) are invalid
-#define MIN_EPOCH 40 * 365 * 24 * 3600
+#define MIN_EPOCH (40 * 365 * 24 * 3600)
 
 
 static void initSerial() {
@@ -35,6 +35,25 @@ static void initWifi(const char* ssid, const char* pass) {
     Serial.println("\r\nConnected to wifi");
 }
 
+static void initTime()
+{
+   time_t epochTime;
+
+   configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+
+   while (true) {
+       epochTime = time(NULL);
+
+       if (epochTime < MIN_EPOCH) {
+           Serial.println("Fetching NTP epoch time failed! Waiting 2 seconds to retry.");
+           delay(2000);
+       } else {
+           Serial.print("Fetched NTP epoch time is: ");
+           Serial.println(epochTime);
+           break;
+       }
+   }
+}
 
 void esp32_sample_init(const char* ssid, const char* password)
 {

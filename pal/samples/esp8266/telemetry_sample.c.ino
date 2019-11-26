@@ -106,7 +106,7 @@ static void send_confirm_callback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void
     // When a message is sent this callback will get envoked
     g_message_count_send_confirmations++;
     LogInfo("Confirm Callback");
-//    LogInfo("Confirmation callback received for message %lu with result %s\r\n", (unsigned long)g_message_count_send_confirmations, MU_ENUM_TO_STRING(IOTHUB_CLIENT_CONFIRMATION_RESULT, result));
+    // LogInfo("Confirmation callback received for message %lu with result %s\r\n", (unsigned long)g_message_count_send_confirmations, MU_ENUM_TO_STRING(IOTHUB_CLIENT_CONFIRMATION_RESULT, result));
 }
 
 static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, IOTHUB_CLIENT_CONNECTION_STATUS_REASON reason, void* user_context)
@@ -151,7 +151,7 @@ void setup() {
         // Can not set this options in HTTP
         bool traceOn = true;
         IoTHubDeviceClient_LL_SetOption(device_ll_handle, OPTION_LOG_TRACE, &traceOn);
-#endif
+#endif // SAMPLE_HTTP
 
         // Setting the Trusted Certificate.  This is only necessary on system with without
         // built in certificate stores.
@@ -168,7 +168,7 @@ void setup() {
         {
             LogInfo("ERROR: IoTHubClient_LL_SetMessageCallback..........FAILED!\r\n");
         }
-#endif
+#endif // SAMPLE_MQTT
 
         // Setting connection status callback to get indication of connection to iothub
         (void)IoTHubDeviceClient_LL_SetConnectionStatusCallback(device_ll_handle, connection_status_callback, NULL);
@@ -188,7 +188,7 @@ void setup() {
                 (void)IoTHubMessage_SetContentEncodingSystemProperty(message_handle, "utf-8");*/
 
                 // Add custom properties to message
-                //(void)IoTHubMessage_SetProperty(message_handle, "property_key", "property_value");
+                // (void)IoTHubMessage_SetProperty(message_handle, "property_key", "property_value");
 
                 LogInfo("Sending message %d to IoTHub\r\n", (int)(messages_sent + 1));
                 result = IoTHubDeviceClient_LL_SendEventAsync(device_ll_handle, message_handle, send_confirm_callback, NULL);

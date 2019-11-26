@@ -14,15 +14,16 @@
 #include <pgmspace.h>
 #include "azure_c_shared_utility/crt_abstractions.h"
 
-
 #ifdef __cplusplus
 #include <cstddef>
 extern "C" {
 #else
 #include <stddef.h>
 #endif
+
 extern char* az_c_strncpy_P(char* dest, PGM_P src, size_t size);
 extern size_t az_c_strlen_P(PGM_P s);
+
 #ifdef __cplusplus
 }
 #endif

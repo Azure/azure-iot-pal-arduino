@@ -13,4 +13,4 @@ size_t az_c_strlen_P(PGM_P s) {
     return strlen_P(s);
 }
 
-#endif
+#endif // ARDUINO_ARCH_ESP8266
