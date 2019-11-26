@@ -34,11 +34,11 @@ You should have the following ready before beginning with any board:
 -   [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 
 -   Install the Azure IoT C SDK libraries by one of two options:
-	1. Generate the Libraries by executing the `make_sdk.cmd`(https://github.com/Azure/azure-iot-pal-arduino/blob/master/build_all/make_sdk.cmd) script within the `build_all` folder, with args as follows:
+	1. Generate the Libraries by executing the [`make_sdk.cmd`](https://github.com/Azure/azure-iot-pal-arduino/blob/master/build_all/make_sdk.cmd) script within the `build_all` folder, with args as follows:
 		- The folder you want to copy the libraries into as arg 1, and the board you are using (`esp8266` or `esp32`) as arg 2
 	
 	2. Install the following libraries through the Arduino IDE Library Manager:
-	-   `AzureIoTHub`, `AzureIoTUtility`, `AzureIoTProtocol_MQTT`, `AzureIoTSocket_WiFi`, and `AzureIoTSocket_Ethernet2` if you are using the `esp32` with an ethernet shield/daughterboard.
+	-   `AzureIoTHub`, `AzureIoTUtility`, `AzureIoTProtocol_MQTT`, `AzureIoTSocket_WiFi`, and, optionally, `AzureIoTSocket_Ethernet2` if you are using the `esp32` with an ethernet shield/daughterboard.
 	
 # Simple Sample Instructions
 
@@ -66,7 +66,7 @@ You should have the following ready before beginning with any board:
 
 5. Navigate to where your esp8266 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
 	
-- Locate the board's Arduino.h `hardware/esp8266/<board package version>/cores/esp8266/` and comment out the line containing `#define round(x)`, around line 137.
+- Locate the board's Arduino.h (`hardware/esp8266/<board package version>/cores/esp8266/` and comment out the line containing `#define round(x)`, around line 137.
 
 - Locate the board's `platform.txt` and add the defines `-DDONT_USE_UPLOADTOBLOB` `-DUSE_BALTIMORE_CERT` on line 73 (`build.extra_flags=`) 
 	
@@ -107,7 +107,7 @@ You should have the following ready before beginning with any board:
 
 5. Navigate to where your esp32 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
 
-- Locate the board's platform.txt and add the define -DDONT_USE_UPLOADTOBLOB on line 53 (build.extra_flags=) 
+- Locate the board's `platform.txt` and add the define `-DDONT_USE_UPLOADTOBLOB` on line 53 (`build.extra_flags=`) 
 	
 6. Navigate to the AzureIoTUtility library location, typically `C:\Users\<your username>\Documents\Arduino\libraries\AzureIoTUtility\src` on Windows, and `~/Arduino/libraries/AzureIoTUtility/src` on Linux
 - Once there, ensure that `tlsio_mbedtls.c` is in the `adapters` folder.
