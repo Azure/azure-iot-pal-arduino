@@ -169,34 +169,6 @@ static int add_pending_io(SOCKET_IO_INSTANCE* socket_io_instance, const unsigned
     return result;
 }
 
-    if (result == 0)
-    {
-        int flags;
-
-        if ((-1 == (flags = fcntl(socket_io_instance->socket, F_GETFL, 0))) ||
-            (fcntl(socket_io_instance->socket, F_SETFL, flags | O_NONBLOCK) == -1))
-        {
-            LogError("Failure: fcntl failure.");
-            result = MU_FAILURE;
-        }
-        else
-        {
-            err = connect(socket_io_instance->socket, connect_addr, connect_addr_len);
-            if ((err != 0) && (errno != EINPROGRESS))
-            {
-                LogError("Failure: connect failure %d.", errno);
-                result = MU_FAILURE;
-            }
-        }
-    }
-
-    if (addrInfoIp != NULL)
-    {
-        freeaddrinfo(addrInfoIp);
-    }
-
-    return result;
-}
 CONCRETE_IO_HANDLE socketio_create(void* io_create_parameters)
 {
     SOCKETIO_CONFIG* socket_io_config = (SOCKETIO_CONFIG*)io_create_parameters;

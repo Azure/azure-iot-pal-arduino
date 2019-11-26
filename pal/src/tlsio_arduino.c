@@ -142,7 +142,7 @@ static void internal_close(TLS_IO_INSTANCE* tls_io_instance)
     /* Codes_SRS_TLSIO_30_051: [ On success, if the underlying TLS does not support asynchronous closing, then the adapter shall enter TLSIO_STATE_EXT_CLOSED immediately after entering TLSIO_STATE_EX_CLOSING. ]*/
     if (tls_io_instance->tlsio_state == TLSIO_STATE_OPEN)
     {
-	sslClient_stop();
+        sslClient_stop();
     }
 
     while (process_and_destroy_head_message(tls_io_instance, IO_SEND_CANCELLED));
@@ -231,7 +231,7 @@ static CONCRETE_IO_HANDLE tlsio_arduino_create(void* io_create_parameters)
                 else
                 {
                     memset(result, 0, sizeof(TLS_IO_INSTANCE));
-		    result->hostname = NULL;
+                    result->hostname = NULL;
                     result->port = (uint16_t)tls_io_config->port;
                     result->tlsio_state = TLSIO_STATE_CLOSED;
                     result->hostname = NULL;
@@ -426,11 +426,11 @@ static void dowork_read(TLS_IO_INSTANCE* tls_io_instance)
                     enter_tlsio_error_state(tls_io_instance);
                 }
                 else
-		{
-		    /* Codes_SRS_TLSIO_30_102: [ If the TLS connection receives no data then tlsio_dowork shall not call the on_bytes_received
-		    callback. ]*/
-		    break;
-		}
+                {
+                    /* Codes_SRS_TLSIO_30_102: [ If the TLS connection receives no data then tlsio_dowork shall not call the on_bytes_received
+                     callback. ]*/
+                    break;
+                }
             }
         }
     }
@@ -513,7 +513,7 @@ static void dowork_poll_open_ssl(TLS_IO_INSTANCE* tls_io_instance)
     }
     else
     {
-	LogError("Error opening socket %d", connect_success);
+        LogError("Error opening socket %d", connect_success);
         enter_open_error_state(tls_io_instance);
     }
 }
@@ -533,7 +533,7 @@ static void tlsio_arduino_dowork(CONCRETE_IO_HANDLE tls_io)
         switch (tls_io_instance->tlsio_state)
         {
         case TLSIO_STATE_CLOSED:
-	    LogInfo("dowork TLSIO_STATE_CLOSED");
+            LogInfo("dowork TLSIO_STATE_CLOSED");
             /* Codes_SRS_TLSIO_30_075: [ If the adapter is in TLSIO_STATE_EXT_CLOSED then  tlsio_dowork  shall do nothing. ]*/
             // Waiting to be opened, nothing to do
             break;
@@ -550,7 +550,7 @@ static void tlsio_arduino_dowork(CONCRETE_IO_HANDLE tls_io)
             dowork_poll_open_ssl(tls_io_instance);
             break;
         case TLSIO_STATE_OPEN:
-            // LogInfo("dowork TLSIO_STATE_OPEN");
+
             dowork_read(tls_io_instance);
             dowork_send(tls_io_instance);
             break;
@@ -639,7 +639,7 @@ static int tlsio_arduino_send_async(CONCRETE_IO_HANDLE tls_io, const void* buffe
                     pending_transmission->unsent_size = size;
                     pending_transmission->on_send_complete = on_send_complete;
                     pending_transmission->callback_context = callback_context;
-		    (void)memcpy(pending_transmission->bytes, buffer, size);
+                    (void)memcpy(pending_transmission->bytes, buffer, size);
 
                     if (singlylinkedlist_add(tls_io_instance->pending_transmission_list, pending_transmission) == NULL)
                     {
