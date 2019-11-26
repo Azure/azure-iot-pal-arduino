@@ -59,7 +59,7 @@ You should have the following ready before beginning with any board:
 
     - Select your ESP8266 board from Tools > Board menu after installation
 
-2. Open the `iothub_II_telemetry_sample` example from the Arduino IDE File->Examples->AzureIoTHub menu.
+2. Open the `iothub_ll_telemetry_sample` example from the Arduino IDE File->Examples->AzureIoTHub menu.
 
 3. Update Wifi SSID/Password in `iot_configs.h`
 
@@ -78,7 +78,7 @@ You should have the following ready before beginning with any board:
 	- Note2: Due to RAM limits, you must select just one CERT define.
 
 6. Navigate to the AzureIoTUtility library location, typically `C:\Users\<your username>\Documents\Arduino\libraries\AzureIoTUtility\src` on Windows, and `~/Arduino/libraries/AzureIoTUtility/src` on Linux.
-- Once there, ensure that tlsio_mbedtls.c either is NOT in the `adapters` folder or IS defined/commented out, as this file will produce compile errors when building for esp8266.
+- Once there, ensure that `tlsio_mbedtls.c` either is NOT in the `adapters` folder or IS defined/commented out, as this file will produce compile errors when building for esp8266.
 
 7. Run the sample.
 	
@@ -100,7 +100,7 @@ You should have the following ready before beginning with any board:
 
     - Select your ESP32 board from Tools > Board menu after installation
 
-2. Open the `iothub_II_telemetry_sample` example from the Arduino IDE File->Examples->AzureIoTHub menu.
+2. Open the `iothub_ll_telemetry_sample` example from the Arduino IDE File->Examples->AzureIoTHub menu.
 
 3. Update Wifi SSID/Password in `iot_configs.h`
 
@@ -113,7 +113,7 @@ You should have the following ready before beginning with any board:
 - Locate the board's platform.txt and add the define -DDONT_USE_UPLOADTOBLOB on line 53 (build.extra_flags=) 
 	
 6. Navigate to the AzureIoTUtility library location, typically `C:\Users\<your username>\Documents\Arduino\libraries\AzureIoTUtility\src` on Windows, and `~/Arduino/libraries/AzureIoTUtility/src` on Linux
-- Once there, ensure that tlsio_mbedtls.c is in the `adapters` folder.
+- Once there, ensure that `tlsio_mbedtls.c` is in the `adapters` folder.
 
 7. Run the sample.
 	
