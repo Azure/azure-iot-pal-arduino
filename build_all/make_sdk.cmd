@@ -13,8 +13,8 @@ if "%1" equ "" (
 
 set use_mbedtls="true"
 if "%2" equ "esp8266" (
-	echo building without mbedtls adapter
-	set use_mbedtls="false"
+    echo building without mbedtls adapter
+    set use_mbedtls="false"
 )
 
 set Libraries_path=%1
