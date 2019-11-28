@@ -447,6 +447,7 @@ int socketio_send(CONCRETE_IO_HANDLE socket_io, const void* buffer, size_t size,
                     else
                     {
                         size_t bytes_sent = (send_result < 0 ? 0 : send_result);
+                        result = 0;
                     }
                 }
                 else

@@ -113,12 +113,6 @@ copy %Arduino_pal_path%inc\*.* %Adapters_path%
 copy %Arduino_pal_path%src\*.* %Adapters_path%
 
 if %use_mbedtls% equ "true" (
-rem // Copy MbedTLS to target
-robocopy %MbedTLS_path%library %AzureIoTUtility_path%src\mbedtls-%MbedTLS_version% *.c /MIR
-robocopy %MbedTLS_path%include\mbedtls %AzureIoTUtility_path%src\mbedtls-%MbedTLS_version%\mbedtls *.h /MIR
-rem // Fixes Arduino limitation with include paths
-robocopy %MbedTLS_path%include\mbedtls %AzureIoTUtility_path%src\mbedtls-%MbedTLS_version%\mbedtls\mbedtls platform_util.h /MIR
-
 rem // Use the MbedTLS adaptor instead of the above
 copy %AzureIoTSDKs_path%c-utility\adapters\tlsio_mbedtls.c %Adapters_path%
 copy %AzureIoTSDKs_path%c-utility\inc\azure_c_shared_utility\tlsio_mbedtls.h %Adapters_path%
