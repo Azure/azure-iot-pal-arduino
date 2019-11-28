@@ -1,3 +1,6 @@
+[submodule "pal/mbedtls"]
+	path = pal/mbedtls
+	url = https://github.com/ARMmbed/mbedtls
 [submodule "sdk"]
 	path = sdk
-	url = https://github.com/Azure/azure-iot-sdk-c.git
+	url = https://github.com/Azure/azure-iot-sdk-c

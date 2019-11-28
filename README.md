@@ -1,7 +1,3 @@
-# # Azure IoT Currently Does Not Support Arduino. This repository is undergoing maintenance.
-
-Please refer to the [Espressif Azure IoT GitHub repository](https://github.com/espressif/esp-azure) to use the ESP32 or ESP8266 directly with Azure IoT.
-
 # azure-iot-pal-arduino
 
 This repository contains all of the Arduino-specific source files for the Azure IoT Arduino 

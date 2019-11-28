@@ -7,7 +7,7 @@
 *	@details These fucntions are just wrappers around existing ones in pgmspace.h that
 *    are not defined in a way to make them linkable from c libs.
 */
-#if defined(ARDUINO_ARCH_ESP8266)
+#ifdef ARDUINO_ARCH_ESP32
 #ifndef AZCPGMSPACE_H
 #define AZCPGMSPACE_H
 
@@ -30,4 +30,4 @@ extern size_t az_c_strlen_P(PGM_P s);
 
 #endif // _AZCPGMSPACE_H
 
-#endif // #if defined(ARDUINO_ARCH_ESP8266)
+#endif // ARDUINO_ARCH_ESP32

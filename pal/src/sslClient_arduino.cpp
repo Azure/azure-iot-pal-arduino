@@ -7,8 +7,10 @@
 
 #ifdef ARDUINO_ARCH_ESP8266
 #include "ESP8266WiFi.h"
-#include "WiFiClientSecure.h"
-static WiFiClientSecure sslClient; // for ESP8266
+#include "WiFiClientSecureBearSSL.h"
+#include "certs/certs.h"
+static BearSSL::WiFiClientSecure sslClient; // for ESP8266
+static BearSSL::X509List cert(certificates);
 #elif ARDUINO_ARCH_ESP32
 #include "WiFi.h"
 #include "WiFiClientSecure.h"
@@ -31,6 +33,9 @@ uint8_t sslClient_connected(void)
 
 int sslClient_connect(uint32_t ipAddress, uint16_t port)
 {
+#ifdef ARDUINO_ARCH_ESP8266
+    sslClient.setTrustAnchors(&cert);
+#endif
     IPAddress ip = IPAddress(ipAddress);
     return (int)sslClient.connect(ip, port);
 }

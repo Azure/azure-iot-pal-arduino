@@ -1,21 +1,22 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#ifdef ARDUINO_ARCH_ESP8266
+#ifdef ARDUINO_ARCH_ESP32
 
 #include <Arduino.h>
 #include <time.h>
-#include <ESP8266WiFi.h>
+#include "AzureIoTSocket_WiFi.h"
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
 #include <WiFiUdp.h>
-#include "user_interface.h"
-#include "Esp.h"
 
 // Times before 2010 (1970 + 40 years) are invalid
 #define MIN_EPOCH (40 * 365 * 24 * 3600)
 
+
 static void initSerial() {
     // Start serial and initialize stdout
-    Serial.begin(115200);
+    Serial.begin(1000000);
     Serial.setDebugOutput(true);
 }
 
@@ -25,17 +26,17 @@ static void initWifi(const char* ssid, const char* pass) {
     Serial.println(ssid);
     
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-    WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pass);
     while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
+      delay(500);
+      Serial.print(".");
     }
     
     Serial.println("\r\nConnected to wifi");
 }
 
-static void initTime() {  
+static void initTime()
+{
    time_t epochTime;
 
    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
@@ -54,15 +55,11 @@ static void initTime() {
    }
 }
 
-void esp8266_sample_init(const char* ssid, const char* password)
+void esp32_sample_init(const char* ssid, const char* password)
 {
     initSerial();
     initWifi(ssid, password);
     initTime();
-    /* Uncomment wdt_disable() and comment out next line when gdb debugging. 
-    Note: use of system_get_free_heap_size() function may also help in tracking available memory. */
-    //wdt_disable(); 
-    wdt_enable(5000);
 }
 
-#endif // ARDUINO_ARCH_ESP8266
+#endif // ARDUINO_ARCH_ESP32

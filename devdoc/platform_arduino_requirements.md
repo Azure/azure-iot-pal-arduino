@@ -3,7 +3,7 @@ platform_arduino
 
 ## Overview
 
-platform_arduino implements a standart way for SDK to access dedicated Arduino interfaces.  
+platform_arduino implements a standard way for SDK to access dedicated Arduino interfaces.  
 
 ## References
 
