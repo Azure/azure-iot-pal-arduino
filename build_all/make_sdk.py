@@ -85,13 +85,9 @@ def run():
 
     if (os.path.exists(obo_path)):
         #clear it out
-        # shutil.rmtree(obo_path+'/Azure*')
         pattern_delete_folder(obo_path+'/Azure*')
     else:
         os.mkdir(obo_path)
-
-    os.system('ls '+obo_path) # linux only
-    input('this?')
 
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTHub', AzureIoTHub_path)
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTUtility', AzureIoTUtility_path)
@@ -99,9 +95,6 @@ def run():
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTProtocol_MQTT', AzureIoTProtocolMQTT_path)
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTSocket_WiFi', AzureIoTSocketWiFi_path)
     # dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTSocket_Ethernet2', AzureIoTSocketEthernet_path)
-
-    # os.mkdir(sdk_path)
-    # os.mkdir(internal_path)
 
     shutil.copy2(azure_iot_sdk_path+'LICENSE', AzureIoTHub_path+'LICENSE')
 
