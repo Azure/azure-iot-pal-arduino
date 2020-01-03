@@ -7,6 +7,8 @@
 // Checking of return codes and error values shall be omitted for brevity.  Please practice sound engineering practices
 // when writing production code.
 
+// Note: See https://github.com/Azure/azure-iot-arduino for detailed setup instructions.
+
 #include <stdio.h>
 #include <stdlib.h>
 

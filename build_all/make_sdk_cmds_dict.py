@@ -1,5 +1,5 @@
 output_path = ''
-device_type = 'esp32' # Note: use esp8266 to remove mbedtls elements so that definitions don't conflict with tlsio_arduino methods
+# device_type = 'esp32' # Note: use esp8266 to remove mbedtls elements so that definitions don't conflict with tlsio_arduino methods
 
 cmds = {
     "help":         {'short': 'h', 'text': "Print Help text"},
