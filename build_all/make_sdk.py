@@ -38,6 +38,15 @@ def pattern_delete_folder(pattern): # helper method
         except:
             print("Error while deleting filepath : ", filePath)
 
+def line_prepender(filename, line):
+    with open(filename, 'r+') as f:
+        content = f.read()
+        f.seek(0, 0)
+        f.write(line.rstrip('\r\n') + '\n' + content)
+
+def line_appender(filename, line):
+    with open(filename, 'a') as f:
+        f.write(line.rstrip('\r\n') + '\n')
 
 def usage():
     # Iterates through command dictionary to print out script's opt usage
@@ -56,8 +65,8 @@ def parse_opts():
             print(usage())
         elif opt in ('-o', '--output'):
             commands_dict.output_path = arg
-        elif opt in ('-d', '--device'):
-            commands_dict.device_type = arg
+        # elif opt in ('-d', '--device'):
+        #     commands_dict.device_type = arg
 
 
 def run():
@@ -130,16 +139,18 @@ def run():
 
     shutil.copy2(azure_iot_sdk_path+'c-utility/pal/agenttime.c', Adapters_path)
     shutil.copy2(azure_iot_sdk_path+'c-utility/pal/tickcounter.c', Adapters_path)
-    # dir_util.copy_tree(azure_iot_sdk_path+'deps/azure-macro-utils-c/inc/', Ma)
     shutil.copy2(azure_iot_sdk_path+'c-utility/pal/generic/refcount_os.h', SharedUtility_path)
     shutil.copy2(azure_iot_sdk_path+'c-utility/pal/tlsio_options.c', SharedUtility_path)
 
     dir_util.copy_tree(arduino_pal_path+'inc/', Adapters_path)
     dir_util.copy_tree(arduino_pal_path+'src/', Adapters_path)
 
-    if commands_dict.device_type == 'esp32': # include mbedtls adapter
-        shutil.copy2(azure_iot_sdk_path+'c-utility/adapters/tlsio_mbedtls.c', Adapters_path)
-        shutil.copy2(azure_iot_sdk_path+'c-utility/inc/azure_c_shared_utility/tlsio_mbedtls.h', Adapters_path)
+    shutil.copy2(azure_iot_sdk_path+'c-utility/adapters/tlsio_mbedtls.c', Adapters_path)
+    # add in define for ARDUINO_ARCH_ESP32
+    line_prepender(Adapters_path+'tlsio_mbedtls.c', "#ifdef ARDUINO_ARCH_ESP32")
+    line_appender(Adapters_path+'tlsio_mbedtls.c', "#endif //ARDUINO_ARCH_ESP32")
+
+    shutil.copy2(azure_iot_sdk_path+'c-utility/inc/azure_c_shared_utility/tlsio_mbedtls.h', Adapters_path)
 
     os.mkdir(AzureUHTTP_path)
     shutil.copy2(azure_iot_sdk_path+'c-utility/adapters/httpapi_compact.c', AzureUHTTP_path)
