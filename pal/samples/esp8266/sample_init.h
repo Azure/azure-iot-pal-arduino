@@ -7,5 +7,9 @@
   #define sample_init esp8266_sample_init
   void esp8266_sample_init(const char* ssid, const char* password);
 #endif
+#if defined(ARDUINO_ARCH_ESP32)
+  #define sample_init esp32_sample_init
+  void esp32_sample_init(const char* ssid, const char* password);
+#endif
 
 #endif // SAMPLE_INIT_H
