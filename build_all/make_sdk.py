@@ -161,7 +161,14 @@ def run():
 
     shutil.copy2(arduino_pal_path+'AzureIoTSocket_WiFi/socketio_esp32wifi.cpp', AzureIoTSocketWiFi_path+'src/')
     # shutil.copy2(arduino_pal_path+'AzureIoTSocket_Ethernet/socketio_esp32ethernet2.cpp', AzureIoTSocketEthernet_path+'src/')
-
+    
+    # ---- add license files ----
+    shutil.copy2(azure_iot_sdk_path+'LICENSE', AzureIoTHub_path)
+    shutil.copy2(azure_iot_sdk_path+'LICENSE', AzureUMQTT_path)
+    shutil.copy2(azure_iot_sdk_path+'LICENSE', AzureUHTTP_path)
+    shutil.copy2(azure_iot_sdk_path+'LICENSE', AzureIoTSocketWiFi_path)
+    shutil.copy2(azure_iot_sdk_path+'LICENSE', AzureIoTUtility_path)
+    
     # ---- clean out files not needed ----
     os.remove(sdk_path+'blob.c')
     os.remove(internal_path+'blob.h')
