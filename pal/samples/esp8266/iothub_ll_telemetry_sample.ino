@@ -7,7 +7,7 @@
 // Checking of return codes and error values shall be omitted for brevity.  Please practice sound engineering practices
 // when writing production code.
 
-// Note: See https://github.com/Azure/azure-iot-arduino for detailed setup instructions.
+// Note: PLEASE see https://github.com/Azure/azure-iot-arduino#simple-sample-instructions for detailed sample setup instructions.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +27,10 @@
 // iot_configs.h
 #include "iot_configs.h"
 #include "sample_init.h"
+#ifdef is_esp_board
+  #include "Esp.h"
+#endif
+
 
 static char ssid[] = IOT_CONFIG_WIFI_SSID;
 static char pass[] = IOT_CONFIG_WIFI_PASSWORD;
@@ -40,16 +44,12 @@ static char pass[] = IOT_CONFIG_WIFI_PASSWORD;
     #include "iothubtransporthttp.h"
 #endif // SAMPLE_HTTP
 
-/* This sample uses the _LL APIs of iothub_client for example purposes.
-Simply changing the using the convenience layer (functions not having _LL)
-and removing calls to _DoWork will yield the same results. */
-
+/* Define several constants/global variables */
 static const char* connectionString = DEVICE_CONNECTION_STRING;
-#define MESSAGE_COUNT        5
-static bool g_continueRunning = true;
+#define MESSAGE_COUNT 5 // determines the number of times the device tries to send a message to the IoT Hub in the cloud.
+static bool g_continueRunning = true; // defines whether or not the device maintains its IoT Hub connection after sending (think receiving messages from the cloud)
 static size_t g_message_count_send_confirmations = 0;
 
-/* Define several constants/global variables */
 IOTHUB_MESSAGE_HANDLE message_handle;
 size_t messages_sent = 0;
 const char* telemetry_msg = "test_message";
@@ -67,6 +67,10 @@ IOTHUB_DEVICE_CLIENT_LL_HANDLE device_ll_handle;
 static int callbackCounter;
 int receiveContext = 0;
 
+/* -- receive_message_callback --
+ * Callback method which executes upon receipt of a message originating from the IoT Hub in the cloud. 
+ * Note: Modifying the contents of this method allows one to command the device from the cloud. 
+ */
 static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_HANDLE message, void* userContextCallback)
 {
     int* counter = (int*)userContextCallback;
@@ -102,6 +106,9 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_
 }
 
 
+/* -- send_confirm_callback --
+ * Callback method which executes upon confirmation that a message originating from this device has been received by the IoT Hub in the cloud.
+ */
 static void send_confirm_callback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void* userContextCallback)
 {
     (void)userContextCallback;
@@ -111,6 +118,9 @@ static void send_confirm_callback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void
     // LogInfo("Confirmation callback received for message %lu with result %s\r\n", (unsigned long)g_message_count_send_confirmations, MU_ENUM_TO_STRING(IOTHUB_CLIENT_CONFIRMATION_RESULT, result));
 }
 
+/* -- connection_status_callback --
+ * Callback method which executes on receipt of a connection status message from the IoT Hub in the cloud.
+ */
 static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, IOTHUB_CLIENT_CONNECTION_STATUS_REASON reason, void* user_context)
 {
     (void)reason;
@@ -131,12 +141,12 @@ void setup() {
 
     sample_init(ssid, pass);
 
+    // Create the iothub handle here
     device_ll_handle = IoTHubDeviceClient_LL_CreateFromConnectionString(connectionString, protocol);
     // Used to initialize IoTHub SDK subsystem
     (void)IoTHub_Init();
-
+    
     LogInfo("Creating IoTHub Device handle\r\n");
-    // Create the iothub handle here
     if (device_ll_handle == NULL)
     {
         LogInfo("Failure createing Iothub device.  Hint: Check you connection string.\r\n");
@@ -150,13 +160,12 @@ void setup() {
         IoTHubDeviceClient_LL_SetOption(device_ll_handle, OPTION_DIAGNOSTIC_SAMPLING_PERCENTAGE, &diag_off);
 
 #ifndef SAMPLE_HTTP
-        // Can not set this options in HTTP
+        // Example sdk status tracing for troubleshooting
         bool traceOn = true;
         IoTHubDeviceClient_LL_SetOption(device_ll_handle, OPTION_LOG_TRACE, &traceOn);
 #endif // SAMPLE_HTTP
 
-        // Setting the Trusted Certificate.  This is only necessary on system with without
-        // built in certificate stores.
+        // Setting the Trusted Certificate.
         IoTHubDeviceClient_LL_SetOption(device_ll_handle, OPTION_TRUSTED_CERT, certificates);
 
 #if defined SAMPLE_MQTT || defined SAMPLE_MQTT_WS
@@ -175,6 +184,7 @@ void setup() {
         // Setting connection status callback to get indication of connection to iothub
         (void)IoTHubDeviceClient_LL_SetConnectionStatusCallback(device_ll_handle, connection_status_callback, NULL);
 
+        // action phase of the program, sending messages to the IoT Hub in the cloud.
         do
         {
             if (messages_sent < MESSAGE_COUNT)
@@ -208,6 +218,23 @@ void setup() {
             IoTHubDeviceClient_LL_DoWork(device_ll_handle);
             ThreadAPI_Sleep(3);
 
+            // Read from local serial 
+            if (Serial.available()){
+                String s1 = Serial.readStringUntil('\n');// s1 is String type variable.
+                Serial.print("Received Data: ");
+                Serial.println(s1);//display same received Data back in serial monitor.
+
+                // Restart device upon receipt of 'exit' call.
+                int e_start = s1.indexOf('e');
+                String ebit = (String) s1.substring(e_start, e_start+4);
+                if(ebit == "exit")
+                {
+#ifdef is_esp_board
+                    ESP.restart();
+#endif
+                }
+            }
+
         } while (g_continueRunning);
 
         // Clean up the iothub sdk handle
@@ -222,5 +249,18 @@ void setup() {
 
 void loop(void)
 {
+    if (Serial.available()){
+        String s1 = Serial.readStringUntil('\n');// s1 is String type variable.
+        Serial.print("Received Data: ");
+        Serial.println(s1);//display same received Data back in serial monitor.
   
+        int e_start = s1.indexOf('e');
+        String ebit = (String) s1.substring(e_start, e_start+4);
+        if(ebit == "exit")
+        {
+#ifdef is_esp_board
+            ESP.restart();
+#endif
+        }
+    }
 }
