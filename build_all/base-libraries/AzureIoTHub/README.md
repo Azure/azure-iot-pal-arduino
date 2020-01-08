@@ -35,7 +35,7 @@ You should have the following ready before beginning with any board:
 
 -   Install the Azure IoT C SDK libraries by one of two options:
 	1. Generate the Libraries by executing the [`make_sdk.cmd`](https://github.com/Azure/azure-iot-pal-arduino/blob/master/build_all/make_sdk.cmd) script within the `build_all` folder, with args as follows:
-		- The folder you want to copy the libraries into as arg 1, and the board you are using (`esp8266` or `esp32`) as arg 2
+		- The folder you want to copy the libraries into as arg 1
 	
 	2. Install the following libraries through the Arduino IDE Library Manager:
 	-   `AzureIoTHub`, `AzureIoTUtility`, `AzureIoTProtocol_MQTT`, `AzureIoTSocket_WiFi`, and, optionally, `AzureIoTSocket_Ethernet2` if you are using the `esp32` with an ethernet shield/daughterboard.
@@ -68,20 +68,19 @@ You should have the following ready before beginning with any board:
 	
 - Locate the board's Arduino.h (`hardware/esp8266/<board package version>/cores/esp8266/` and comment out the line containing `#define round(x)`, around line 137.
 
-- Locate the board's `platform.txt` and add the defines `-DDONT_USE_UPLOADTOBLOB` `-DUSE_BALTIMORE_CERT` on line 73 (`build.extra_flags=`) 
-	
-	- Note1: Please change the CERT define to the appropriate cert define if not using the global portal.azure.com server, defines for which are laid out in [`certs.c`](https://github.com/Azure/azure-iot-sdk-c/blob/master/certs/certs.c)
-	
-	- Note2: Due to RAM limits, you must select just one CERT define.
+- In the same folder as the board's `platform.txt`, copy the `platform.local.esp8266.txt` file to it and rename the file `platform.local.txt` 
 
-6. Navigate to the AzureIoTUtility library location, typically `C:\Users\<your username>\Documents\Arduino\libraries\AzureIoTUtility\src` on Windows, and `~/Arduino/libraries/AzureIoTUtility/src` on Linux.
-- Once there, ensure that `tlsio_mbedtls.c` either is NOT in the `adapters` folder or IS defined/commented out, as this file will produce compile errors when building for esp8266.
-
-7. Run the sample.
+	- Note1: Users may also add the defines `-DDONT_USE_UPLOADTOBLOB` `-DUSE_BALTIMORE_CERT` to the `build.extra_flags=` line in the `platform.txt` file in the same folder. 
 	
-8. Access the [SparkFun Get Started](https://azure.microsoft.com/en-us/documentation/samples/iot-hub-c-thingdev-getstartedkit/) tutorial to learn more about Microsoft Sparkfun Dev Kit.
+	- Note2: Please change the CERT define to the appropriate cert define if not using the global portal.azure.com server, defines for which are laid out in [`certs.c`](https://github.com/Azure/azure-iot-sdk-c/blob/master/certs/certs.c)
+	
+	- Note3: Due to RAM limits, you must select just one CERT define.
 
-9. Access the [Huzzah Get Started](https://azure.microsoft.com/en-us/documentation/samples/iot-hub-c-huzzah-getstartedkit/) tutorial to learn more about Microsoft Huzzah Dev Kit.
+6. Run the sample.
+	
+7. Access the [SparkFun Get Started](https://azure.microsoft.com/en-us/documentation/samples/iot-hub-c-thingdev-getstartedkit/) tutorial to learn more about Microsoft Sparkfun Dev Kit.
+
+8. Access the [Huzzah Get Started](https://azure.microsoft.com/en-us/documentation/samples/iot-hub-c-huzzah-getstartedkit/) tutorial to learn more about Microsoft Huzzah Dev Kit.
 
 ## ESP32
 
@@ -101,22 +100,21 @@ You should have the following ready before beginning with any board:
 
 3. Update Wifi SSID/Password in `iot_configs.h`
 
-    - Ensure you are using a wifi network that does not require additional manual steps after connection, such as opening a web browser.
+- Ensure you are using a wifi network that does not require additional manual steps after connection, such as opening a web browser.
 
 4. Update IoT Hub Connection string in `iot_configs.h`
 
 5. Navigate to where your esp32 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
 
-- Locate the board's `platform.txt` and add the define `-DDONT_USE_UPLOADTOBLOB` on line 53 (`build.extra_flags=`) 
+	- Copy the `platform.local.esp32.txt` file from the sample to the same folder as the `platform.txt` file, and rename it `platform.local.txt`.
 	
-6. Navigate to the AzureIoTUtility library location, typically `C:\Users\<your username>\Documents\Arduino\libraries\AzureIoTUtility\src` on Windows, and `~/Arduino/libraries/AzureIoTUtility/src` on Linux
-- Once there, ensure that `tlsio_mbedtls.c` is in the `adapters` folder.
-
-7. Run the sample.
+	- OR: Locate the board's `platform.txt` and add the define `-DDONT_USE_UPLOADTOBLOB` to `build.extra_flags=`, typically around line 53. 
 	
-8. Access the [SparkFun Get Started](https://azure.microsoft.com/en-us/documentation/samples/iot-hub-c-thingdev-getstartedkit/) tutorial to learn more about Microsoft Sparkfun Dev Kit.
+6. Run the sample.
+	
+7. Access the [SparkFun Get Started](https://azure.microsoft.com/en-us/documentation/samples/iot-hub-c-thingdev-getstartedkit/) tutorial to learn more about Microsoft Sparkfun Dev Kit.
 
-9. Access the [Huzzah Get Started](https://azure.microsoft.com/en-us/documentation/samples/iot-hub-c-huzzah-getstartedkit/) tutorial to learn more about Microsoft Huzzah Dev Kit.
+8. Access the [Huzzah Get Started](https://azure.microsoft.com/en-us/documentation/samples/iot-hub-c-huzzah-getstartedkit/) tutorial to learn more about Microsoft Huzzah Dev Kit.
 
 ## License
 

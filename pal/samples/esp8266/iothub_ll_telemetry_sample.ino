@@ -149,7 +149,7 @@ void setup() {
     LogInfo("Creating IoTHub Device handle\r\n");
     if (device_ll_handle == NULL)
     {
-        LogInfo("Failure createing Iothub device.  Hint: Check you connection string.\r\n");
+        LogInfo("Failure createing Iothub device. AZ002 Hint: Check you connection string.\r\n");
     }
     else
     {
