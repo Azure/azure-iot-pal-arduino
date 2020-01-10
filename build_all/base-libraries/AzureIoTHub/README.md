@@ -66,11 +66,11 @@ You should have the following ready before beginning with any board:
 
 5. Navigate to where your esp8266 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
 	
-- Locate the board's Arduino.h (`hardware/esp8266/<board package version>/cores/esp8266/` and comment out the line containing `#define round(x)`, around line 137.
+- Locate the board's `Arduino.h` (`hardware/esp8266/<board package version>/cores/esp8266/` and comment out the line containing `#define round(x)`, around line 137.
 
-- In the same folder as the board's `platform.txt`, copy the `platform.local.esp8266.txt` file to it and rename the file `platform.local.txt` 
+- Two folders up from the `Arduino.h` step above, in the same folder as the board's `platform.txt`, copy the `platform.local.esp8266.txt` file to it and rename the file `platform.local.txt` 
 
-	- Note1: Users may also add the defines `-DDONT_USE_UPLOADTOBLOB` `-DUSE_BALTIMORE_CERT` to the `build.extra_flags=` line in the `platform.txt` file in the same folder. 
+	- Note1: Users may also add the defines `-DDONT_USE_UPLOADTOBLOB` `-DUSE_BALTIMORE_CERT` to the `build.extra_flags=` line in the `platform.txt` file in the same folder for other versions of the Board Package. 
 	
 	- Note2: Please change the CERT define to the appropriate cert define if not using the global portal.azure.com server, defines for which are laid out in [`certs.c`](https://github.com/Azure/azure-iot-sdk-c/blob/master/certs/certs.c)
 	
@@ -106,9 +106,11 @@ You should have the following ready before beginning with any board:
 
 5. Navigate to where your esp32 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
 
+	- Navigate deeper in to `hardware/esp8266/<board package version>/` where the `platform.txt` file lives.
+	
 	- Copy the `platform.local.esp32.txt` file from the sample to the same folder as the `platform.txt` file, and rename it `platform.local.txt`.
 	
-	- OR: Locate the board's `platform.txt` and add the define `-DDONT_USE_UPLOADTOBLOB` to `build.extra_flags=`, typically around line 53. 
+	- OR, for later versions of the Board Package: Add the define `-DDONT_USE_UPLOADTOBLOB` to `build.extra_flags=` in `platform.txt` or a `platform.local.txt` that you create.
 	
 6. Run the sample.
 	
