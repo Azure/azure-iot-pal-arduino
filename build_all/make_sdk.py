@@ -33,7 +33,6 @@ def pattern_delete_folder(pattern): # helper method
     # Iterate over the list of filepaths & remove each file.
     for filePath in fileList:
         try:
-            # os.rmdir(filePath)
             shutil.rmtree(filePath)
         except:
             print("Error while deleting filepath : ", filePath)
@@ -69,17 +68,17 @@ def parse_opts():
 
 def run():
     # set up paths for copying
-    obo_path = os.path.abspath(commands_dict.output_path)
+    output_path = os.path.abspath(commands_dict.output_path)
     arduino_repo_root = os.path.abspath('../')
-    print(obo_path)
+    print(output_path)
     arduino_pal_path = arduino_repo_root+'/pal/'
     azure_iot_sdk_path = arduino_repo_root+'/sdk/'
-    AzureIoTHub_path = obo_path+'/AzureIoTHub/'
-    AzureIoTProtocolHTTP_path = obo_path+'/AzureIoTProtocol_HTTP/'
-    AzureIoTProtocolMQTT_path = obo_path+'/AzureIoTProtocol_MQTT/'
-    AzureIoTUtility_path = obo_path+'/AzureIoTUtility/'
-    AzureIoTSocketWiFi_path = obo_path+'/AzureIoTSocket_WiFi/'
-    # AzureIoTSocketEthernet_path = obo_path+'/AzureIoTSocket_Ethernet/'
+    AzureIoTHub_path = output_path+'/AzureIoTHub/'
+    AzureIoTProtocolHTTP_path = output_path+'/AzureIoTProtocol_HTTP/'
+    AzureIoTProtocolMQTT_path = output_path+'/AzureIoTProtocol_MQTT/'
+    AzureIoTUtility_path = output_path+'/AzureIoTUtility/'
+    AzureIoTSocketWiFi_path = output_path+'/AzureIoTSocket_WiFi/'
+    # AzureIoTSocketEthernet_path = output_path+'/AzureIoTSocket_Ethernet/'
     AzureUHTTP_path = AzureIoTProtocolHTTP_path+'src/azure_uhttp_c/'
     AzureUMQTT_path = AzureIoTProtocolMQTT_path+'src/azure_umqtt_c/'
     SharedUtility_path = AzureIoTUtility_path+'src/azure_c_shared_utility/'
@@ -90,11 +89,11 @@ def run():
     sdk_path = AzureIoTHub_path+'src/'
     internal_path = AzureIoTHub_path+'src/internal/'
 
-    if (os.path.exists(obo_path)):
+    if (os.path.exists(output_path)):
         #clear it out
-        pattern_delete_folder(obo_path+'/Azure*')
+        pattern_delete_folder(output_path+'/Azure*')
     else:
-        os.mkdir(obo_path)
+        os.mkdir(output_path)
 
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTHub', AzureIoTHub_path)
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTUtility', AzureIoTUtility_path)
