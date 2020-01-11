@@ -65,9 +65,7 @@ def parse_opts():
             print(usage())
         elif opt in ('-o', '--output'):
             commands_dict.output_path = arg
-        # elif opt in ('-d', '--device'):
-        #     commands_dict.device_type = arg
-
+            
 
 def run():
     # set up paths for copying
