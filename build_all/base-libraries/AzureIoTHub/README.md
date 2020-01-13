@@ -34,11 +34,13 @@ You should have the following ready before beginning with any board:
 -   [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 
 -   Install the Azure IoT C SDK libraries by one of two options:
-	1. Generate the Libraries by executing the [`make_sdk.cmd`](https://github.com/Azure/azure-iot-pal-arduino/blob/master/build_all/make_sdk.cmd) script within the `build_all` folder, with args as follows:
-		- The folder you want to copy the libraries into as arg 1
+	1. Generate the Libraries by executing the [`make_sdk.py`](https://github.com/Azure/azure-iot-pal-arduino/blob/master/build_all/make_sdk.py) script within the `build_all` folder, with args as follows:
+	- The folder you want to copy the libraries into as arg 1
+		
+	- Note: this is also the most expedient way to get the `AzureIoTSocket_WiFi` library for using the esp32.
 	
 	2. Install the following libraries through the Arduino IDE Library Manager:
-	-   `AzureIoTHub`, `AzureIoTUtility`, `AzureIoTProtocol_MQTT`, `AzureIoTSocket_WiFi`, and, optionally, `AzureIoTSocket_Ethernet2` if you are using the `esp32` with an ethernet shield/daughterboard.
+	-   `AzureIoTHub`, `AzureIoTUtility`, `AzureIoTProtocol_MQTT`, `AzureIoTProtocol_HTTP`
 	
 # Simple Sample Instructions
 

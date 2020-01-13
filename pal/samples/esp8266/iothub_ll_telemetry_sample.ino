@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#include <AzureIoTUtility.h>
+#include <AzureIoTHub.h>
 
 // CAVEAT: This sample is to demonstrate azure IoT client concepts only and is not a guide design principles or style
 // Checking of return codes and error values shall be omitted for brevity.  Please practice sound engineering practices
@@ -11,17 +11,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "iothub.h"
-#include "iothub_client.h"
-#include "iothub_device_client_ll.h"
-#include "iothub_client_options.h"
-#include "iothub_message.h"
-#include "azure_c_shared_utility/crt_abstractions.h"
-#include "azure_c_shared_utility/shared_util_options.h"
-#include "azure_c_shared_utility/tlsio.h"
-#include "azure_c_shared_utility/xlogging.h"
-#include "certs/certs.h"
 
 // You must set the device id, device key, IoT Hub name and IotHub suffix in
 // iot_configs.h
