@@ -8,6 +8,8 @@
 // when writing production code.
 
 // Note: PLEASE see https://github.com/Azure/azure-iot-arduino#simple-sample-instructions for detailed sample setup instructions.
+// Note2: To use this sample with the esp32, you MUST build the AzureIoTSocket_WiFi library by using the make_sdk.py,
+//        found in https://github.com/Azure/azure-iot-pal-arduino/tree/master/build_all
 
 #include <stdio.h>
 #include <stdlib.h>
