@@ -70,7 +70,7 @@ You should have the following ready before beginning with any board:
 	
 - Locate the board's `Arduino.h` (`hardware/esp8266/<board package version>/cores/esp8266/` and comment out the line containing `#define round(x)`, around line 137.
 
-- Two folders up from the `Arduino.h` step above, in the same folder as the board's `platform.txt`, copy the `platform.local.esp8266.txt` file to it and rename the file `platform.local.txt` 
+- Two folders up from the `Arduino.h` step above, in the same folder as the board's `platform.txt`, paste the `platform.local.txt` file from the `esp8266` folder in the sample into it 
 
 	- Note1: Users may also add the defines `-DDONT_USE_UPLOADTOBLOB` `-DUSE_BALTIMORE_CERT` to the `build.extra_flags=` line in the `platform.txt` file in the same folder for other versions of the Board Package. 
 	
@@ -110,9 +110,9 @@ You should have the following ready before beginning with any board:
 
 	- Navigate deeper in to `hardware/esp8266/<board package version>/` where the `platform.txt` file lives.
 	
-	- Copy the `platform.local.esp32.txt` file from the sample to the same folder as the `platform.txt` file, and rename it `platform.local.txt`.
+	- Copy the `platform.local.txt` file from the `esp32` folder in the sample into the same folder as the `platform.txt`.
 	
-	- OR, for later versions of the Board Package: Add the define `-DDONT_USE_UPLOADTOBLOB` to `build.extra_flags=` in `platform.txt` or a `platform.local.txt` that you create.
+	- Alternatively, or for later versions of the Board Package, add the define `-DDONT_USE_UPLOADTOBLOB` to `build.extra_flags=` in `platform.txt` or a `platform.local.txt` that you create.
 	
 6. Run the sample.
 	
