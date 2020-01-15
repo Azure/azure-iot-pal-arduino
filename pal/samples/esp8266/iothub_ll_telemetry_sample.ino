@@ -9,7 +9,8 @@
 
 // Note: PLEASE see https://github.com/Azure/azure-iot-arduino#simple-sample-instructions for detailed sample setup instructions.
 // Note2: To use this sample with the esp32, you MUST build the AzureIoTSocket_WiFi library by using the make_sdk.py,
-//        found in https://github.com/Azure/azure-iot-pal-arduino/tree/master/build_all
+//        found in https://github.com/Azure/azure-iot-pal-arduino/tree/master/build_all. 
+//        Command line example: python3 make_sdk.py -o <your-lib-folder>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -140,7 +141,7 @@ void setup() {
     LogInfo("Creating IoTHub Device handle\r\n");
     if (device_ll_handle == NULL)
     {
-        LogInfo("Failure createing Iothub device. AZ002 Hint: Check you connection string.\r\n");
+        LogInfo("Error AZ002: Failure createing Iothub device. Hint: Check you connection string.\r\n");
     }
     else
     {
