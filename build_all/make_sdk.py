@@ -120,8 +120,7 @@ def run():
     os.mkdir(Macro_Utils_path)
     os.mkdir(Hub_Macro_Utils_path)
     os.mkdir(AzureIoTHub_path+'examples/')
-    os.mkdir(AzureIoTHub_path+'examples/iothub_ll_telemetry_sample/')
-    os.mkdir(AzureIoTHub_path+'src/certs/')
+#     os.mkdir(AzureIoTHub_path+'examples/iothub_ll_telemetry_sample/')
 
     # ---- copy sample ----
     dir_util.copy_tree(arduino_pal_path+'samples/esp8266/', AzureIoTHub_path+'examples/iothub_ll_telemetry_sample/')
