@@ -78,7 +78,6 @@ def run():
     AzureIoTProtocolMQTT_path = output_path+'/AzureIoTProtocol_MQTT/'
     AzureIoTUtility_path = output_path+'/AzureIoTUtility/'
     AzureIoTSocketWiFi_path = output_path+'/AzureIoTSocket_WiFi/'
-    # AzureIoTSocketEthernet_path = output_path+'/AzureIoTSocket_Ethernet/'
     AzureUHTTP_path = AzureIoTProtocolHTTP_path+'src/azure_uhttp_c/'
     AzureUMQTT_path = AzureIoTProtocolMQTT_path+'src/azure_umqtt_c/'
     SharedUtility_path = AzureIoTUtility_path+'src/azure_c_shared_utility/'
@@ -95,23 +94,24 @@ def run():
     else:
         os.mkdir(output_path)
 
+    # ---- copy base library files (Arduino specific) ----
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTHub', AzureIoTHub_path)
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTUtility', AzureIoTUtility_path)
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTProtocol_HTTP', AzureIoTProtocolHTTP_path)
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTProtocol_MQTT', AzureIoTProtocolMQTT_path)
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTSocket_WiFi', AzureIoTSocketWiFi_path)
-    # dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTSocket_Ethernet2', AzureIoTSocketEthernet_path)
 
-    shutil.copy2(azure_iot_sdk_path+'LICENSE', AzureIoTHub_path+'LICENSE')
-
+    # ---- copy sdk files + certs ----
     dir_util.copy_tree(azure_iot_sdk_path+'iothub_client/src/', sdk_path)
     dir_util.copy_tree(azure_iot_sdk_path+'iothub_client/inc/', sdk_path)
     dir_util.copy_tree(azure_iot_sdk_path+'iothub_client/inc/internal/', internal_path)
     dir_util.copy_tree(azure_iot_sdk_path+'serializer/src/', sdk_path)
     dir_util.copy_tree(azure_iot_sdk_path+'serializer/inc/', sdk_path)
+    dir_util.copy_tree(azure_iot_sdk_path+'certs/', AzureIoTHub_path+'src/certs/')
     shutil.copy2(azure_iot_sdk_path+'deps/parson/parson.h', sdk_path)
     shutil.copy2(azure_iot_sdk_path+'deps/parson/parson.c', sdk_path)
 
+    # ---- make sub folders in new Arduino libs ----
     os.mkdir(SharedUtility_path)
     os.mkdir(Adapters_path)
     os.mkdir(Umock_c_path)
@@ -123,22 +123,25 @@ def run():
     os.mkdir(AzureIoTHub_path+'examples/iothub_ll_telemetry_sample/')
     os.mkdir(AzureIoTHub_path+'src/certs/')
 
+    # ---- copy sample ----
     dir_util.copy_tree(arduino_pal_path+'samples/esp8266/', AzureIoTHub_path+'examples/iothub_ll_telemetry_sample/')
+
+    # ---- copy dependencies ----
     dir_util.copy_tree(azure_iot_sdk_path+'c-utility/inc/azure_c_shared_utility/', SharedUtility_path)
     dir_util.copy_tree(azure_iot_sdk_path+'c-utility/src/', SharedUtility_path)
     dir_util.copy_tree(arduino_pal_path+'azure_c_shared_utility/', SharedUtility_path)
+    shutil.copy2(azure_iot_sdk_path+'c-utility/pal/generic/refcount_os.h', SharedUtility_path)
+    shutil.copy2(azure_iot_sdk_path+'c-utility/pal/tlsio_options.c', SharedUtility_path)
     dir_util.copy_tree(azure_iot_sdk_path+'deps/umock-c/inc/umock_c/', Umock_c_path)
     dir_util.copy_tree(azure_iot_sdk_path+'deps/umock-c/src/', Umock_c_path)
     dir_util.copy_tree(azure_iot_sdk_path+'deps/azure-macro-utils-c/inc/azure_macro_utils/', Hub_Macro_Utils_path)
     dir_util.copy_tree(azure_iot_sdk_path+'deps/azure-macro-utils-c/inc/azure_macro_utils/', Macro_Utils_path)
     dir_util.copy_tree(azure_iot_sdk_path+'deps/azure-macro-utils-c/inc/azure_macro_utils/', Umock_c_path+'azure_macro_utils/')
-    dir_util.copy_tree(azure_iot_sdk_path+'certs/', AzureIoTHub_path+'src/certs/')
 
+
+    # ---- copy adapters ----
     shutil.copy2(azure_iot_sdk_path+'c-utility/pal/agenttime.c', Adapters_path)
     shutil.copy2(azure_iot_sdk_path+'c-utility/pal/tickcounter.c', Adapters_path)
-    shutil.copy2(azure_iot_sdk_path+'c-utility/pal/generic/refcount_os.h', SharedUtility_path)
-    shutil.copy2(azure_iot_sdk_path+'c-utility/pal/tlsio_options.c', SharedUtility_path)
-
     dir_util.copy_tree(arduino_pal_path+'inc/', Adapters_path)
     dir_util.copy_tree(arduino_pal_path+'src/', Adapters_path)
 
@@ -148,7 +151,8 @@ def run():
     line_appender(Adapters_path+'tlsio_mbedtls.c', "#endif //ARDUINO_ARCH_ESP32")
 
     shutil.copy2(azure_iot_sdk_path+'c-utility/inc/azure_c_shared_utility/tlsio_mbedtls.h', Adapters_path)
-
+    
+    # ---- make protocol and socket layer libs ----
     os.mkdir(AzureUHTTP_path)
     shutil.copy2(azure_iot_sdk_path+'c-utility/adapters/httpapi_compact.c', AzureUHTTP_path)
 
@@ -157,7 +161,6 @@ def run():
     dir_util.copy_tree(azure_iot_sdk_path+'umqtt/inc/', AzureIoTHub_path+'src/')
 
     shutil.copy2(arduino_pal_path+'AzureIoTSocket_WiFi/socketio_esp32wifi.cpp', AzureIoTSocketWiFi_path+'src/')
-    # shutil.copy2(arduino_pal_path+'AzureIoTSocket_Ethernet/socketio_esp32ethernet2.cpp', AzureIoTSocketEthernet_path+'src/')
     
     # ---- add license files ----
     shutil.copy2(azure_iot_sdk_path+'LICENSE', AzureIoTHub_path)
