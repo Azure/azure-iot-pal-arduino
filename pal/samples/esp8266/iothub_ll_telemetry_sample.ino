@@ -209,7 +209,8 @@ void setup() {
 
             IoTHubDeviceClient_LL_DoWork(device_ll_handle);
             ThreadAPI_Sleep(3);
-
+          
+#ifdef is_esp_board
             // Read from local serial 
             if (Serial.available()){
                 String s1 = Serial.readStringUntil('\n');// s1 is String type variable.
@@ -221,12 +222,10 @@ void setup() {
                 String ebit = (String) s1.substring(e_start, e_start+4);
                 if(ebit == "exit")
                 {
-#ifdef is_esp_board
                     ESP.restart();
-#endif
                 }
             }
-
+#endif
         } while (g_continueRunning);
 
         // Clean up the iothub sdk handle
