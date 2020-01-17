@@ -225,7 +225,7 @@ void setup() {
                     ESP.restart();
                 }
             }
-#endif
+#endif // is_esp_board
         } while (g_continueRunning);
 
         // Clean up the iothub sdk handle
@@ -240,6 +240,8 @@ void setup() {
 
 void loop(void)
 {
+  
+#ifdef is_esp_board
     if (Serial.available()){
         String s1 = Serial.readStringUntil('\n');// s1 is String type variable.
         Serial.print("Received Data: ");
@@ -249,9 +251,8 @@ void loop(void)
         String ebit = (String) s1.substring(e_start, e_start+4);
         if(ebit == "exit")
         {
-#ifdef is_esp_board
             ESP.restart();
-#endif
         }
     }
+#endif // is_esp_board
 }
