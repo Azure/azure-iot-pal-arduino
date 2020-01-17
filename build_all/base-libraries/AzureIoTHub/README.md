@@ -68,7 +68,7 @@ You should have the following ready before beginning with any board:
 	
 - Locate the board's `Arduino.h` (`hardware/esp8266/<board package version>/cores/esp8266/` and comment out the line containing `#define round(x)`, around line 137.
 
-- Two folders up from the `Arduino.h` step above, in the same folder as the board's `platform.txt`, paste the `platform.local.txt` file from the `esp8266` folder in the sample into it.
+- Two folders up from the `Arduino.h` step above, in the same folder as the board's `platform.txt`, paste the [platform.local.txt](https://github.com/Azure/azure-iot-arduino/tree/master/examples/iothub_ll_telemetry_sample/esp8266/platform.local.txt) file from the `esp8266` folder in the sample into it.
 
 	- Note1: It is necessary to add `-DDONT_USE_UPLOADTOBLOB` and `-DUSE_BALTIMORE_CERT` to `build.extra_flags=` in a `platform.txt` in order to run the sample, however, you can define them in your own `platform.txt` or a `platform.local.txt` of your own creation. 
 	
@@ -108,7 +108,7 @@ You should have the following ready before beginning with any board:
 
 	- Navigate deeper in to `hardware/esp8266/<board package version>/` where the `platform.txt` file lives.
 	
-	- Copy the `platform.local.txt` file from the `esp32` folder in the sample into the same folder as the `platform.txt`.
+	- Copy the [platform.local.txt](https://github.com/Azure/azure-iot-arduino/tree/master/examples/iothub_ll_telemetry_sample/esp32/platform.local.txt) file from the `esp32` folder in the sample into the same folder as the `platform.txt`.
 	
 	- Alternatively, or for later versions of the Board Package, add the define `-DDONT_USE_UPLOADTOBLOB` to `build.extra_flags=` in `platform.txt` or a `platform.local.txt` that you create.
 	
