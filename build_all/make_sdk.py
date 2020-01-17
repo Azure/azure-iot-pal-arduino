@@ -67,7 +67,7 @@ def parse_opts():
             
 
 def run():
-    # set up paths for copying
+    # ---- set up paths for copying ----
     output_path = os.path.abspath(commands_dict.output_path)
     arduino_repo_root = os.path.abspath('../')
     print(output_path)
@@ -87,14 +87,15 @@ def run():
     Umock_c_path = AzureIoTUtility_path+'src/umock_c/'
     sdk_path = AzureIoTHub_path+'src/'
     internal_path = AzureIoTHub_path+'src/internal/'
-
+    
+    # ---- clear out existing Arduino Azure libs ----
     if (os.path.exists(output_path)):
         #clear it out
         pattern_delete_folder(output_path+'/Azure*')
     else:
         os.mkdir(output_path)
 
-    # ---- copy base library files (Arduino specific) ----
+    # ---- copy pal library files (Arduino specific) ----
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTHub', AzureIoTHub_path)
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTUtility', AzureIoTUtility_path)
     dir_util.copy_tree(arduino_repo_root+'/build_all/base-libraries/AzureIoTProtocol_HTTP', AzureIoTProtocolHTTP_path)
@@ -107,9 +108,11 @@ def run():
     dir_util.copy_tree(azure_iot_sdk_path+'iothub_client/inc/internal/', internal_path)
     dir_util.copy_tree(azure_iot_sdk_path+'serializer/src/', sdk_path)
     dir_util.copy_tree(azure_iot_sdk_path+'serializer/inc/', sdk_path)
-    dir_util.copy_tree(azure_iot_sdk_path+'certs/', AzureIoTHub_path+'src/certs/')
     shutil.copy2(azure_iot_sdk_path+'deps/parson/parson.h', sdk_path)
     shutil.copy2(azure_iot_sdk_path+'deps/parson/parson.c', sdk_path)
+    
+    # ---- copy sdk certs ---
+    dir_util.copy_tree(azure_iot_sdk_path+'certs/', AzureIoTHub_path+'src/certs/')
 
     # ---- make sub folders in new Arduino libs ----
     os.mkdir(SharedUtility_path)
@@ -120,7 +123,6 @@ def run():
     os.mkdir(Macro_Utils_path)
     os.mkdir(Hub_Macro_Utils_path)
     os.mkdir(AzureIoTHub_path+'examples/')
-#     os.mkdir(AzureIoTHub_path+'examples/iothub_ll_telemetry_sample/')
 
     # ---- copy sample ----
     dir_util.copy_tree(arduino_pal_path+'samples/esp8266/', AzureIoTHub_path+'examples/iothub_ll_telemetry_sample/')
