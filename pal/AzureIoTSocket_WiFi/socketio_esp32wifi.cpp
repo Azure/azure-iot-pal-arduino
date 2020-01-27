@@ -50,7 +50,7 @@ typedef struct SOCKET_IO_INSTANCE_TAG
     char* target_mac_address;
     IO_STATE io_state;
     SINGLYLINKEDLIST_HANDLE pending_io_list;
-    unsigned char recv_bytes[RECEIVE_BYTES_VALUE];
+    unsigned char recv_bytes[XIO_RECEIVE_BUFFER_SIZE];
 } SOCKET_IO_INSTANCE;
 
 typedef struct NETWORK_INTERFACE_DESCRIPTION_TAG
@@ -524,7 +524,7 @@ void socketio_dowork(CONCRETE_IO_HANDLE socket_io)
 
             while (socket_io_instance->socket->available() && socket_io_instance->io_state == IO_STATE_OPEN)
             {
-                received = socket_io_instance->socket->read(socket_io_instance->recv_bytes, RECEIVE_BYTES_VALUE);
+                received = socket_io_instance->socket->read(socket_io_instance->recv_bytes, XIO_RECEIVE_BUFFER_SIZE);
 
                 if (received > 0)
                 {
