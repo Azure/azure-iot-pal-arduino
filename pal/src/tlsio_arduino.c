@@ -486,10 +486,7 @@ static void dowork_poll_dns(TLS_IO_INSTANCE* tls_io_instance)
     }
     else
     {
-        /* Codes_SRS_TLSIO_ARDUINO_21_019: [ If the WiFi cannot find the IP for the hostName, the tlsio_arduino_create shall destroy the sslClient and tlsio instances and return NULL as the handle. ]*/
         LogError("Host %s not found", STRING_c_str(tls_io_instance->hostname));
-        free(tls_io_instance);
-        tls_io_instance = NULL;
     }
 }
 
