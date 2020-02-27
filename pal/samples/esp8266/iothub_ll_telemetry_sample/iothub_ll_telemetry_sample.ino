@@ -68,7 +68,6 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_
     int* counter = (int*)userContextCallback;
     const unsigned char* buffer;
     size_t size;
-    //MAP_HANDLE mapProperties;
     const char* messageId;
 
     // Message properties
@@ -106,7 +105,6 @@ static void send_confirm_callback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void
     (void)userContextCallback;
     // When a message is sent this callback will get envoked
     g_message_count_send_confirmations++;
-    //LogInfo("Confirm Callback");
     LogInfo("Confirmation callback received for message %lu with result %s\r\n", (unsigned long)g_message_count_send_confirmations, MU_ENUM_TO_STRING(IOTHUB_CLIENT_CONFIRMATION_RESULT, result));
 }
 
