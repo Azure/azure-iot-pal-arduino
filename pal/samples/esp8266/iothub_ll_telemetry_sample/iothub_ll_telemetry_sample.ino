@@ -66,9 +66,9 @@ int receiveContext = 0;
 static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_HANDLE message, void* userContextCallback)
 {
     int* counter = (int*)userContextCallback;
-    const char* buffer;
+    const unsigned char* buffer;
     size_t size;
-    MAP_HANDLE mapProperties;
+    //MAP_HANDLE mapProperties;
     const char* messageId;
 
     // Message properties
@@ -106,8 +106,8 @@ static void send_confirm_callback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void
     (void)userContextCallback;
     // When a message is sent this callback will get envoked
     g_message_count_send_confirmations++;
-    LogInfo("Confirm Callback");
-    // LogInfo("Confirmation callback received for message %lu with result %s\r\n", (unsigned long)g_message_count_send_confirmations, MU_ENUM_TO_STRING(IOTHUB_CLIENT_CONFIRMATION_RESULT, result));
+    //LogInfo("Confirm Callback");
+    LogInfo("Confirmation callback received for message %lu with result %s\r\n", (unsigned long)g_message_count_send_confirmations, MU_ENUM_TO_STRING(IOTHUB_CLIENT_CONFIRMATION_RESULT, result));
 }
 
 /* -- connection_status_callback --
@@ -148,7 +148,7 @@ void setup() {
         // Set any option that are neccessary.
         // For available options please see the iothub_sdk_options.md documentation
         // turn off diagnostic sampling
-        int diag_off=0;
+        int diag_off = 0;
         IoTHubDeviceClient_LL_SetOption(device_ll_handle, OPTION_DIAGNOSTIC_SAMPLING_PERCENTAGE, &diag_off);
 
 #ifndef SAMPLE_HTTP
