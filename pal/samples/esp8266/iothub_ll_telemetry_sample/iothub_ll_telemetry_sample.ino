@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#include <AzureIoTHub.h>
-
 // CAVEAT: This sample is to demonstrate azure IoT client concepts only and is not a guide design principles or style
 // Checking of return codes and error values shall be omitted for brevity.  Please practice sound engineering practices
 // when writing production code.
@@ -11,21 +9,16 @@
 // Note2: To use this sample with the esp32, you MUST build the AzureIoTSocket_WiFi library by using the make_sdk.py,
 //        found in https://github.com/Azure/azure-iot-pal-arduino/tree/master/build_all. 
 //        Command line example: python3 make_sdk.py -o <your-lib-folder>
-
+#include <AzureIoTHub.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-// You must set the device id, device key, IoT Hub name and IotHub suffix in
-// iot_configs.h
-#include "iot_configs.h"
+#include "iot_configs.h" // You must set your wifi SSID, wifi PWD, and your IoTHub Device Connection String in iot_configs.h
 #include "sample_init.h"
+
 #ifdef is_esp_board
   #include "Esp.h"
 #endif
-
-
-static char ssid[] = IOT_CONFIG_WIFI_SSID;
-static char pass[] = IOT_CONFIG_WIFI_PASSWORD;
 
 #ifdef SAMPLE_MQTT
     #include "AzureIoTProtocol_MQTT.h"
@@ -36,23 +29,19 @@ static char pass[] = IOT_CONFIG_WIFI_PASSWORD;
     #include "iothubtransporthttp.h"
 #endif // SAMPLE_HTTP
 
+static const char ssid[] = IOT_CONFIG_WIFI_SSID;
+static const char pass[] = IOT_CONFIG_WIFI_PASSWORD;
+
 /* Define several constants/global variables */
 static const char* connectionString = DEVICE_CONNECTION_STRING;
-#define MESSAGE_COUNT 5 // determines the number of times the device tries to send a message to the IoT Hub in the cloud.
 static bool g_continueRunning = true; // defines whether or not the device maintains its IoT Hub connection after sending (think receiving messages from the cloud)
 static size_t g_message_count_send_confirmations = 0;
 
 IOTHUB_MESSAGE_HANDLE message_handle;
 size_t messages_sent = 0;
+#define MESSAGE_COUNT 5 // determines the number of times the device tries to send a message to the IoT Hub in the cloud.
 const char* telemetry_msg = "test_message";
-
-// Select the Protocol to use with the connection
-#ifdef SAMPLE_MQTT
-    IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = MQTT_Protocol;
-#endif // SAMPLE_MQTT
-#ifdef SAMPLE_HTTP
-   IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = HTTP_Protocol;
-#endif // SAMPLE_HTTP
+const char* quit_msg = "quit";
 
 IOTHUB_DEVICE_CLIENT_LL_HANDLE device_ll_handle;
 
@@ -85,7 +74,7 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_
     {
         LogInfo("Received Message [%d]\r\n Message ID: %s\r\n Data: <<<%.*s>>> & Size=%d\r\n", *counter, messageId, (int)size, buffer, (int)size);
         // If we receive the work 'quit' then we stop running
-        if (size == (strlen("quit") * sizeof(char)) && memcmp(buffer, "quit", size) == 0)
+        if (size == (strlen(quit_msg) * sizeof(char)) && memcmp(buffer, quit_msg, size) == 0)
         {
             g_continueRunning = false;
         }
@@ -126,6 +115,14 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
     }
 }
 
+    // Select the Protocol to use with the connection
+#ifdef SAMPLE_MQTT
+    IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = MQTT_Protocol;
+#endif // SAMPLE_MQTT
+#ifdef SAMPLE_HTTP
+   IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = HTTP_Protocol;
+#endif // SAMPLE_HTTP
+
 void setup() {
     int result = 0;
 
@@ -158,7 +155,7 @@ void setup() {
         // Setting the Trusted Certificate.
         IoTHubDeviceClient_LL_SetOption(device_ll_handle, OPTION_TRUSTED_CERT, certificates);
 
-#if defined SAMPLE_MQTT || defined SAMPLE_MQTT_WS
+#if defined SAMPLE_MQTT
         //Setting the auto URL Encoder (recommended for MQTT). Please use this option unless
         //you are URL Encoding inputs yourself.
         //ONLY valid for use with MQTT
