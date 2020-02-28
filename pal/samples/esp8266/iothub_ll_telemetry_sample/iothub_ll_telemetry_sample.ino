@@ -115,6 +115,8 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
     }
 }
 
+
+void setup() {
     // Select the Protocol to use with the connection
 #ifdef SAMPLE_MQTT
     IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = MQTT_Protocol;
@@ -123,9 +125,7 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
    IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = HTTP_Protocol;
 #endif // SAMPLE_HTTP
 
-void setup() {
     int result = 0;
-
     sample_init(ssid, pass);
 
     // Create the iothub handle here
