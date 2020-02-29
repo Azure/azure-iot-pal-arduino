@@ -42,6 +42,7 @@ size_t messages_sent = 0;
 #define MESSAGE_COUNT 5 // determines the number of times the device tries to send a message to the IoT Hub in the cloud.
 const char* telemetry_msg = "test_message";
 const char* quit_msg = "quit";
+const char* exit_msg = "exit";
 
 IOTHUB_DEVICE_CLIENT_LL_HANDLE device_ll_handle;
 
@@ -127,7 +128,7 @@ static void reset_esp_helper()
         // Restart device upon receipt of 'exit' call.
         int e_start = s1.indexOf('e');
         String ebit = (String) s1.substring(e_start, e_start+4);
-        if(ebit == "exit")
+        if(ebit == exit_msg)
         {
             ESP.restart();
         }
