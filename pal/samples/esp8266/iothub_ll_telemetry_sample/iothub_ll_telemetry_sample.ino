@@ -115,6 +115,25 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
     }
 }
 
+static void reset_esp_helper()
+{
+#ifdef is_esp_board
+    // Read from local serial 
+    if (Serial.available()){
+        String s1 = Serial.readStringUntil('\n');// s1 is String type variable.
+        Serial.print("Received Data: ");
+        Serial.println(s1);//display same received Data back in serial monitor.
+
+        // Restart device upon receipt of 'exit' call.
+        int e_start = s1.indexOf('e');
+        String ebit = (String) s1.substring(e_start, e_start+4);
+        if(ebit == "exit")
+        {
+            ESP.restart();
+        }
+    }
+#endif // is_esp_board
+}
 
 void setup() {
     // Select the Protocol to use with the connection
@@ -204,23 +223,8 @@ void setup() {
 
             IoTHubDeviceClient_LL_DoWork(device_ll_handle);
             ThreadAPI_Sleep(3);
+            reset_esp_helper();
           
-#ifdef is_esp_board
-            // Read from local serial 
-            if (Serial.available()){
-                String s1 = Serial.readStringUntil('\n');// s1 is String type variable.
-                Serial.print("Received Data: ");
-                Serial.println(s1);//display same received Data back in serial monitor.
-
-                // Restart device upon receipt of 'exit' call.
-                int e_start = s1.indexOf('e');
-                String ebit = (String) s1.substring(e_start, e_start+4);
-                if(ebit == "exit")
-                {
-                    ESP.restart();
-                }
-            }
-#endif // is_esp_board
         } while (g_continueRunning);
 
         // Clean up the iothub sdk handle
@@ -235,19 +239,5 @@ void setup() {
 
 void loop(void)
 {
-  
-#ifdef is_esp_board
-    if (Serial.available()){
-        String s1 = Serial.readStringUntil('\n');// s1 is String type variable.
-        Serial.print("Received Data: ");
-        Serial.println(s1);//display same received Data back in serial monitor.
-  
-        int e_start = s1.indexOf('e');
-        String ebit = (String) s1.substring(e_start, e_start+4);
-        if(ebit == "exit")
-        {
-            ESP.restart();
-        }
-    }
-#endif // is_esp_board
+  reset_esp_helper();
 }
