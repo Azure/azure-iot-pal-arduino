@@ -36,6 +36,7 @@ static const char pass[] = IOT_CONFIG_WIFI_PASSWORD;
 static const char* connectionString = DEVICE_CONNECTION_STRING;
 static bool g_continueRunning = true; // defines whether or not the device maintains its IoT Hub connection after sending (think receiving messages from the cloud)
 static size_t g_message_count_send_confirmations = 0;
+static bool g_run_demo = true;
 
 IOTHUB_MESSAGE_HANDLE message_handle;
 size_t messages_sent = 0;
@@ -116,6 +117,9 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
     }
 }
 
+/* -- reset_esp_helper -- 
+ * waits for call of exit_msg over Serial line to reset device
+ */
 static void reset_esp_helper()
 {
 #ifdef is_esp_board
@@ -136,7 +140,62 @@ static void reset_esp_helper()
 #endif // is_esp_board
 }
 
+/* -- run_demo --
+ * Runs active task of sending telemetry to IoTHub
+ * WARNING: only call this function once, as it includes steps to destroy handles and clean up at the end.
+ */
+static void run_demo()
+{
+    int result = 0;
+
+    // action phase of the program, sending messages to the IoT Hub in the cloud.
+    do
+    {
+        if (messages_sent < MESSAGE_COUNT)
+        {
+            // Construct the iothub message from a string or a byte array
+            message_handle = IoTHubMessage_CreateFromString(telemetry_msg);
+            //message_handle = IoTHubMessage_CreateFromByteArray((const unsigned char*)msgText, strlen(msgText)));
+
+            // Set Message property
+            /*(void)IoTHubMessage_SetMessageId(message_handle, "MSG_ID");
+            (void)IoTHubMessage_SetCorrelationId(message_handle, "CORE_ID");
+            (void)IoTHubMessage_SetContentTypeSystemProperty(message_handle, "application%2fjson");
+            (void)IoTHubMessage_SetContentEncodingSystemProperty(message_handle, "utf-8");*/
+
+            // Add custom properties to message
+            // (void)IoTHubMessage_SetProperty(message_handle, "property_key", "property_value");
+
+            LogInfo("Sending message %d to IoTHub\r\n", (int)(messages_sent + 1));
+            result = IoTHubDeviceClient_LL_SendEventAsync(device_ll_handle, message_handle, send_confirm_callback, NULL);
+            // The message is copied to the sdk so the we can destroy it
+            IoTHubMessage_Destroy(message_handle);
+
+            messages_sent++;
+        }
+        else if (g_message_count_send_confirmations >= MESSAGE_COUNT)
+        {
+            // After all messages are all received stop running
+            g_continueRunning = false;
+        }
+
+        IoTHubDeviceClient_LL_DoWork(device_ll_handle);
+        ThreadAPI_Sleep(3);
+        reset_esp_helper();
+      
+    } while (g_continueRunning);
+
+    // Clean up the iothub sdk handle
+    IoTHubDeviceClient_LL_Destroy(device_ll_handle);
+    // Free all the sdk subsystem
+    IoTHub_Deinit();
+
+    LogInfo("done with sending");
+    return;
+}
+
 void setup() {
+  
     // Select the Protocol to use with the connection
 #ifdef SAMPLE_MQTT
     IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = MQTT_Protocol;
@@ -145,15 +204,14 @@ void setup() {
    IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = HTTP_Protocol;
 #endif // SAMPLE_HTTP
 
-    int result = 0;
     sample_init(ssid, pass);
 
-    // Create the iothub handle here
-    device_ll_handle = IoTHubDeviceClient_LL_CreateFromConnectionString(connectionString, protocol);
     // Used to initialize IoTHub SDK subsystem
     (void)IoTHub_Init();
-    
+    // Create the iothub handle here
+    device_ll_handle = IoTHubDeviceClient_LL_CreateFromConnectionString(connectionString, protocol);
     LogInfo("Creating IoTHub Device handle\r\n");
+
     if (device_ll_handle == NULL)
     {
         LogInfo("Error AZ002: Failure creating Iothub device. Hint: Check you connection string.\r\n");
@@ -161,7 +219,7 @@ void setup() {
     else
     {
         // Set any option that are neccessary.
-        // For available options please see the iothub_sdk_options.md documentation
+        // For available options please see the iothub_sdk_options.md documentation in the main C SDK
         // turn off diagnostic sampling
         int diag_off = 0;
         IoTHubDeviceClient_LL_SetOption(device_ll_handle, OPTION_DIAGNOSTIC_SAMPLING_PERCENTAGE, &diag_off);
@@ -191,54 +249,15 @@ void setup() {
         // Setting connection status callback to get indication of connection to iothub
         (void)IoTHubDeviceClient_LL_SetConnectionStatusCallback(device_ll_handle, connection_status_callback, NULL);
 
-        // action phase of the program, sending messages to the IoT Hub in the cloud.
-        do
-        {
-            if (messages_sent < MESSAGE_COUNT)
-            {
-                // Construct the iothub message from a string or a byte array
-                message_handle = IoTHubMessage_CreateFromString(telemetry_msg);
-                //message_handle = IoTHubMessage_CreateFromByteArray((const unsigned char*)msgText, strlen(msgText)));
-
-                // Set Message property
-                /*(void)IoTHubMessage_SetMessageId(message_handle, "MSG_ID");
-                (void)IoTHubMessage_SetCorrelationId(message_handle, "CORE_ID");
-                (void)IoTHubMessage_SetContentTypeSystemProperty(message_handle, "application%2fjson");
-                (void)IoTHubMessage_SetContentEncodingSystemProperty(message_handle, "utf-8");*/
-
-                // Add custom properties to message
-                // (void)IoTHubMessage_SetProperty(message_handle, "property_key", "property_value");
-
-                LogInfo("Sending message %d to IoTHub\r\n", (int)(messages_sent + 1));
-                result = IoTHubDeviceClient_LL_SendEventAsync(device_ll_handle, message_handle, send_confirm_callback, NULL);
-                // The message is copied to the sdk so the we can destroy it
-                IoTHubMessage_Destroy(message_handle);
-
-                messages_sent++;
-            }
-            else if (g_message_count_send_confirmations >= MESSAGE_COUNT)
-            {
-                // After all messages are all received stop running
-                g_continueRunning = false;
-            }
-
-            IoTHubDeviceClient_LL_DoWork(device_ll_handle);
-            ThreadAPI_Sleep(3);
-            reset_esp_helper();
-          
-        } while (g_continueRunning);
-
-        // Clean up the iothub sdk handle
-        IoTHubDeviceClient_LL_Destroy(device_ll_handle);
     }
-    // Free all the sdk subsystem
-    IoTHub_Deinit();
-
-    LogInfo("done with sending");
-    return;
 }
 
 void loop(void)
 {
+  if (g_run_demo)
+  {
+      run_demo();
+      g_run_demo = false;
+  }
   reset_esp_helper();
 }
