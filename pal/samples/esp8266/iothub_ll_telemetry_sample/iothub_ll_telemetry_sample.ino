@@ -74,7 +74,7 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_
     else
     {
         LogInfo("Received Message [%d]\r\n Message ID: %s\r\n Data: <<<%.*s>>> & Size=%d\r\n", *counter, messageId, (int)size, buffer, (int)size);
-        // If we receive the work 'quit' then we stop running
+        // If we receive the word 'quit' then we stop running
         if (size == (strlen(quit_msg) * sizeof(char)) && memcmp(buffer, quit_msg, size) == 0)
         {
             g_continueRunning = false;
@@ -156,7 +156,7 @@ void setup() {
     LogInfo("Creating IoTHub Device handle\r\n");
     if (device_ll_handle == NULL)
     {
-        LogInfo("Error AZ002: Failure createing Iothub device. Hint: Check you connection string.\r\n");
+        LogInfo("Error AZ002: Failure creating Iothub device. Hint: Check you connection string.\r\n");
     }
     else
     {
