@@ -125,7 +125,7 @@ def run():
     os.mkdir(AzureIoTHub_path + 'examples/')
 
     # ---- copy sample ----
-    dir_util.copy_tree(arduino_pal_path + 'samples/esp8266/', AzureIoTHub_path + 'examples/iothub_ll_telemetry_sample/')
+    dir_util.copy_tree(arduino_pal_path + 'samples/', AzureIoTHub_path + 'examples/')
 
     # ---- copy dependencies ----
     dir_util.copy_tree(azure_iot_sdk_path + 'c-utility/inc/azure_c_shared_utility/', SharedUtility_path)
