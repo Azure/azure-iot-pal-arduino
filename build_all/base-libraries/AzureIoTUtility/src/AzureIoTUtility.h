@@ -12,6 +12,6 @@
 #include "azure_c_shared_utility/tlsio.h"
 #include "azure_c_shared_utility/xlogging.h"
 
-#define AzureIoTUtilityVersion "1.3.8"
+#define AzureIoTUtilityVersion "1.3.9"
 
 #endif //AZUREIOTUTILITY_H
