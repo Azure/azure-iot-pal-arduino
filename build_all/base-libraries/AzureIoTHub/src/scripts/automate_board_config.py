@@ -166,21 +166,22 @@ def main():
           f" {ARDUINO_PACKAGES_PATH}")
 
     # Check for and change other versions if they exist
+    BOARD_PATH = Path(ARDUINO_PACKAGES_PATH / PACKAGE_PATH)
     try:
         versions = []
-        with os.scandir(
-                ARDUINO_PACKAGES_PATH / PACKAGE_PATH) as entries:
+        with os.scandir(BOARD_PATH) as entries:
             for version in entries:
                 # avoid files and hidden files
                 if version.is_dir and not version.name.startswith('.'):
                     versions.append(
-                        Path(
-                            ARDUINO_PACKAGES_PATH /
-                            PACKAGE_PATH / version))
+                        Path(BOARD_PATH / version))
     except FileNotFoundError:
         print(
             f'Error: Board files for ESP{board_to_update} not found!\n'
-            f'Please ensure that the board library is installed')
+            f'Directory searched was: {BOARD_PATH}\n'
+            f'Please ensure that the board library exists at the location'
+            f', or check command line parameters to specify a'
+            f' custom Arduino packages path')
         sys.exit(1)
 
     for path in versions:
