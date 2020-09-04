@@ -1,11 +1,13 @@
 from pathlib import Path
 import os
 import sys
+import getopt
 import fileinput
 from shutil import copyfile
 
 ESP8266_PACKAGE_PATH = Path("packages/esp8266/hardware/esp8266/")
 ESP32_PACKAGE_PATH = Path("packages/esp32/hardware/esp32/")
+ARDUINO_PACKAGES_PATH = None  # Determined by user opts or platform
 
 
 def update_line_file(
@@ -71,7 +73,36 @@ def confirm_overwrite(file_path):
             print("Ensure your response is a Y or N")
 
 
+def usage():
+    '''
+    Prints script's opt usage
+    '''
+    print(
+          "automate_board_config.py usage:\n"
+          " -h or --help: Print usage text\n"
+          " -p or --packages_path: Set custom path for Arduino packages path")
+    sys.exit()
+
+
+def parse_opts():
+    '''
+    Prints script's command line options
+    '''
+    options, _ = getopt.gnu_getopt(
+                                          sys.argv[1:],
+                                          'hp:',
+                                          ['help', 'packages_path'])
+
+    for opt, arg in options:
+        if opt in ('-h', '--help'):
+            usage()
+        elif opt in ('-p', '--packages_path'):
+            global ARDUINO_PACKAGES_PATH
+            ARDUINO_PACKAGES_PATH = Path(arg)
+
+
 def main():
+    parse_opts()
     disclaimer_prompt = \
         "This script will attempt to automatically update" \
         " your ESP8266 and/or ESP32 board files to work with Azure IoT Hub" \
@@ -117,16 +148,19 @@ def main():
         else:
             print("Ensure your response is either 8226 or 32")
 
-    if sys.platform == "darwin":
-        ARDUINO_PACKAGES_PATH = Path(Path.home() / "Library/Arduino15")
-    elif sys.platform == "linux":
-        ARDUINO_PACKAGES_PATH = Path(Path.home() / ".arduino15")
-    elif sys.platform == "win32":
-        ARDUINO_PACKAGES_PATH = Path(Path.home() / "AppData/Local/Arduino15")
-    else:
-        print(f"Error: no valid board path condition for platform:"
-              f" {sys.platform}")
-        sys.exit()
+    global ARDUINO_PACKAGES_PATH
+    if ARDUINO_PACKAGES_PATH is None:
+        if sys.platform == "darwin":
+            ARDUINO_PACKAGES_PATH = Path(Path.home() / "Library/Arduino15")
+        elif sys.platform == "linux":
+            ARDUINO_PACKAGES_PATH = Path(Path.home() / ".arduino15")
+        elif sys.platform == "win32":
+            ARDUINO_PACKAGES_PATH = Path(
+                                    Path.home() / "AppData/Local/Arduino15")
+        else:
+            print(f"Error: no valid board path condition for platform:"
+                  f" {sys.platform}")
+            sys.exit()
 
     print(f"Arduino path for platform {sys.platform} is:"
           f" {ARDUINO_PACKAGES_PATH}")
