@@ -175,6 +175,8 @@ def main():
                 if version.is_dir and not version.name.startswith('.'):
                     versions.append(
                         Path(BOARD_PATH / version))
+        if len(versions) == 0:
+            raise FileNotFoundError
     except FileNotFoundError:
         print(
             f'Error: Board files for ESP{board_to_update} not found!\n'
