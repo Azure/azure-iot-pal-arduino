@@ -120,7 +120,7 @@ def main():
     if sys.platform == "darwin":
         ARDUINO_PACKAGES_PATH = Path(Path.home() / "Library/Arduino15")
     elif sys.platform == "linux":
-        ARDUINO_PACKAGES_PATH = Path(Path.home() / ".arduino15/packages/")
+        ARDUINO_PACKAGES_PATH = Path(Path.home() / ".arduino15")
     elif sys.platform == "win32":
         ARDUINO_PACKAGES_PATH = Path(Path.home() / "AppData/Local/Arduino15")
     else:
