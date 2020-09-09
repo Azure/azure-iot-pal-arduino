@@ -65,7 +65,7 @@ You should have the following ready before beginning with any board:
 4. Update IoT Hub Connection string in `iot_configs.h`
 
 5. Configure board library using the automation script and `python3`. If you choose this method you can skip step 6.
-    - Clone this repo `git clone https://github.com/Azure/azure-iot-arduino.git` or download the script [directly](https://raw.githubusercontent.com/Azure/azure-iot-arduino/master/scripts/automate_board_config.py).
+    - Clone or download this repo: `git clone https://github.com/Azure/azure-iot-pal-arduino.git` , navigate to the downloaded sub-folder: `cd azure-iot-pal-arduino/build_all/base-libraries/AzureIoTHub/src/scripts` , and check that the script `automate_board_config.py` exists in this location. If this folder or script cannot be located, download the script [directly](https://raw.githubusercontent.com/Azure/azure-iot-pal-arduino/master/build_all/base-libraries/AzureIoTHub/src/scripts/automate_board_config.py).
     - Run the script E.x.: `python3 automate_board_config.py` and select appropriate options.
     - Note: if you update or reinstall your board library in Arduino you will need to run this script again.
 
@@ -110,7 +110,7 @@ You should have the following ready before beginning with any board:
 4. Update IoT Hub Connection string in `iot_configs.h`
 
 5. Configure board library using the automation script and `python3`. If you choose this method you can skip step 6.
-    - Clone this repo `git clone https://github.com/Azure/azure-iot-arduino.git` or download the script [directly](https://raw.githubusercontent.com/Azure/azure-iot-arduino/master/scripts/automate_board_config.py).
+    - Clone or download this repo: `git clone https://github.com/Azure/azure-iot-pal-arduino.git` , navigate to the downloaded sub-folder: `cd azure-iot-pal-arduino/build_all/base-libraries/AzureIoTHub/src/scripts` , and check that the script `automate_board_config.py` exists in this location. If this folder or script cannot be located, download the script [directly](https://raw.githubusercontent.com/Azure/azure-iot-pal-arduino/master/build_all/base-libraries/AzureIoTHub/src/scripts/automate_board_config.py).
     - Run the script E.x.: `python3 automate_board_config.py` and select appropriate options.
     - Note: if you update or reinstall your board library in Arduino you will need to run this script again.
 
