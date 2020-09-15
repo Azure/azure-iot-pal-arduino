@@ -16,7 +16,7 @@
 
 static void initSerial() {
     // Start serial and initialize stdout
-    Serial.begin(1000000);
+    Serial.begin(921600);
     Serial.setDebugOutput(true);
 }
 
