@@ -337,7 +337,7 @@ int socketio_open(CONCRETE_IO_HANDLE socket_io, ON_IO_OPEN_COMPLETE on_io_open_c
                 if (socket_io_instance->socket != NULL)
                 {
                     delete socket_io_instance->socket;
-                    socket_io_instance->socket == NULL;
+                    socket_io_instance->socket = NULL;
                 }
             }
         }
