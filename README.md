@@ -9,6 +9,7 @@ The published Azure IoT Arduino libraries are here:
 * [AzureIoTProtocol_MQTT Arduino **published library**](https://github.com/Azure/azure-iot-arduino-protocol-mqtt)
 * [AzureIoTProtocol_HTTP Arduino **published library**](https://github.com/Azure/azure-iot-arduino-protocol-http)
 * [AzureIoTUtility Arduino **published library**](https://github.com/Azure/azure-iot-arduino-utility)
+* [AzureIoTSocket_WiFi **published library**](https://github.com/Azure/azure-iot-arduino-socket-esp32-wifi)
 
 Contributions should _not_ be made to these locations, as they are auto-generated.
 
@@ -19,6 +20,7 @@ Arduino-specific sources for the Azure IoT Arduino libraries are kept in this re
 * [AzureIoTProtocol_MQTT **Arduino sources**](https://github.com/Azure/azure-iot-pal-arduino/tree/master/build_all/base-libraries/AzureIoTProtocol_MQTT)
 * [AzureIoTProtocol_HTTP **Arduino sources**](https://github.com/Azure/azure-iot-pal-arduino/tree/master/build_all/base-libraries/AzureIoTProtocol_HTTP)
 * [AzureIoTUtility **Arduino sources**](https://github.com/Azure/azure-iot-pal-arduino/tree/master/build_all/base-libraries/AzureIoTUtility)
+* [AzureIoTSocket_WiFi **Arduino sources**](https://github.com/Azure/azure-iot-pal-arduino/tree/master/pal/AzureIoTSocket_WiFi)
 
 Arduino-specific contributions should be made to these locations.
 
