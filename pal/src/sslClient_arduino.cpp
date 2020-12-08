@@ -31,13 +31,12 @@ uint8_t sslClient_connected(void)
     return (uint8_t)sslClient.connected();
 }
 
-int sslClient_connect(uint32_t ipAddress, uint16_t port)
+int sslClient_connect(const char* name, uint16_t port)
 {
 #ifdef ARDUINO_ARCH_ESP8266
     sslClient.setTrustAnchors(&cert);
 #endif
-    IPAddress ip = IPAddress(ipAddress);
-    return (int)sslClient.connect(ip, port);
+    return (int)sslClient.connect(name, port);
 }
 
 void sslClient_stop(void)
