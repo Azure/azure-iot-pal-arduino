@@ -46,7 +46,6 @@ const size_t WEBSOCKET_HEADER_NO_CERT_PARAM_SIZE = sizeof(WEBSOCKET_HEADER_NO_CE
 typedef enum TLSIO_STATE_TAG
 {
     TLSIO_STATE_CLOSED,
-    TLSIO_STATE_OPENING_WAITING_DNS,
     TLSIO_STATE_OPENING_WAITING_SOCKET,
     TLSIO_STATE_OPENING_WAITING_SSL,
     TLSIO_STATE_OPEN,
@@ -55,8 +54,7 @@ typedef enum TLSIO_STATE_TAG
 
 bool is_an_opening_state(TLSIO_STATE state)
 {
-    return state == TLSIO_STATE_OPENING_WAITING_DNS ||
-        state == TLSIO_STATE_OPENING_WAITING_SOCKET ||
+    return state == TLSIO_STATE_OPENING_WAITING_SOCKET ||
         state == TLSIO_STATE_OPENING_WAITING_SSL;
 }
 
@@ -70,7 +68,6 @@ typedef struct TLS_IO_INSTANCE_TAG
     void* on_open_complete_context;
     TLSIO_STATE tlsio_state;
     STRING_HANDLE hostname;
-    uint32_t remote_addr;
     uint16_t port;
     SINGLYLINKEDLIST_HANDLE pending_transmission_list;
     TLSIO_OPTIONS options;
@@ -234,7 +231,6 @@ static CONCRETE_IO_HANDLE tlsio_arduino_create(void* io_create_parameters)
                     result->hostname = NULL;
                     result->port = (uint16_t)tls_io_config->port;
                     result->tlsio_state = TLSIO_STATE_CLOSED;
-                    result->hostname = NULL;
                     result->pending_transmission_list = NULL;
                     tlsio_options_initialize(&result->options, TLSIO_OPTION_BIT_TRUSTED_CERTS);
                     
@@ -328,7 +324,7 @@ static int tlsio_arduino_open_async(CONCRETE_IO_HANDLE tls_io,
 
                         /* Codes_SRS_TLSIO_30_035: [ On tlsio_open success the adapter shall enter TLSIO_STATE_EX_OPENING and return 0. ]*/
                         // All the real work happens in dowork
-                        tls_io_instance->tlsio_state = TLSIO_STATE_OPENING_WAITING_DNS;
+                        tls_io_instance->tlsio_state = TLSIO_STATE_OPENING_WAITING_SOCKET;
                         result = 0;
                     }
                 }
@@ -477,19 +473,6 @@ static void dowork_send(TLS_IO_INSTANCE* tls_io_instance)
     }
 }
 
-static void dowork_poll_dns(TLS_IO_INSTANCE* tls_io_instance)
-{
-    /* Codes_SRS_TLSIO_ARDUINO_21_018: [ The tlsio_arduino_create shall convert the provide hostName to an IP address. ]*/
-    if (sslClient_hostByName(STRING_c_str(tls_io_instance->hostname), &(tls_io_instance->remote_addr)))
-    {
-        tls_io_instance->tlsio_state = TLSIO_STATE_OPENING_WAITING_SOCKET;
-    }
-    else
-    {
-        LogError("Host %s not found", STRING_c_str(tls_io_instance->hostname));
-    }
-}
-
 static void dowork_poll_socket(TLS_IO_INSTANCE* tls_io_instance)
 {
     // Nothing to do here
@@ -498,7 +481,7 @@ static void dowork_poll_socket(TLS_IO_INSTANCE* tls_io_instance)
 
 static void dowork_poll_open_ssl(TLS_IO_INSTANCE* tls_io_instance)
 {
-    int connect_success = sslClient_connect(tls_io_instance->remote_addr, tls_io_instance->port);
+    int connect_success = sslClient_connect(STRING_c_str(tls_io_instance->hostname), tls_io_instance->port);
     if (connect_success)
     {
         /* Codes_SRS_TLSIO_30_080: [ The tlsio_dowork shall establish a TLS connection using the hostName and port provided during tlsio_open. ]*/
@@ -533,10 +516,6 @@ static void tlsio_arduino_dowork(CONCRETE_IO_HANDLE tls_io)
             LogInfo("dowork TLSIO_STATE_CLOSED");
             /* Codes_SRS_TLSIO_30_075: [ If the adapter is in TLSIO_STATE_EXT_CLOSED then  tlsio_dowork  shall do nothing. ]*/
             // Waiting to be opened, nothing to do
-            break;
-        case TLSIO_STATE_OPENING_WAITING_DNS:
-            LogInfo("dowork TLSIO_STATE_OPENING_WAITING_DNS");
-            dowork_poll_dns(tls_io_instance);
             break;
         case TLSIO_STATE_OPENING_WAITING_SOCKET:
             LogInfo("dowork TLSIO_STATE_OPENING_WAITING_SOCKET");
