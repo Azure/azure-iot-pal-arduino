@@ -114,7 +114,6 @@ void due_sample_init(byte *mac,
     // Certificate conversion
     pem_to_ta(certificates, strlen(certificates), &g_anchors, &g_anchors_len);
     g_rand_pin = rand_pin;
-    //p_sslClient = new SSLClient(baseClient, anchors, anchors_len, rand_pin);
     delay(1000);
 }
 

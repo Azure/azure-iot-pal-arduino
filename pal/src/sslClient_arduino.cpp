@@ -24,7 +24,7 @@ static WiFiClientSecure sslClient; // for ESP32
 #include "sam/sample_init.h"
 
 static EthernetClient baseClient;
-SSLClient *p_sslClient;
+SSLClient *p_sslClient = NULL;
 #define sslClient (*p_sslClient)
 #else
 #include "WiFi101.h"
@@ -63,7 +63,7 @@ void sslClient_stop(void)
 {
     sslClient.stop();
 #ifdef ARDUINO_ARCH_SAM
-    free(p_sslClient);
+    delete p_sslClient;
     p_sslClient = NULL;
 #endif
 }
