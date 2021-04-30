@@ -58,7 +58,13 @@ void NTPClientAz::prepareRequest()
 void NTPClientAz::sendRequest(const char* host, int port)
 {
     _udp.beginPacket(host, port);
+
+#if WIO_TERMINAL
+    _udp.write((const uint8_t*)_buffer, NTP_PACKET_SIZE);
+#else
     _udp.write(_buffer, NTP_PACKET_SIZE);
+#endif
+
     _udp.endPacket();
 }
 
