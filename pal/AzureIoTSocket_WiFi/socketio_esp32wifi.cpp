@@ -6,6 +6,8 @@
 #include "ESP8266WiFi.h"
 #elif ARDUINO_ARCH_ESP32
 #include "WiFi.h"
+#elif WIO_TERMINAL
+#include <WiFi.h>
 #else
 #include "WiFi101.h"
 #endif

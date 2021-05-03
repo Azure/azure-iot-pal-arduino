@@ -15,6 +15,10 @@ static BearSSL::X509List cert(certificates);
 #include "WiFi.h"
 #include "WiFiClientSecure.h"
 static WiFiClientSecure sslClient; // for ESP32
+#elif WIO_TERMINAL
+#include "WiFi.h"
+#include "WiFiClientSecure.h"
+static WiFiClientSecure sslClient; // for Wio Terminal variant of SAMD
 #else
 #include "WiFi101.h"
 #include "WiFiSSLClient.h"
