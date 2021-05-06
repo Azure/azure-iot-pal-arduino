@@ -152,11 +152,11 @@ You should have the following ready before beginning with any board:
     - Run the script E.x.: `python3 automate_board_config.py` and select appropriate options.
     - Note: if you update or reinstall your board library in Arduino you will need to run this script again.
 
-6. Navigate to where your esp32 board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
+6. Navigate to where your arduino nano 33 iot board package is located, typically in `C:\Users\<your username>\AppData\Local\Arduino15\packages` on Windows and `~/.arduino15/packages/` on Linux
 
 	- Navigate deeper in to `hardware/samd/<board package version>/` where the `platform.txt` file lives.
 	
-	- Copy the [`platform.local.txt`](https://github.com/Azure/azure-iot-arduino/blob/master/examples/iothub_ll_telemetry_sample/esp32/platform.local.txt) file from the `samd` folder in the sample into the same folder as the `platform.txt`.
+	- Copy the [`platform.local.txt`](https://github.com/Azure/azure-iot-arduino/blob/master/examples/iothub_ll_telemetry_sample/ArduinoNano33iot/platform.local.txt) file from the `samd` folder in the sample into the same folder as the `platform.txt`.
 	
 	- Alternatively, or for later versions of the Board Package, add the define `-DDONT_USE_UPLOADTOBLOB` to `build.extra_flags=` in `platform.txt` or a `platform.local.txt` that you create.
 	
