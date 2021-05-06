@@ -156,7 +156,7 @@ You should have the following ready before beginning with any board:
 
 	- Navigate deeper in to `hardware/samd/<board package version>/` where the `platform.txt` file lives.
 	
-	- Copy the [`platform.local.txt`](https://github.com/Azure/azure-iot-arduino/blob/master/examples/iothub_ll_telemetry_sample/ArduinoNano33iot/platform.local.txt) file from the `samd` folder in the sample into the same folder as the `platform.txt`.
+	- Copy the [`platform.local.txt`](https://github.com/Azure/azure-iot-arduino/blob/master/examples/iothub_ll_telemetry_sample/ArduinoNano33iot/platform.local.txt) file from the `ArduinoNano33iot` folder in the sample into the same folder as the `platform.txt`.
 	
 	- Alternatively, or for later versions of the Board Package, add the define `-DDONT_USE_UPLOADTOBLOB` to `build.extra_flags=` in `platform.txt` or a `platform.local.txt` that you create.
 	
