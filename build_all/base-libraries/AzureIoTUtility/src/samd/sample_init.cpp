@@ -35,10 +35,6 @@ static WiFiSSLClient sslClient;
 
 #endif // ARDUINO_SAMD_FEATHER_M0
 
-
-static WiFiSSLClient sslClient;
-
-
 static void initWifi(const char* ssid, const char* pass) 
 {
     #ifdef ARDUINO_SAMD_FEATHER_M0
