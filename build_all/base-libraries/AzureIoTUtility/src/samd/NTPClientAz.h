@@ -6,7 +6,12 @@
 #ifndef NTPCLIENT_AZ_H
 #define NTPCLIENT_AZ_H
 
+#if WIO_TERMINAL
+#include <WiFi.h>
+#else
 #include <WiFi101.h>
+#endif
+
 #include <WiFiUdp.h>
 
 #define NTP_PACKET_SIZE     48

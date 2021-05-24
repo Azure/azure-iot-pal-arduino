@@ -15,6 +15,10 @@ static BearSSL::X509List cert(certificates);
 #include "WiFi.h"
 #include "WiFiClientSecure.h"
 static WiFiClientSecure sslClient; // for ESP32
+#elif WIO_TERMINAL
+#include "WiFi.h"
+#include "WiFiClientSecure.h"
+static WiFiClientSecure sslClient; // for Wio Terminal variant of SAMD
 #elif ARDUINO_ARCH_SAM
 #include <Dns.h>
 #include <SSLClient.h>
@@ -50,7 +54,8 @@ int sslClient_connect(const char* name, uint16_t port)
 #ifdef ARDUINO_ARCH_SAM
     time_t current_time = time(NULL);
     //g_ variables declared as extern in sample_init
-    p_sslClient = new SSLClient(baseClient, g_anchors, g_anchors_len, g_rand_pin);
+    if(!p_sslClient)
+        p_sslClient = new SSLClient(baseClient, g_anchors, g_anchors_len, g_rand_pin);
     sslClient.setVerificationTime(// days since 1970 + days from 1970 to year 0 
  		(current_time / SEC_PER_DAY) + 719528UL, 
  		// seconds over start of day 
@@ -62,10 +67,6 @@ int sslClient_connect(const char* name, uint16_t port)
 void sslClient_stop(void)
 {
     sslClient.stop();
-#ifdef ARDUINO_ARCH_SAM
-    delete p_sslClient;
-    p_sslClient = NULL;
-#endif
 }
 
 size_t sslClient_write(const uint8_t *buf, size_t size)

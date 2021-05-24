@@ -9,7 +9,16 @@
 #include <time.h>
 #include <sys/time.h>
 #include <SPI.h>
+
+#if WIO_TERMINAL
+#include <WiFi.h>
+#include "WiFiClientSecure.h"
+static WiFiClientSecure sslClient; // for Wio Terminal variant of SAMD
+#else
 #include <WiFi101.h>
+static WiFiSSLClient sslClient;
+#endif
+
 #include <WiFiUdp.h>
 #include "NTPClientAz.h"
 
@@ -25,10 +34,6 @@
 #define WINC_EN   2
 
 #endif // ARDUINO_SAMD_FEATHER_M0
-
-
-static WiFiSSLClient sslClient;
-
 
 static void initWifi(const char* ssid, const char* pass) 
 {
@@ -79,7 +84,15 @@ static void initTime() {
             delay(2000);
         } else {
             Serial.print("Fetched NTP epoch time is: ");
+
+#if WIO_TERMINAL
+            char buff[32];
+            sprintf(buff, "%.f", difftime(epochTime, (time_t) 0));
+            Serial.println(buff);
+#else
             Serial.println(epochTime);
+#endif
+
             break;
         }
     }

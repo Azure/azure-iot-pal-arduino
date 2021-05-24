@@ -4,11 +4,13 @@
 #ifndef AZUREIOTSOCKETWIFI_H
 #define AZUREIOTSOCKETWIFI_H
 
-#define AzureIoTSocketWiFiVersion "1.0.00"
+#define AzureIoTSocketWiFiVersion "1.0.2"
 
 #ifdef ARDUINO_ARCH_ESP8266
 #include <ESP8266WiFi.h>
 #elif ARDUINO_ARCH_ESP32
+#include <WiFi.h>
+#elif WIO_TERMINAL
 #include <WiFi.h>
 #else
 #include <WiFi101.h>
