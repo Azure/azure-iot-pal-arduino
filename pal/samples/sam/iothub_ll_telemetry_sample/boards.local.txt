@@ -1,0 +1,2 @@
+arduino_due_x_dbg.build.extra_flags=-D__SAM3X8E__ -mthumb {build.usb_flags} -DDONT_USE_UPLOADTOBLOB -DUSE_BALTIMORE_CERT
+arduino_due_x.build.extra_flags=-D__SAM3X8E__ -mthumb {build.usb_flags} -DDONT_USE_UPLOADTOBLOB -DUSE_BALTIMORE_CERT
