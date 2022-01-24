@@ -1,5 +1,7 @@
 # azure-iot-pal-arduino
 
+**Warning: This library is being deprecated! Please use Azure SDK for C for new projects!**
+
 This repository contains all of the Arduino-specific source files for the Azure IoT Arduino 
 libraries. 
 
