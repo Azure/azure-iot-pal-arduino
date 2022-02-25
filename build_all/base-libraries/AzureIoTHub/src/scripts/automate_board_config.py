@@ -7,6 +7,7 @@ from shutil import copyfile
 
 ESP8266_PACKAGE_PATH = Path("packages/esp8266/hardware/esp8266/")
 ESP32_PACKAGE_PATH = Path("packages/esp32/hardware/esp32/")
+NANO33_PACKAGE_PATH = Path("packages/arduino/hardware/samd/")
 ARDUINO_PACKAGES_PATH = None  # Determined by user opts or platform
 
 
@@ -78,9 +79,9 @@ def usage():
     Prints script's opt usage
     '''
     print(
-          "automate_board_config.py usage:\n"
-          " -h or --help: Print usage text\n"
-          " -p or --packages_path: Set custom path for Arduino packages path")
+        "automate_board_config.py usage:\n"
+        " -h or --help: Print usage text\n"
+        " -p or --packages_path: Set custom path for Arduino packages path")
     sys.exit()
 
 
@@ -89,9 +90,9 @@ def parse_opts():
     Prints script's command line options
     '''
     options, _ = getopt.gnu_getopt(
-                                          sys.argv[1:],
-                                          'hp:',
-                                          ['help', 'packages_path'])
+        sys.argv[1:],
+        'hp:',
+        ['help', 'packages_path'])
 
     for opt, arg in options:
         if opt in ('-h', '--help'):
@@ -109,7 +110,7 @@ def main():
         " for the repo https://github.com/Azure/azure-iot-arduino" \
         "\nPlease refer to the license agreement there." \
         "\nThis script will update all installed versions of board" \
-        " libraries for ESP8266 and/or ESP32." \
+        " libraries for ESP8266 and/or ESP32 and/or NANO33" \
         "\nDo you wish to proceed? Please answer Y or N:" \
         " "
 
@@ -126,9 +127,10 @@ def main():
             print("Ensure your response is a Y or N")
 
     board_prompt = \
-        "Would you like to update your ESP8266 or ESP32 board files?\n" \
+        "Would you like to update your ESP8266,ESP32 or NANO33 board files?\n" \
         "For ESP8266 please respond: 8266\n" \
         "For ESP32 please respond: 32\n" \
+        "For NANO33 please respond: 33\n" \
         "Which board files would you like to update:" \
         " "
 
@@ -145,8 +147,12 @@ def main():
             board_to_update = '32'
             PACKAGE_PATH = ESP32_PACKAGE_PATH
             break
+        elif response == '33':
+            board_to_update = '33'
+            PACKAGE_PATH = NANO33_PACKAGE_PATH
+            break
         else:
-            print("Ensure your response is either 8226 or 32")
+            print("Ensure your response is either 8226,32 or 33")
 
     global ARDUINO_PACKAGES_PATH
     if ARDUINO_PACKAGES_PATH is None:
@@ -156,7 +162,7 @@ def main():
             ARDUINO_PACKAGES_PATH = Path(Path.home() / ".arduino15")
         elif sys.platform == "win32":
             ARDUINO_PACKAGES_PATH = Path(
-                                    Path.home() / "AppData/Local/Arduino15")
+                Path.home() / "AppData/Local/Arduino15")
         else:
             print(f"Error: no valid board path condition for platform:"
                   f" {sys.platform}")
@@ -225,9 +231,11 @@ def main():
                              " -DUSE_BALTIMORE_CERT"
             elif PACKAGE_PATH == ESP32_PACKAGE_PATH:
                 append_str = " -DDONT_USE_UPLOADTOBLOB"
+            elif PACKAGE_PATH == NANO33_PACKAGE_PATH:
+                append_str = " -DDONT_USE_UPLOADTOBLOB"
             get_update = update_line_file(
-                    platform_txt_file, "build.extra_flags=",
-                    str_append=append_str)
+                platform_txt_file, "build.extra_flags=",
+                str_append=append_str)
             print(f"Updated: {get_update} for {platform_txt_file}")
         else:
             print(f"Could not find {platform_txt_file}")
